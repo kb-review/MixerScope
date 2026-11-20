@@ -1,0 +1,1617 @@
+# =============================================================================
+# MixerScope KB entry: Coinomize                                   schema_version 0.4
+# =============================================================================
+# INVARIANTS ONLY. No value from any order appears here; order-specific values are
+# placeholders (<btc_address>, <order_id>, <txid_hex64>, ...). Service-level literals
+# (signing key, onion) are InvariantLiterals with a justification.
+# =============================================================================
+schema_version: "0.4"
+
+service:
+  id: coinomize
+  display_name: Coinomize
+  entry_status: reviewed
+  tiers_completed: [0]
+  analysts: [analyst]
+  first_analyzed: "2026-10"
+  validity_default:
+    { first_seen: "2026-10", last_seen: "2026-10", status: current }
+
+# --- Observations: every source a value may cite ------------------------------------------
+observations:
+  - id: cz-flow
+    kind: capture_flow
+    provenance_class: instrumentation
+    tier: 0
+    date: "2026-10-18"
+    os: Windows 10
+    browser_version: Chrome 150
+    case_ref: "proxy capture of the tier-0 run"
+    notes: "Proxy capture of one unfunded order (96 exchanges, all to coinomize.biz): home page, order form, a first submission rejected because the destination address was already in an open order, order creation, the order page polled by its own fragment reloads, the Letter of Guarantee download, the browser-session expiry page, the order-status lookup by order number, the referral and German pages. Also the source of the page scripts and page text. The capture's own timestamps date it 2026-10-18."
+  - id: cz-policy
+    kind: operator_page
+    provenance_class: operator_claim
+    tier: 0
+    date: "2026-10"
+    case_ref: "FAQ (/faq) and home page saved on 2026-10-28; operator statements printed on the order form, order page, error pages and in the Letter of Guarantee as served during the capture of 2026-10-18"
+  - id: cz-disk
+    kind: disk_image
+    provenance_class: subject_evidence
+    tier: 0
+    date: "2026-10-21"
+    os: Windows 10
+    browser_version: Chrome 155
+    case_ref: "Chrome profile and Downloads folder exported from the image of the capture VM"
+    conditions: "Chrome closed normally; VM shut down normally before acquisition"
+    notes: "Last activity in the profile is about ten minutes after the capture ended. Examined read-only (History, Network/Cookies, Web Data, Sessions, Cache, storage folders), with a byte search for every order value of the capture."
+  - id: cz-replay
+    kind: replay
+    provenance_class: instrumentation
+    tier: 0
+    date: "2026-10-21"
+    case_ref: "all 96 recorded requests replayed with their original cookies, headers and bodies about three days after the capture (variant original only)"
+    notes: "Replayed with the recorded PHP session id and CSRF tokens, after the stated validity of the order had passed. No superseded-session, no-cookies or foreign-order-key variant was sent."
+
+# --- 1. Identity -------------------------------------------------------------------------
+identity:
+  domains:
+    - domain: coinomize.biz
+      role: canonical
+      attr:
+        {
+          tier: 0,
+          basis: observed,
+          sources: [cz-flow, cz-policy],
+          notes: "All captured traffic, pages, assets and the letter download went to this host.",
+        }
+    - domain: coinomize.co
+      role: alias
+      attr:
+        {
+          tier: 0,
+          basis: claimed,
+          sources: [cz-policy],
+          notes: "Backup domain per the FAQ; named in every letter.",
+        }
+    - domain: coinomize.is
+      role: alias
+      attr:
+        {
+          tier: 0,
+          basis: claimed,
+          sources: [cz-policy],
+          notes: "Backup domain per the FAQ; named in every letter.",
+        }
+    - domain: coino2q64k4fg3lkjsnhjeydzwykw22a56u5nf2rdfzkjuy3jbwvypqd.onion
+      role: onion
+      attr:
+        {
+          tier: 0,
+          basis: claimed,
+          sources: [cz-policy],
+          notes: "Published in the FAQ, on the order form and in every letter.",
+        }
+    - domain: coinomize.bz
+      role: suspected_clone
+      attr:
+        {
+          tier: 0,
+          basis: claimed,
+          sources: [cz-policy],
+          notes: "Named as a scam/clone domain in the warning on the order form.",
+        }
+    - domain: coinomize.cc
+      role: suspected_clone
+      attr:
+        {
+          tier: 0,
+          basis: claimed,
+          sources: [cz-policy],
+          notes: "Named as a scam/clone domain in the warning on the order form.",
+        }
+    - domain: coinomize.net
+      role: suspected_clone
+      attr:
+        {
+          tier: 0,
+          basis: claimed,
+          sources: [cz-policy],
+          notes: "Named as a scam/clone domain in the warning on the order form.",
+        }
+    - domain: coinomqrds5ti77r.onion
+      role: suspected_clone
+      attr:
+        {
+          tier: 0,
+          basis: claimed,
+          sources: [cz-policy],
+          notes: "Named as a scam/clone onion in the warning on the order form.",
+        }
+  cdn_proxy:
+    value: ddos-guard
+    tier: 0
+    basis: observed
+    sources: [cz-flow, cz-disk]
+    notes: "server: ddos-guard on every response; __ddg1_, __ddg8_, __ddg9_, __ddg10_ cookies set on the service host and present in the Cookies DB."
+  framework:
+    name:
+      value: "PHP (framework not identified)"
+      tier: 0
+      basis: inferred
+      sources: [cz-flow]
+      notes: "Inferred from the signals below; the operator does not say. Page paths are extension-less, so no PHP file names are visible."
+    signals:
+      - "PHPSESSID session cookie"
+      - "CSRF tokens shaped like PHP uniqid('', true): 14 hex characters, a dot, 8 digits"
+      - "theme.css header: Template Coinomize, Version 1.8.0, Updated 10.19.2019"
+  client_ip_leak:
+    present:
+      { value: true, tier: 0, basis: observed, sources: [cz-flow, cz-disk] }
+    mechanism:
+      value: "__ddg9_ DDoS-Guard cookie whose value is the client's public IPv4 address, sent back to the service on every request; the row lands in the Chrome Cookies DB with the value encrypted at rest"
+      tier: 0
+      basis: observed
+      sources: [cz-flow, cz-disk]
+
+# --- 2. Access and modes -----------------------------------------------------------------
+access:
+  account_model:
+    value: account_less
+    tier: 0
+    basis: observed
+    sources: [cz-flow]
+    notes: "No registration or login. The optional Coinomize Code is a per-user key the service issues on the first order (see order_model), not an account."
+  kyc: { value: false, tier: 0, basis: observed, sources: [cz-flow] }
+
+modes:
+  - id: btc_mix
+    page_paths:
+      ["/start-mixing", "/create-order", "/check-order", "/status-order"]
+    chain_flow:
+      value: "BTC -> service wallet -> BTC to up to five destination addresses (marketed as CoinJoin)"
+      tier: 0
+      basis: claimed
+      sources: [cz-policy]
+      notes: "Not exercised: no deposit was made."
+    limits:
+      min:
+        value: "0.0015 BTC per output address"
+        tier: 0
+        basis: claimed
+        sources: [cz-policy]
+        notes: "FAQ; also printed on the order page, the status page and in the letter."
+      max:
+        {
+          tier: 0,
+          basis: unknown,
+          notes: "No maximum stated; the FAQ only mentions several nodes and cold wallets with different balances.",
+        }
+    fee_model:
+      value: "Service fee chosen on a slider, 1.5000% to 5.0000% in steps of 0.0001 (form default 4.0214%), plus 0.0003 BTC per output address; the FAQ states 1% to 5% plus 0.0003 BTC miner fee"
+      tier: 0
+      basis: observed
+      sources: [cz-flow, cz-policy]
+      notes: "Slider range from the form's input element; the FAQ's 1% lower bound does not match the form's 1.5%."
+    delay_options:
+      value: "0 to 4320 minutes (72 h) in 1-minute steps on a slider (form default 45 min); selecting a 5% fee forces 900 minutes (the '100% clean coins' option); several destination addresses add a random delay of seconds each (FAQ)"
+      tier: 0
+      basis: observed
+      sources: [cz-flow, cz-policy]
+    order_params:
+      [coinocode, output_address_1, service_fee, delay, csrf, captcha, submit]
+    attr:
+      tier: 0
+      basis: observed
+      sources: [cz-flow]
+      notes: "The only mode offered for BTC; the home page shows ETH and XMR mixing as 'Coming Soon'. The home page says up to five destination addresses; the capture used one. The order form field for additional addresses is revealed by a button ('Add new Address')."
+
+# --- 3. Order model ----------------------------------------------------------------------
+order_model:
+  identifiers:
+    - name: order_number
+      fact: order_id
+      scheme: { regex: "^[0-9a-f]{20}$", describes: order_id }
+      derivation:
+        value: "20 lowercase hexadecimal characters assigned by the server at order creation; one sample, no decodable timestamp"
+        tier: 0
+        basis: inferred
+        sources: [cz-flow]
+        notes: "Shown as 'Order Number' on the order page, the expiry page and the status page; the only path segment that carries it is the letter download URL."
+      role:
+        value: status_lookup_key
+        tier: 0
+        basis: observed
+        sources: [cz-flow, cz-replay]
+        notes: "POST /status-order is queried with it (field ordernumb); the lookup returned the full record three days later. Also the record key the service displays."
+      exposed_in:
+        [chrome_downloads, filesystem, chrome_autofill, chrome_sessions]
+      attr: { tier: 0, basis: observed, sources: [cz-flow] }
+    - name: deposit_address
+      fact: deposit_address
+      scheme: { regex: "^<btc_address>$", describes: deposit_address }
+      derivation:
+        value: "Fresh service-controlled address per order (P2PKH in the sample), displayed on the order and status pages and printed in the letter; not used as a lookup key"
+        tier: 0
+        basis: observed
+        sources: [cz-flow]
+      role:
+        { value: display_only, tier: 0, basis: observed, sources: [cz-flow] }
+      exposed_in: [filesystem]
+      attr: { tier: 0, basis: observed, sources: [cz-flow] }
+    - name: coinomize_code
+      fact: user_identifier
+      scheme: { regex: "^[A-Za-z0-9]{8}$", describes: user_identifier }
+      derivation:
+        value: "8 alphanumeric characters issued on the first order ('Your Coinomize Code' on the order page) and meant to be entered in the coinocode field of every later order so that the user never receives their own earlier coins; links a user's orders on the server"
+        tier: 0
+        basis: observed
+        sources: [cz-flow, cz-policy]
+        notes: "Issuance and the form field seen in the capture; the linking purpose is the operator's description (order page and FAQ). Whether the code is tied to the destination address or to the session is not established."
+      role:
+        {
+          value: cross_order_user_key,
+          tier: 0,
+          basis: observed,
+          sources: [cz-flow, cz-policy],
+        }
+      exposed_in: [network_only]
+      attr:
+        tier: 0
+        basis: observed
+        sources: [cz-flow, cz-disk]
+        notes: "Displayed once on the no-store order page. Inferred: the code field is a named text field like output_address_1, which reaches autofill and session restore; not tested."
+
+# --- 4. Session --------------------------------------------------------------------------
+cookies:
+  - name: PHPSESSID
+    set_by: application
+    purpose:
+      value: "PHP server-side session; holds the order being created (order page, letter) and the order number entered on the status form (status page)"
+      tier: 0
+      basis: observed
+      sources: [cz-flow]
+    flags:
+      {
+        value: ["path=/", HttpOnly, Secure],
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow],
+      }
+    client_max_age:
+      value: "session cookie: no Expires or Max-Age, discarded when the browser exits"
+      tier: 0
+      basis: observed
+      sources: [cz-flow, cz-disk]
+    rotation_interval:
+      value: "not rotated during the capture (one value over ten minutes, set on the first response only)"
+      tier: 0
+      basis: observed
+      sources: [cz-flow]
+    server_side_validity:
+      value: "three days later the recorded id was still accepted but held no order: the order page redirected to /mix-error, the letter URL to the home page, and the status form's CSRF token was rejected"
+      tier: 0
+      basis: inferred
+      sources: [cz-replay]
+      notes: "Consistent with PHP accepting a client-supplied id for a new, empty session (session.use_strict_mode off) rather than with the original session surviving; the two cannot be told apart from this replay."
+    persists_to_disk:
+      value: false
+      tier: 0
+      basis: observed
+      sources: [cz-disk]
+      notes: "No PHPSESSID row in the Cookies DB: a session cookie is not written to disk when Chrome exits normally."
+    encodes_fact: [session_id]
+    attr: { tier: 0, basis: observed, sources: [cz-flow] }
+  - name: __ddg9_
+    set_by: cdn
+    purpose:
+      {
+        value: "DDoS-Guard; value carries the client's public IPv4 address",
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow],
+      }
+    value_scheme: { regex: "^<ipv4>$", describes: client_ip }
+    flags:
+      {
+        value: ["Domain=.coinomize.biz", "Path=/", "Expires=<20 min ahead>"],
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow],
+      }
+    client_max_age:
+      {
+        value: "20 min, re-issued on every response",
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow],
+      }
+    persists_to_disk:
+      value: true
+      tier: 0
+      basis: observed
+      sources: [cz-disk]
+      notes: "Row present, value encrypted (78 bytes); the content is known from the proxy capture only."
+    encodes_fact: [client_ip]
+    attr: { tier: 0, basis: observed, sources: [cz-flow] }
+  - name: __ddg10_
+    set_by: cdn
+    purpose:
+      {
+        value: "DDoS-Guard; value carries a unix timestamp",
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow],
+      }
+    value_scheme: { regex: "^<unix_ts>$" }
+    flags:
+      {
+        value: ["Domain=.coinomize.biz", "Path=/", "Expires=<20 min ahead>"],
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow],
+      }
+    persists_to_disk:
+      {
+        value: true,
+        tier: 0,
+        basis: observed,
+        sources: [cz-disk],
+        notes: "Row present, value encrypted.",
+      }
+    attr: { tier: 0, basis: observed, sources: [cz-flow] }
+  - name: __ddg8_
+    set_by: cdn
+    purpose:
+      {
+        value: "DDoS-Guard session / challenge token",
+        tier: 0,
+        basis: inferred,
+        sources: [cz-flow],
+        notes: "16-character token re-issued on every response; purpose not documented by the CDN.",
+      }
+    flags:
+      {
+        value: ["Domain=.coinomize.biz", "Path=/", "Expires=<20 min ahead>"],
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow],
+      }
+    persists_to_disk:
+      {
+        value: true,
+        tier: 0,
+        basis: observed,
+        sources: [cz-disk],
+        notes: "Row present, value encrypted.",
+      }
+    attr: { tier: 0, basis: observed, sources: [cz-flow] }
+  - name: __ddg1_
+    set_by: cdn
+    purpose:
+      {
+        value: "DDoS-Guard long-lived client token",
+        tier: 0,
+        basis: inferred,
+        sources: [cz-flow],
+        notes: "Set once on the first response with a one-year expiry; purpose not documented by the CDN.",
+      }
+    flags:
+      {
+        value:
+          [
+            "Domain=.coinomize.biz",
+            HttpOnly,
+            "Path=/",
+            "Expires=<1 year ahead>",
+          ],
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow],
+      }
+    persists_to_disk:
+      {
+        value: true,
+        tier: 0,
+        basis: observed,
+        sources: [cz-disk],
+        notes: "Row present, value encrypted.",
+      }
+    attr: { tier: 0, basis: observed, sources: [cz-flow] }
+  - name: _ga
+    set_by: analytics
+    purpose:
+      {
+        value: "Google Analytics client id, set by the gtag.js script the pages load from googletagmanager.com; sent to the service host with every request",
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow, cz-disk],
+      }
+    persists_to_disk:
+      {
+        value: true,
+        tier: 0,
+        basis: observed,
+        sources: [cz-disk],
+        notes: "Row present with a one-year expiry, value encrypted.",
+      }
+    attr:
+      {
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow, cz-disk],
+        notes: "Set by script, not by a Set-Cookie header; a second property cookie (_ga_<property>) is set the same way.",
+      }
+
+# --- 5. Endpoints ------------------------------------------------------------------------
+endpoints:
+  - id: home
+    method: GET
+    path: { regex: "^/$" }
+    purpose: "Home page; the first response sets PHPSESSID and the DDoS-Guard cookies"
+    gate: { value: [], tier: 0, basis: observed, sources: [cz-flow, cz-replay] }
+    cache_policy:
+      value: cacheable_explicit
+      tier: 0
+      basis: observed
+      sources: [cz-flow, cz-disk]
+      notes: "Cache-Control: max-age=2592000, public; two copies found in the Cache_Data folder. The page carries the service's donation address, which is also its letter-signing address."
+    content_encoding:
+      { value: gzip, tier: 0, basis: observed, sources: [cz-flow] }
+    attr: { tier: 0, basis: observed, sources: [cz-flow] }
+  - id: order_form
+    method: GET
+    path: { regex: "^/start-mixing$" }
+    purpose: "Order form: optional Coinomize Code, destination address(es), fee slider, delay slider, captcha; embeds the CSRF token"
+    gate: { value: [], tier: 0, basis: observed, sources: [cz-flow, cz-replay] }
+    cache_policy:
+      { value: no_store, tier: 0, basis: observed, sources: [cz-flow, cz-disk] }
+    content_encoding:
+      { value: gzip, tier: 0, basis: observed, sources: [cz-flow] }
+    attr:
+      {
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow],
+        notes: "Shows the operator's clone-domain warning.",
+      }
+  - id: captcha_image
+    method: GET
+    path: { regex: '^/captcddos\?<hex>$' }
+    purpose: "Captcha image (JPEG) for the order form and the status form, keyed by a hex query string"
+    gate:
+      {
+        value: [session],
+        tier: 0,
+        basis: inferred,
+        sources: [cz-flow],
+        notes: "Requested with the session cookie; whether it is required was not tested.",
+      }
+    cache_policy:
+      { value: no_store, tier: 0, basis: observed, sources: [cz-flow] }
+    content_encoding:
+      { value: none, tier: 0, basis: observed, sources: [cz-flow] }
+    attr: { tier: 0, basis: observed, sources: [cz-flow] }
+  - id: create_order
+    method: POST
+    path: { regex: "^/create-order$" }
+    purpose: "Creates the order from the form; answers with the order page, or redirects to /exist-error when the destination address is already in an open order"
+    request_fields:
+      [coinocode, output_address_1, service_fee, delay, csrf, captcha, submit]
+    field_facts:
+      {
+        coinocode: user_identifier,
+        output_address_1: destination_address,
+        service_fee: fee_and_delay,
+        delay: fee_and_delay,
+      }
+    gate:
+      value: [session, csrf, captcha]
+      tier: 0
+      basis: observed
+      sources: [cz-flow, cz-replay]
+      notes: "The replayed submission (stale session, stale token, used captcha) was redirected to /invalid-captcha."
+    cache_policy:
+      { value: no_store, tier: 0, basis: observed, sources: [cz-flow, cz-disk] }
+    content_encoding:
+      { value: gzip, tier: 0, basis: observed, sources: [cz-flow] }
+    response_templates:
+      - { text: "Order Number: <order_id>", yields: [order_id] }
+      - {
+          text: "Send your Bitcoins (min. 0.0015 BTC ) to: <btc_address>",
+          yields: [deposit_address],
+        }
+      - { text: "Your Coinomize Code: <text>", yields: [] }
+      - {
+          text: "Output Addresses: <btc_address>",
+          yields: [destination_address],
+        }
+      - {
+          text: "Fee: <percent>% + 0.0003 BTC (0.0003 BTC per address)",
+          yields: [fee_and_delay],
+        }
+      - {
+          text: "Payment created: <datetime> (UTC time)",
+          yields: [order_created_time],
+        }
+      - {
+          text: "Payment Delay: <int>:<int> (h:m) (After 1 confirmation)",
+          yields: [],
+        }
+      - { text: "Waiting for payment...", yields: [] }
+      - { text: "BTC address already exists in the mixer", yields: [] }
+    replay_results:
+      - variant: original
+        reply: { text: "<302 to /invalid-captcha>", yields: [] }
+        reading: "Resubmission with the recorded body is refused at the captcha check; no second order is created"
+        outcome:
+          { value: rejected, tier: 0, basis: observed, sources: [cz-replay] }
+    attr:
+      tier: 0
+      basis: observed
+      sources: [cz-flow]
+      notes: "The order page is server-rendered into the POST response; no separate order API. The 'Coinomize Code' placeholder is <text> because no fact-bearing placeholder exists for a user code (see review)."
+  - id: order_page
+    method: GET
+    path: { regex: "^/create-order$" }
+    purpose: "Order page for the order held in the PHP session; re-fetched by the page's own scripts every 15 s and 20 s (XMLHttpRequest, X-Requested-With) to swap the payment-status fragments; after 2 minutes a script timer navigates to /order-expired"
+    gate:
+      {
+        value: [session],
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow, cz-replay],
+      }
+    cache_policy:
+      { value: no_store, tier: 0, basis: observed, sources: [cz-flow, cz-disk] }
+    content_encoding:
+      { value: gzip, tier: 0, basis: observed, sources: [cz-flow] }
+    response_templates:
+      - { text: "Waiting for payment...", yields: [] }
+      - { text: "No payments has been recognized yet.", yields: [] }
+      - { text: "No payments have been sent yet.", yields: [] }
+    replay_results:
+      - variant: original
+        reply:
+          { text: "<302 to ./ with a meta refresh to /mix-error>", yields: [] }
+        reading: "Three days later the recorded session no longer resolves to an order; the page is not served"
+        outcome:
+          { value: rejected, tier: 0, basis: observed, sources: [cz-replay] }
+    attr:
+      {
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow],
+        notes: "The path carries no order key; the state is the session.",
+      }
+  - id: letter_download
+    method: GET
+    path: { regex: "^/order/letter/download/<order_id>$", describes: order_id }
+    purpose: "Letter of Guarantee as a file attachment (Content-Disposition: attachment; filename=Coinomize.biz_Letter_<order_id>.txt), linked from the order page and opened in a new tab"
+    gate:
+      value: [session]
+      tier: 0
+      basis: inferred
+      sources: [cz-flow, cz-replay]
+      notes: "Fetched with the session in the capture; the replay with the stale session was redirected to the home page while the order record was still served by the status lookup, so the session (not the order's existence) is what the URL needs. Not tested without cookies."
+    cache_policy:
+      { value: no_store, tier: 0, basis: observed, sources: [cz-flow, cz-disk] }
+    content_encoding:
+      { value: none, tier: 0, basis: observed, sources: [cz-flow] }
+    replay_results:
+      - variant: original
+        reply: { text: "<302 to />", yields: [] }
+        reading: "The letter is no longer served to the recorded session three days later"
+        outcome:
+          { value: rejected, tier: 0, basis: observed, sources: [cz-replay] }
+    attr: { tier: 0, basis: observed, sources: [cz-flow, cz-disk] }
+  - id: order_expired
+    method: GET
+    path: { regex: "^/order-expired$" }
+    purpose: "'Browser session expired' page the order page navigates to after 2 minutes; prints the order number while the session still holds the order and tells the user to use the status lookup"
+    gate: { value: [], tier: 0, basis: observed, sources: [cz-flow, cz-replay] }
+    cache_policy:
+      { value: no_store, tier: 0, basis: observed, sources: [cz-flow, cz-disk] }
+    content_encoding:
+      { value: gzip, tier: 0, basis: observed, sources: [cz-flow] }
+    response_templates:
+      - { text: "Browser session expired", yields: [] }
+      - { text: "Your Order Number: <order_id>", yields: [order_id] }
+    replay_results:
+      - variant: original
+        reply: { text: "Browser session expired", yields: [] }
+        reading: "Served, but without the order number: the session no longer holds the order"
+        outcome:
+          { value: accepted, tier: 0, basis: observed, sources: [cz-replay] }
+    attr: { tier: 0, basis: observed, sources: [cz-flow] }
+  - id: exist_error
+    method: GET
+    path: { regex: "^/exist-error$" }
+    purpose: "Error page after a submission whose destination address is already in an open order; redirects back to the form after 5 seconds"
+    gate: { value: [], tier: 0, basis: observed, sources: [cz-flow, cz-replay] }
+    cache_policy:
+      value: cacheable_explicit
+      tier: 0
+      basis: observed
+      sources: [cz-flow, cz-disk]
+      notes: "Cache-Control: max-age=3600; a copy was found in the cache. It carries no order value."
+    content_encoding:
+      { value: gzip, tier: 0, basis: observed, sources: [cz-flow] }
+    response_templates:
+      - { text: "BTC address already exists in the mixer", yields: [] }
+      - {
+          text: "Use a different Bitcoin address to mix or delete your other order! You should use each address only once for your own safety! The data will be deleted after 3 days.",
+          yields: [],
+        }
+    attr:
+      {
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow],
+        notes: "Evidence that an address is in an open order: the service refuses a second order with the same destination.",
+      }
+  - id: status_form
+    method: GET
+    path: { regex: "^/check-order$" }
+    purpose: "Order-status lookup form (order number and CSRF token)"
+    gate: { value: [], tier: 0, basis: observed, sources: [cz-flow, cz-replay] }
+    cache_policy:
+      { value: no_store, tier: 0, basis: observed, sources: [cz-flow, cz-disk] }
+    content_encoding:
+      { value: gzip, tier: 0, basis: observed, sources: [cz-flow] }
+    attr: { tier: 0, basis: observed, sources: [cz-flow] }
+  - id: status_lookup
+    method: POST
+    path: { regex: "^/status-order$" }
+    purpose: "Looks an order up by its number and renders the status page; the number is then held in the session for the fragment reloads"
+    request_fields: [ordernumb, csrf]
+    field_facts: { ordernumb: order_id }
+    lookup_key: { value: order_id, tier: 0, basis: observed, sources: [cz-flow, cz-replay] }
+    gate:
+      value: [session, csrf]
+      tier: 0
+      basis: observed
+      sources: [cz-flow, cz-replay]
+      notes: "The replay with the recorded token was redirected to /wrong-token."
+    ownership_check:
+      value: false
+      tier: 0
+      basis: observed
+      sources: [cz-flow, cz-replay]
+      notes: "Knowing the order number is the only requirement: the lookup comes from a fresh form with no reference to the creating session."
+    cache_policy:
+      { value: no_store, tier: 0, basis: observed, sources: [cz-flow, cz-disk] }
+    content_encoding:
+      { value: gzip, tier: 0, basis: observed, sources: [cz-flow] }
+    response_templates:
+      - { text: "Order Number: <order_id>", yields: [order_id] }
+      - { text: "Order Created: <datetime>", yields: [order_created_time] }
+      - { text: "Order Valid until: <datetime>", yields: [] }
+      - {
+          text: "Payment Delay: <int>:<int> (h:m) (After 1 confirmation)",
+          yields: [],
+        }
+      - { text: "Fee: <percent>% + 0.0003 BTC", yields: [fee_and_delay] }
+      - {
+          text: "Output Addresses: <btc_address>",
+          yields: [destination_address],
+        }
+      - {
+          text: "Send your Bitcoins (min. 0.0015 BTC ) to: <btc_address>",
+          yields: [deposit_address],
+        }
+      - { text: "Waiting for payment...", yields: [] }
+    replay_results:
+      - variant: original
+        reply:
+          {
+            text: "<302 to /wrong-token> Order Number: <order_id> Order Created: <datetime> Order Valid until: <datetime> Output Addresses: <btc_address> Send your Bitcoins (min. 0.0015 BTC ) to: <btc_address> Waiting for payment...",
+            yields:
+              [
+                order_id,
+                order_created_time,
+                destination_address,
+                deposit_address,
+              ],
+          }
+        reading: "The stale CSRF token is refused (redirect to /wrong-token), yet the response body carries the live record three days after creation and after the 'valid until' time the service itself prints: order number, creation time, fee, delay, destination and deposit addresses and the current blockchain-fee tip"
+        outcome: { value: live, tier: 0, basis: observed, sources: [cz-replay] }
+    attr:
+      {
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow],
+        notes: "The 'Order Valid until' line yields nothing: it is the creation time plus three days, a service rule rather than an order fact.",
+      }
+  - id: status_page
+    method: GET
+    path: { regex: "^/status-order$" }
+    purpose: "Status page for the order number held in the session; same fragment-reload polling and 2-minute expiry as the order page. Without a looked-up order the response carries a meta refresh to /check-order"
+    gate:
+      {
+        value: [session],
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow, cz-replay],
+      }
+    cache_policy:
+      { value: no_store, tier: 0, basis: observed, sources: [cz-flow, cz-disk] }
+    content_encoding:
+      { value: gzip, tier: 0, basis: observed, sources: [cz-flow] }
+    response_templates:
+      - { text: "Waiting for payment...", yields: [] }
+    replay_results:
+      - variant: original
+        reply:
+          {
+            text: "<200 with a meta refresh to /check-order> Order Number: <order_id> Order Created: <datetime> Payment Delay: Instant (After 1 confirmation) Output Addresses: <btc_address> Send your Bitcoins (min. 0 BTC ) to: <btc_address>",
+            yields:
+              [
+                order_id,
+                order_created_time,
+                destination_address,
+                deposit_address,
+              ],
+          }
+        reading: "Answered with the record of the order the preceding replayed lookup had placed in the session; the delay and minimum shown are session defaults ('Instant', 0 BTC), not the order's values, and the meta refresh sends a browser back to the form"
+        outcome: { value: live, tier: 0, basis: observed, sources: [cz-replay] }
+    attr: { tier: 0, basis: observed, sources: [cz-flow] }
+
+# --- 6. Status ---------------------------------------------------------------------------
+status:
+  mechanism:
+    value: polling
+    tier: 0
+    basis: observed
+    sources: [cz-flow]
+    notes: "No status API: page scripts re-fetch the page itself with jQuery .load(location.href + ' #time') every 20 s and ' #timetro' every 15 s and swap the two fragments (incoming/outgoing transactions, payment state). A third timer navigates to /order-expired after 2 minutes, after which the user must look the order up by number."
+  endpoint_ref: order_page
+  interval:
+    value: "15 s and 20 s (two timers on the same page)"
+    tier: 0
+    basis: observed
+    sources: [cz-flow]
+  states:
+    - order: 0
+      label: waiting
+      template: { text: "Waiting for payment...", yields: [] }
+      attr:
+        {
+          tier: 0,
+          basis: observed,
+          sources: [cz-flow, cz-replay],
+          notes: "Accompanied by 'No payments has been recognized yet.' and 'No payments have been sent yet.' in the transaction tables. Later states need a funded order.",
+        }
+  replay_behavior:
+    value: "Three days after creation the order page and the letter are no longer reachable through the recorded session, but the lookup by order number still returns the full record (still in the waiting state), including after the 'valid until' time the service prints"
+    tier: 0
+    basis: observed
+    sources: [cz-replay]
+
+# --- 7. Receipts -------------------------------------------------------------------------
+receipts:
+  - id: letter_of_guarantee
+    name: Letter of Guarantee
+    offered:
+      {
+        value: optional,
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow],
+        notes: "Link on the order page: 'Download the Letter of Guarantee before payment'; the FAQ says support needs it.",
+      }
+    obtained_via:
+      endpoint_ref: letter_download
+      request_params: []
+      delivery:
+        value: server_file
+        tier: 0
+        basis: observed
+        sources: [cz-flow, cz-disk]
+        notes: "Content-Disposition attachment from the server; the download's URL chain in History is the server URL (no blob)."
+      cache_policy:
+        {
+          value: no_store,
+          tier: 0,
+          basis: observed,
+          sources: [cz-flow, cz-disk],
+        }
+    file:
+      filename_pattern:
+        {
+          regex: '^Coinomize\.biz_Letter_<order_id>\.txt$',
+          describes: order_id,
+        }
+      mime_type:
+        {
+          value: text/plain,
+          tier: 0,
+          basis: observed,
+          sources: [cz-disk],
+          notes: "Recorded by Chrome; served as application/octet-stream.",
+        }
+    structure:
+      container:
+        {
+          value: bitcoin_signed_message,
+          tier: 0,
+          basis: observed,
+          sources: [cz-disk],
+        }
+      container_notes: "A leading blank line, a header line naming the service domains and the signing address, then a -----BEGIN BITCOIN SIGNED MESSAGE----- block with one paragraph of letter text, a -----BEGIN SIGNATURE----- block with the base64 signature and -----END BITCOIN SIGNED MESSAGE-----. CRLF line endings."
+      templates:
+        - text: |-
+            THIS LETTER FROM coinomize.biz/coinomize.co/coinomize.is/coino2q64k4fg3lkjsnhjeydzwykw22a56u5nf2rdfzkjuy3jbwvypqd.onion SIGNED BY 1CrywjDEzzpEMxdWzCDgtmZ3Tr57XrnANV
+            -----BEGIN BITCOIN SIGNED MESSAGE-----
+            Hereby we confirm that coinomize.biz or coinomize.co or coinomize.is or coino2q64k4fg3lkjsnhjeydzwykw22a56u5nf2rdfzkjuy3jbwvypqd.onion has generated the following Bitcoin address: <btc_address> in order to transfer incoming amount (minus fee) to the following address(es): <btc_address>,,,, after an delay of <text> hours, after 1 confirmation. Your order is valid for 24 hours and will be deleted if no coins are received! Your choosen fee is <percent>% + blockchain fees per Address. Your Order created on <datetime>. This letter is signed by our main account: 1CrywjDEzzpEMxdWzCDgtmZ3Tr57XrnANV. Your Order Number is: <order_id>. Thanks for choosing Coinomize Service! If you do not deposit the minimum amount, usually 0.0015 BTC, we can delete your order without paying it out!
+            -----BEGIN SIGNATURE-----
+            <signature>
+            -----END BITCOIN SIGNED MESSAGE-----
+          yields:
+            [
+              deposit_address,
+              destination_address,
+              fee_and_delay,
+              order_created_time,
+              order_id,
+            ]
+          literals:
+            - {
+                literal: 1CrywjDEzzpEMxdWzCDgtmZ3Tr57XrnANV,
+                justification: "The service's fixed signing address, printed in every letter, in the FAQ and as the donation address on the home page; service-level, not per order.",
+              }
+            - {
+                literal: coino2q64k4fg3lkjsnhjeydzwykw22a56u5nf2rdfzkjuy3jbwvypqd.onion,
+                justification: "The service's published onion name, printed in every letter.",
+              }
+    signature:
+      scheme:
+        value: bitcoin_signed_message
+        tier: 0
+        basis: observed
+        sources: [cz-disk, cz-policy]
+        notes: "Bitcoin signed-message block format; the FAQ tells users to verify it in Electrum against the signing address."
+      signing_identity:
+        {
+          literal: 1CrywjDEzzpEMxdWzCDgtmZ3Tr57XrnANV,
+          justification: "The service's fixed signing address, named in the letter header and in the FAQ.",
+        }
+      verification:
+        {
+          tier: 0,
+          basis: unknown,
+          notes: "Investigator task: the signature over the message block should be verified against the signing address and the published identity.",
+        }
+    evidentiary_value:
+      binds_facts:
+        [
+          order_id,
+          deposit_address,
+          destination_address,
+          fee_and_delay,
+          order_created_time,
+        ]
+      survives_server_purge:
+        value: true
+        tier: 0
+        basis: inferred
+        sources: [cz-disk, cz-replay]
+        notes: "A user-side file; the server stopped serving it to the recorded session within three days while the file remained in Downloads."
+    field_map:
+      value:
+        "has generated the following Bitcoin address:": deposit_address
+        "to the following address(es):": destination_address
+        "after an delay of": fee_and_delay
+        "Your choosen fee is": fee_and_delay
+        "Your Order created on": order_created_time
+        "Your Order Number is:": order_id
+      tier: 0
+      basis: observed
+      sources: [cz-disk]
+    artifact_refs: [letter_file, letter_download_record]
+    attr:
+      tier: 0
+      basis: observed
+      sources: [cz-flow, cz-disk]
+      notes: "Template from the letter downloaded in the case with the order values replaced by placeholders; wording, markers and line breaks kept. With several destinations the address list presumably fills the empty comma slots (four commas follow the single address in the sample). The delay is printed as h:mm. The letter states a 24-hour validity while the order page states 3 days."
+
+# --- 8. Artifacts (disk-image observation cz-disk) ---------------------------------------
+artifacts:
+  - id: letter_file
+    name: Letter of Guarantee (downloaded file)
+    location: filesystem
+    path_pattern: "<Downloads>/Coinomize.biz_Letter_<order_id>.txt"
+    filename_pattern:
+      { regex: '^Coinomize\.biz_Letter_<order_id>\.txt$', describes: order_id }
+    produced_by: letter_of_guarantee
+    receipt_ref: letter_of_guarantee
+    format: text/plain
+    carries_facts: [order_id, deposit_address, destination_address, fee_and_delay, order_created_time, receipt]
+    persistence_class:
+      { value: disk, tier: 0, basis: observed, sources: [cz-disk] }
+    recovery_route:
+      value: "User's Downloads folder; the file name carries the order number, the body the deposit and destination addresses, the fee percentage, the delay, the creation time and the service signature. Search unallocated space for the header line and the signing address."
+      tier: 0
+      basis: observed
+      sources: [cz-disk]
+    search_keys:
+      - {
+          literal: 1CrywjDEzzpEMxdWzCDgtmZ3Tr57XrnANV,
+          justification: "Fixed signing address printed in every letter; service-level, not per order.",
+        }
+      - { regex: 'THIS LETTER FROM coinomize\.biz' }
+      - { regex: 'Coinomize\.biz_Letter_<order_id>\.txt', describes: order_id }
+    case_uco_class: uco-observable:File
+    attr: { tier: 0, basis: observed, sources: [cz-disk] }
+  - id: letter_download_record
+    name: Download record of the Letter of Guarantee
+    location: chrome_downloads
+    path_pattern: "History: downloads.target_path, downloads_url_chains.url (https://coinomize.biz/order/letter/download/<order_id>)"
+    produced_by: letter_of_guarantee
+    format: sqlite row
+    carries_facts: [order_id, order_created_time, receipt]
+    persistence_class:
+      { value: disk, tier: 0, basis: observed, sources: [cz-disk] }
+    recovery_route:
+      value: "Chrome History DB, downloads and downloads_url_chains tables: the target path and the server URL both carry the order number; start_time records the download, which follows order creation by a user action. The Download Service store (shared_proto_db) holds the same URL."
+      tier: 0
+      basis: observed
+      sources: [cz-disk]
+    search_keys:
+      - { regex: 'Coinomize\.biz_Letter_<order_id>\.txt', describes: order_id }
+      - { regex: "/order/letter/download/<order_id>", describes: order_id }
+    attr:
+      {
+        tier: 0,
+        basis: observed,
+        sources: [cz-disk],
+        notes: "The letter URL appears only here, not in the urls table: it was a download, not a page visit.",
+      }
+  - id: page_visits
+    name: Visits to the order pages
+    location: chrome_history
+    path_pattern: "History: urls.url and visits.visit_time for /start-mixing, /create-order, /order-expired, /check-order, /status-order"
+    produced_by: browser
+    format: sqlite rows
+    carries_facts: [order_created_time]
+    persistence_class:
+      { value: disk, tier: 0, basis: observed, sources: [cz-disk] }
+    recovery_route:
+      value: "Chrome History DB: the visit to /create-order is recorded one second after the creation time the server printed; the /check-order and /status-order visits date the status lookup. No URL carries an order value; the pages are at fixed paths and the state is server-side."
+      tier: 0
+      basis: observed
+      sources: [cz-disk]
+    search_keys:
+      - {
+          regex: 'coinomize\.biz/(start-mixing|create-order|order-expired|check-order|status-order)',
+        }
+    attr: { tier: 0, basis: observed, sources: [cz-disk] }
+  - id: destination_autofill
+    name: Destination address in autofill
+    location: chrome_autofill
+    path_pattern: "Web Data: autofill rows with name = output_address_1"
+    produced_by: user_action
+    format: sqlite row
+    carries_facts: [destination_address, order_created_time]
+    persistence_class:
+      { value: disk, tier: 0, basis: observed, sources: [cz-disk] }
+    recovery_route:
+      value: "Chrome Web Data DB, autofill table, field name output_address_1 (output_address_2.. for further addresses): every address the user typed into the form, including one from a rejected submission; date_created is the submission time."
+      tier: 0
+      basis: observed
+      sources: [cz-disk]
+    search_keys:
+      - { regex: '^output_address_\d$' }
+    caveat:
+      {
+        value: "Autofill keeps every address typed into the form, including addresses from submissions the service rejected (it refuses a destination already in an open order); confirm against the letter or the session-restore POST body.",
+        tier: 0,
+        basis: observed,
+        sources: [cz-disk],
+      }
+    attr: { tier: 0, basis: observed, sources: [cz-disk] }
+  - id: order_id_autofill
+    name: Order number in autofill
+    location: chrome_autofill
+    path_pattern: "Web Data: autofill row with name = ordernumb"
+    produced_by: user_action
+    format: sqlite row
+    carries_facts: [order_id]
+    persistence_class:
+      { value: disk, tier: 0, basis: observed, sources: [cz-disk] }
+    recovery_route:
+      value: "Chrome Web Data DB, autofill table, field name ordernumb: the order number typed into the status form; present only if the user looked the order up."
+      tier: 0
+      basis: observed
+      sources: [cz-disk]
+    search_keys:
+      - { regex: "^ordernumb$" }
+    attr: { tier: 0, basis: observed, sources: [cz-disk] }
+  - id: session_restore_state
+    name: Session restore navigation entries with form POST bodies
+    location: chrome_sessions
+    path_pattern: "Sessions/Session_<int> and Sessions/Tabs_<int> (SNSS)"
+    produced_by: browser
+    format: SNSS
+    carries_facts: [destination_address, fee_and_delay, order_id]
+    persistence_class:
+      { value: disk, tier: 0, basis: observed, sources: [cz-disk] }
+    recovery_route:
+      value: "The navigation entries for the form POSTs keep their bodies as ASCII (coinocode=..&output_address_1=<btc_address>&service_fee=<percent>&delay=<int>&csrf=..&captcha=..&submit=Create+Order and ordernumb=<order_id>&csrf=..) and the form field state keeps the typed destination address in UTF-16; both the Session and the Tabs files hold them, in two generations."
+      tier: 0
+      basis: observed
+      sources: [cz-disk]
+    search_keys:
+      - {
+          regex: "output_address_1=<btc_address>&service_fee=<percent>&delay=<int>",
+          describes: destination_address,
+        }
+      - { regex: "ordernumb=<order_id>&csrf=", describes: order_id }
+    attr:
+      {
+        tier: 0,
+        basis: observed,
+        sources: [cz-disk],
+        notes: "Because orders are created and looked up by form navigation (not XHR), Chrome keeps the request bodies; the service's own no-store headers do not prevent this.",
+      }
+  - id: client_ip_cookie_row
+    name: DDoS-Guard cookie row carrying the client IP
+    location: chrome_cookies
+    path_pattern: "Network/Cookies: cookies row host_key .coinomize.biz, name __ddg9_"
+    produced_by: browser
+    format: sqlite row
+    carries_facts: [client_ip]
+    persistence_class:
+      { value: disk, tier: 0, basis: observed, sources: [cz-disk] }
+    recovery_route:
+      value: "Chrome Cookies DB; the value is the client's public IPv4 address, encrypted at rest with the profile's OS-bound key (decryptable with the user's Windows credentials). Creation time dates the first visit."
+      tier: 0
+      basis: observed
+      sources: [cz-disk]
+    search_keys:
+      - { regex: "^__ddg9_$" }
+    attr: { tier: 0, basis: observed, sources: [cz-flow, cz-disk] }
+
+# --- 9. Fact coverage: the stored fact-by-source matrix ----------------------------------
+# Columns: history, downloads, cache, cookies, web_storage, autofill, sessions, filesystem,
+# replay, chain. A cell is `<outcome>` or `"<outcome>: <detail>"`.
+fact_coverage:
+  - fact: deposit_address
+    best_persistence: disk
+    artifacts: [letter_file]
+    cells:
+      history: "not_stored_by_design: no URL carries it"
+      downloads: "not_stored_by_design: the letter URL carries only the order number"
+      cache: "not_stored_by_design: order page, status page and letter are no-store"
+      cookies: "not_stored_by_design: no cookie carries an order value"
+      web_storage: not_stored_by_design
+      autofill: "not_stored_by_design: displayed, never typed"
+      sessions: "not_found: session restore holds POST bodies and form state, not page content"
+      filesystem: "recovered: letter body"
+      replay: "live_only: returned by the status lookup while the record is held (still served three days after creation)"
+      chain: not_tested
+    attr: { tier: 0, basis: observed, sources: [cz-disk, cz-replay] }
+  - fact: destination_address
+    best_persistence: disk
+    artifacts: [letter_file, destination_autofill, session_restore_state]
+    cells:
+      history: "not_stored_by_design: no URL carries it"
+      downloads: "not_stored_by_design: the letter URL carries only the order number"
+      cache: "not_stored_by_design: order page, status page and letter are no-store"
+      cookies: "not_stored_by_design: no cookie carries an order value"
+      web_storage: not_stored_by_design
+      autofill: "recovered: output_address_1 rows, including an address from a rejected submission"
+      sessions: "recovered: create-order POST body and form field state"
+      filesystem: "recovered: letter body"
+      replay: "live_only: returned by the status lookup while the record is held"
+      chain: not_tested
+    attr: { tier: 0, basis: observed, sources: [cz-disk, cz-replay] }
+  - fact: order_id
+    best_persistence: disk
+    artifacts:
+      [
+        letter_file,
+        letter_download_record,
+        order_id_autofill,
+        session_restore_state,
+      ]
+    cells:
+      history: "not_stored_by_design: order and status pages are at fixed paths; the letter URL is recorded as a download, not a visit"
+      downloads: "recovered: letter file name and download URL"
+      cache: "not_stored_by_design: order page, status page and letter are no-store"
+      cookies: "not_stored_by_design: no cookie carries an order value"
+      web_storage: not_stored_by_design
+      autofill: "recovered: ordernumb row, if the user looked the order up"
+      sessions: "recovered: status-lookup POST body"
+      filesystem: "recovered: letter file name and body"
+      replay: "required_to_query: the status lookup needs it and then returns the full record"
+      chain: not_applicable
+    attr: { tier: 0, basis: observed, sources: [cz-disk, cz-replay] }
+  - fact: receipt
+    best_persistence: disk
+    artifacts: [letter_file, letter_download_record]
+    cells:
+      history: "not_stored_by_design: recorded as a download, not a visit"
+      downloads: "recovered: download row of the letter"
+      cache: "not_stored_by_design: served no-store as an attachment"
+      cookies: not_applicable
+      web_storage: not_stored_by_design
+      autofill: not_applicable
+      sessions: "not_found: the letter was opened in a new tab and left no navigation entry"
+      filesystem: "recovered: the letter file"
+      replay: "not_found: the letter URL redirects to the home page three days later with the recorded session"
+      chain: not_applicable
+    attr: { tier: 0, basis: observed, sources: [cz-disk, cz-replay] }
+  - fact: deposit_txid
+    best_persistence: none_by_design
+    artifacts: []
+    cells:
+      history: "not_tested: tier-1 fact, unfunded order"
+      downloads: "not_tested: tier-1 fact, unfunded order"
+      cache: "not_tested: tier-1 fact, unfunded order"
+      cookies: "not_tested: tier-1 fact, unfunded order"
+      web_storage: "not_tested: tier-1 fact, unfunded order"
+      autofill: "not_tested: tier-1 fact, unfunded order"
+      sessions: "not_tested: tier-1 fact, unfunded order"
+      filesystem: "not_tested: tier-1 fact, unfunded order"
+      replay: "not_tested: tier-1 fact, unfunded order"
+      chain: not_tested
+    notes: "Tier-1 fact; best_persistence is provisional until a funded order is run."
+    attr: { tier: 0, basis: unknown, notes: "tier-1 fact; no deposit was made" }
+  - fact: payout_txid
+    best_persistence: none_by_design
+    artifacts: []
+    cells:
+      history: "not_tested: tier-1 fact, unfunded order"
+      downloads: "not_tested: tier-1 fact, unfunded order"
+      cache: "not_tested: tier-1 fact, unfunded order"
+      cookies: "not_tested: tier-1 fact, unfunded order"
+      web_storage: "not_tested: tier-1 fact, unfunded order"
+      autofill: "not_tested: tier-1 fact, unfunded order"
+      sessions: "not_tested: tier-1 fact, unfunded order"
+      filesystem: "not_tested: tier-1 fact, unfunded order"
+      replay: "not_tested: tier-1 fact, unfunded order"
+      chain: not_tested
+    notes: "Tier-1 fact; best_persistence is provisional until a funded order is run."
+    attr: { tier: 0, basis: unknown, notes: "tier-1 fact; no payout was made" }
+  - fact: amounts
+    best_persistence: none_by_design
+    artifacts: []
+    cells:
+      history: "not_tested: tier-1 fact, unfunded order"
+      downloads: "not_tested: tier-1 fact, unfunded order"
+      cache: "not_tested: tier-1 fact, unfunded order"
+      cookies: "not_tested: tier-1 fact, unfunded order"
+      web_storage: "not_tested: tier-1 fact, unfunded order"
+      autofill: "not_tested: tier-1 fact, unfunded order"
+      sessions: "not_tested: tier-1 fact, unfunded order"
+      filesystem: "not_tested: tier-1 fact, unfunded order"
+      replay: "not_tested: tier-1 fact, unfunded order"
+      chain: not_tested
+    notes: "Tier-1 fact; the order page and letter print only the service minimum and the fixed per-address fee, which are service constants. best_persistence is provisional until a funded order is run."
+    attr: { tier: 0, basis: unknown, notes: "tier-1 fact; no deposit was made" }
+  - fact: fee_and_delay
+    best_persistence: disk
+    artifacts: [letter_file, session_restore_state]
+    cells:
+      history: "not_stored_by_design: no URL carries it"
+      downloads: "not_stored_by_design: the letter URL carries only the order number"
+      cache: "not_stored_by_design: order page, status page and letter are no-store"
+      cookies: "not_stored_by_design: no cookie carries an order value"
+      web_storage: not_stored_by_design
+      autofill: "not_stored_by_design: fee and delay are range inputs, which autofill does not save"
+      sessions: "recovered: service_fee and delay in the create-order POST body"
+      filesystem: "recovered: letter body (fee percentage and delay)"
+      replay: "live_only: returned by the status lookup while the record is held"
+      chain: not_tested
+    attr: { tier: 0, basis: observed, sources: [cz-disk, cz-replay] }
+  - fact: mix_mode
+    best_persistence: none_by_design
+    artifacts: []
+    cells:
+      history: not_applicable
+      downloads: not_applicable
+      cache: not_applicable
+      cookies: not_applicable
+      web_storage: not_applicable
+      autofill: not_applicable
+      sessions: not_applicable
+      filesystem: not_applicable
+      replay: not_applicable
+      chain: not_applicable
+    notes: "Single mixing mode for BTC; the '100% clean coins' option is a fee-and-delay preset (5%, 900 min), not a mode. ETH and XMR are shown as coming soon."
+    attr: { tier: 0, basis: observed, sources: [cz-flow] }
+  - fact: order_created_time
+    best_persistence: disk
+    artifacts: [letter_file, letter_download_record, page_visits]
+    cells:
+      history: "recovered: visit time of /create-order, one second after the server's creation time"
+      downloads: "recovered: letter download start time (follows creation by a user action)"
+      cache: "not_stored_by_design: order page, status page and letter are no-store"
+      cookies: "not_found: cookie creation times date the first visit, not the order"
+      web_storage: not_stored_by_design
+      autofill: "recovered: date_created of the output_address_1 row (submission time)"
+      sessions: "not_tested: SNSS entry timestamps not decoded"
+      filesystem: "recovered: 'Your Order created on' in the letter body; file timestamps"
+      replay: "live_only: 'Order Created' on the status page while the record is held"
+      chain: not_tested
+    attr: { tier: 0, basis: observed, sources: [cz-disk, cz-replay] }
+  - fact: session_id
+    best_persistence: none_by_design
+    artifacts: []
+    cells:
+      history: not_stored_by_design
+      downloads: not_stored_by_design
+      cache: not_stored_by_design
+      cookies: "not_stored_by_design: PHPSESSID is a session cookie without Expires; not written to the Cookies DB on normal exit"
+      web_storage: not_stored_by_design
+      autofill: not_applicable
+      sessions: "not_found: cookie values are not part of session restore"
+      filesystem: not_found
+      replay: "required_to_query: the recorded cookie value is needed; a stale id is accepted but holds no order"
+      chain: not_applicable
+    notes: "The session id reaches disk only if Chrome is killed or set to continue where it left off; with a normal exit it is network-only."
+    attr: { tier: 0, basis: observed, sources: [cz-flow, cz-disk, cz-replay] }
+  - fact: client_ip
+    best_persistence: disk
+    artifacts: [client_ip_cookie_row]
+    cells:
+      history: not_found
+      downloads: not_found
+      cache: "not_found: absent from the service's cache entries"
+      cookies: "metadata_only: __ddg9_ row, value encrypted"
+      web_storage: not_stored_by_design
+      autofill: not_found
+      sessions: not_found
+      filesystem: not_found
+      replay: "not_found: no reply carries it; the cookie is client-sent"
+      chain: not_applicable
+    attr: { tier: 0, basis: observed, sources: [cz-disk, cz-replay] }
+  - fact: user_identifier
+    best_persistence: none_by_design
+    artifacts: []
+    cells:
+      history: "not_stored_by_design: no URL carries it"
+      downloads: "not_stored_by_design: not in the letter URL"
+      cache: "not_stored_by_design: shown only on the no-store order page"
+      cookies: "not_stored_by_design: no cookie carries it"
+      web_storage: not_stored_by_design
+      autofill: "not_tested: the code was not typed into a later order"
+      sessions: "not_tested: the code was not typed into a later order (coinocode= was empty)"
+      filesystem: "not_found: not printed in the letter"
+      replay: "not_found: the status lookup does not return it"
+      chain: not_applicable
+    notes: "Inferred: the code field is a named text field like output_address_1, which reaches autofill and session restore; not tested."
+    attr: { tier: 0, basis: observed, sources: [cz-flow, cz-disk, cz-replay] }
+  - fact: status_progression
+    best_persistence: none_by_design
+    artifacts: []
+    cells:
+      history: "not_tested: tier-1 fact; only the waiting state was seen"
+      downloads: "not_tested: tier-1 fact; only the waiting state was seen"
+      cache: "not_stored_by_design: order and status pages are no-store"
+      cookies: "not_tested: tier-1 fact; only the waiting state was seen"
+      web_storage: not_stored_by_design
+      autofill: "not_tested: tier-1 fact; only the waiting state was seen"
+      sessions: "not_tested: tier-1 fact; only the waiting state was seen"
+      filesystem: "not_tested: tier-1 fact; only the waiting state was seen"
+      replay: "live_only: the waiting state still served three days later"
+      chain: not_applicable
+    notes: "Tier-1 fact; best_persistence is provisional until a funded order is run."
+    attr: { tier: 0, basis: observed, sources: [cz-flow, cz-replay] }
+
+# --- 10. Retention -----------------------------------------------------------------------
+retention:
+  stated_policy:
+    - {
+        value: "We do not store any logs of your transaction, not even your IP or Bitcoin addresses. We delete all orders after 24-72 hours (Depending on choosen delay time.), but you can also delete it by yourself.",
+        tier: 0,
+        basis: claimed,
+        sources: [cz-policy],
+        notes: "FAQ.",
+      }
+    - {
+        value: "an auto-deletion occurs after 72 hours removing the records permanently",
+        tier: 0,
+        basis: claimed,
+        sources: [cz-policy],
+        notes: "Home page.",
+      }
+    - {
+        value: "Your order is valid for 3 days and will be deleted after this time!",
+        tier: 0,
+        basis: claimed,
+        sources: [cz-policy],
+        notes: "Order page and status page; the status page prints an 'Order Valid until' time three days after creation.",
+      }
+    - {
+        value: "Your order is valid for 24 hours and will be deleted if no coins are received!",
+        tier: 0,
+        basis: claimed,
+        sources: [cz-policy],
+        notes: "Letter of Guarantee; contradicts the 3 days on the order page.",
+      }
+    - {
+        value: "The data will be deleted after 3 days.",
+        tier: 0,
+        basis: claimed,
+        sources: [cz-policy],
+        notes: "Error page for a destination address already in an open order.",
+      }
+  observed:
+    - {
+        value: "About 78 hours after creation, past the 'valid until' time the service prints, the lookup by order number still returned the full record of the unfunded order (number, creation time, fee, delay, destination and deposit addresses, waiting state)",
+        tier: 0,
+        basis: observed,
+        sources: [cz-replay],
+      }
+    - {
+        value: "The recorded PHP session no longer resolved to the order: the order page redirected to /mix-error and the letter URL to the home page",
+        tier: 0,
+        basis: observed,
+        sources: [cz-replay],
+      }
+  consistency:
+    value: contradicted
+    tier: 0
+    basis: inferred
+    sources: [cz-policy, cz-replay]
+    notes: "The unfunded order was still served about 78 hours after creation, past the 24-hour (letter) and 3-day (order page) deadlines. One replay; deletion may be batched or delayed rather than absent. A later replay would settle it. The 'no logs' claim is untested."
+
+# --- 11. Negative findings ---------------------------------------------------------------
+negative_findings:
+  - location: chrome_local_storage
+    finding: "Not written for the service origin"
+    reason: "Page scripts make no Web Storage calls; no Local Storage file mentions the host"
+    attr:
+      {
+        value: not_stored_by_design,
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow, cz-disk],
+      }
+  - location: chrome_session_storage
+    finding: "Not written for the service origin"
+    reason: "Page scripts make no Web Storage calls; no Session Storage file mentions the host"
+    attr:
+      {
+        value: not_stored_by_design,
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow, cz-disk],
+      }
+  - location: chrome_indexeddb
+    finding: "Not written for the service origin"
+    reason: "Page scripts make no IndexedDB calls; no IndexedDB file mentions the host"
+    attr:
+      {
+        value: not_stored_by_design,
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow, cz-disk],
+      }
+  - location: chrome_cache
+    finding: "Order page, status page, order form, expiry page and letter absent; the cache holds the home page, the /exist-error page and static assets"
+    reason: "Served with Cache-Control: no-store, no-cache, must-revalidate; the cached home page carries only the service's signing/donation address"
+    attr:
+      {
+        value: not_stored_by_design,
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow, cz-disk],
+      }
+  - location: chrome_history
+    finding: "No visited URL carries an order value (deposit address, destination address, order number, code, fee or delay); only the visit times remain"
+    reason: "Order and status pages live at fixed paths with the state in the PHP session; the only URL with the order number is the letter download, which Chrome records as a download rather than a visit"
+    attr:
+      {
+        value: not_stored_by_design,
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow, cz-disk],
+      }
+  - location: chrome_downloads
+    finding: "The download record carries no order value other than the order number (plus the download time)"
+    reason: "The letter URL and file name contain the order number and nothing else"
+    attr:
+      {
+        value: not_stored_by_design,
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow, cz-disk],
+      }
+  - location: chrome_cookies
+    finding: "No PHPSESSID row"
+    reason: "Session cookie without Expires or Max-Age; Chrome does not persist it on a normal exit"
+    facts: [session_id]
+    attr:
+      {
+        value: not_stored_by_design,
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow, cz-disk],
+      }
+  - location: chrome_cookies
+    finding: "No cookie carries an order value"
+    reason: "The Set-Cookie headers in the capture carry the PHP session id, DDoS-Guard tokens and the client IP only"
+    facts: [deposit_address, destination_address, order_id, fee_and_delay, user_identifier]
+    attr:
+      {
+        value: not_stored_by_design,
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow, cz-disk],
+      }
+  - location: chrome_autofill
+    finding: "Deposit address absent"
+    reason: "Displayed by the service, never typed"
+    facts: [deposit_address]
+    attr:
+      {
+        value: not_stored_by_design,
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow, cz-disk],
+      }
+  - location: chrome_autofill
+    finding: "Fee and delay absent"
+    reason: "Both are range inputs on the form; Chrome autofill saves text fields only"
+    facts: [fee_and_delay]
+    attr:
+      {
+        value: not_stored_by_design,
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow, cz-disk],
+      }
+  - location: chrome_sessions
+    finding: "Deposit address, Coinomize Code and session id absent"
+    reason: "Session restore keeps navigation entries, POST bodies and typed form state; the deposit address and the code are server-rendered page content, the session id is a cookie"
+    attr: { value: not_found, tier: 0, basis: observed, sources: [cz-disk] }
+
+# --- 12. Indicators (weights are analyst-assigned specificity) ----------------------------
+indicators:
+  - kind: domain
+    value:
+      {
+        literal: coinomize.biz,
+        justification: "The service's canonical domain.",
+      }
+    weight: 1.0
+    attr: { tier: 0, basis: observed, sources: [cz-flow, cz-policy] }
+  - kind: domain
+    value:
+      {
+        literal: coinomize.co,
+        justification: "Backup domain named in the FAQ and in every letter.",
+      }
+    weight: 0.9
+    attr: { tier: 0, basis: claimed, sources: [cz-policy] }
+  - kind: domain
+    value:
+      {
+        literal: coinomize.is,
+        justification: "Backup domain named in the FAQ and in every letter.",
+      }
+    weight: 0.9
+    attr: { tier: 0, basis: claimed, sources: [cz-policy] }
+  - kind: string
+    value:
+      {
+        literal: coino2q64k4fg3lkjsnhjeydzwykw22a56u5nf2rdfzkjuy3jbwvypqd.onion,
+        justification: "The service's published onion name, printed in every letter.",
+      }
+    weight: 1.0
+    attr: { tier: 0, basis: claimed, sources: [cz-policy] }
+  - kind: string
+    value:
+      {
+        literal: 1CrywjDEzzpEMxdWzCDgtmZ3Tr57XrnANV,
+        justification: "Fixed signing address printed in every letter, named in the FAQ and shown as the donation address on the home page.",
+      }
+    weight: 1.0
+    attr: { tier: 0, basis: observed, sources: [cz-disk, cz-policy] }
+  - kind: string
+    value: { regex: 'THIS LETTER FROM coinomize\.biz' }
+    weight: 0.9
+    attr:
+      {
+        tier: 0,
+        basis: observed,
+        sources: [cz-disk],
+        notes: "Letter header line.",
+      }
+  - kind: string
+    value: { regex: 'Hereby we confirm that coinomize\.biz or coinomize\.co' }
+    weight: 0.9
+    attr:
+      {
+        tier: 0,
+        basis: observed,
+        sources: [cz-disk],
+        notes: "Letter body wording.",
+      }
+  - kind: filename
+    value:
+      { regex: '^Coinomize\.biz_Letter_<order_id>\.txt$', describes: order_id }
+    weight: 0.9
+    attr: { tier: 0, basis: observed, sources: [cz-flow, cz-disk] }
+  - kind: url_path
+    value: { regex: "^/order/letter/download/<order_id>$", describes: order_id }
+    weight: 0.9
+    attr: { tier: 0, basis: observed, sources: [cz-flow, cz-disk] }
+  - kind: string
+    value:
+      {
+        regex: "output_address_1=<btc_address>&service_fee=<percent>&delay=<int>&csrf=",
+        describes: destination_address,
+      }
+    weight: 0.9
+    attr:
+      {
+        tier: 0,
+        basis: observed,
+        sources: [cz-disk],
+        notes: "Order-creation POST body as kept by session restore.",
+      }
+  - kind: string
+    value: { regex: "ordernumb=<order_id>&csrf=", describes: order_id }
+    weight: 0.9
+    attr:
+      {
+        tier: 0,
+        basis: observed,
+        sources: [cz-disk],
+        notes: "Status-lookup POST body as kept by session restore.",
+      }
+  - kind: string
+    value: { regex: "Your Coinomize Code:" }
+    weight: 0.9
+    attr:
+      {
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow],
+        notes: "Order page wording; the page itself is no-store.",
+      }
+  - kind: url_path
+    value:
+      {
+        regex: "^/(start-mixing|create-order|check-order|status-order|order-expired|exist-error)$",
+      }
+    weight: 0.6
+    attr: { tier: 0, basis: observed, sources: [cz-flow, cz-disk] }
+  - kind: url_path
+    value: { regex: "^/captcddos" }
+    weight: 0.6
+    attr: { tier: 0, basis: observed, sources: [cz-flow] }
+  - kind: string
+    value: { regex: "Browser session expired - Coinomize" }
+    weight: 0.7
+    attr:
+      {
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow, cz-disk],
+        notes: "Page title recorded in History and session restore.",
+      }
+  - kind: cookie_name
+    value: { regex: "^PHPSESSID$" }
+    weight: 0.1
+    attr: { tier: 0, basis: observed, sources: [cz-flow] }
+  - kind: cookie_name
+    value: { regex: "^__ddg(1|8|9|10)_$" }
+    weight: 0.1
+    attr:
+      {
+        tier: 0,
+        basis: observed,
+        sources: [cz-flow, cz-disk],
+        notes: "DDoS-Guard; shared with every site behind that CDN.",
+      }
+  - kind: header
+    value: { regex: '^server:\s*ddos-guard$' }
+    weight: 0.1
+    attr: { tier: 0, basis: observed, sources: [cz-flow] }
+
+# --- 13. Extensions ----------------------------------------------------------------------
+extensions: {}

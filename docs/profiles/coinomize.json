@@ -1,0 +1,1952 @@
+{
+  "service": "coinomize",
+  "display_name": "Coinomize",
+  "scope": {
+    "status": "reviewed",
+    "tiers": [
+      0
+    ],
+    "valid": {
+      "first_seen": "2026-10",
+      "last_seen": "2026-10"
+    },
+    "disk": [
+      {
+        "id": "cz-disk",
+        "os": "Windows 10",
+        "browser": "Chrome 155",
+        "conditions": "Chrome closed normally; VM shut down normally before acquisition",
+        "tier": 0,
+        "ref": "observations.cz-disk"
+      }
+    ]
+  },
+  "recognise": [
+    {
+      "value": "coinomize.biz",
+      "literal": true,
+      "kind": "domain",
+      "weight": 1.0,
+      "weak": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[0]"
+    },
+    {
+      "value": "coino2q64k4fg3lkjsnhjeydzwykw22a56u5nf2rdfzkjuy3jbwvypqd.onion",
+      "literal": true,
+      "kind": "string",
+      "weight": 1.0,
+      "weak": false,
+      "tier": 0,
+      "basis": "claimed",
+      "ref": "indicators[3]"
+    },
+    {
+      "value": "1CrywjDEzzpEMxdWzCDgtmZ3Tr57XrnANV",
+      "literal": true,
+      "kind": "string",
+      "weight": 1.0,
+      "weak": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[4]"
+    },
+    {
+      "value": "coinomize.co",
+      "literal": true,
+      "kind": "domain",
+      "weight": 0.9,
+      "weak": false,
+      "tier": 0,
+      "basis": "claimed",
+      "ref": "indicators[1]"
+    },
+    {
+      "value": "coinomize.is",
+      "literal": true,
+      "kind": "domain",
+      "weight": 0.9,
+      "weak": false,
+      "tier": 0,
+      "basis": "claimed",
+      "ref": "indicators[2]"
+    },
+    {
+      "value": "THIS LETTER FROM coinomize\\.biz",
+      "literal": false,
+      "kind": "string",
+      "weight": 0.9,
+      "weak": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[5]"
+    },
+    {
+      "value": "Hereby we confirm that coinomize\\.biz or coinomize\\.co",
+      "literal": false,
+      "kind": "string",
+      "weight": 0.9,
+      "weak": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[6]"
+    },
+    {
+      "value": "^Coinomize\\.biz_Letter_<order_id>\\.txt$",
+      "literal": false,
+      "kind": "filename",
+      "weight": 0.9,
+      "weak": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[7]"
+    },
+    {
+      "value": "^/order/letter/download/<order_id>$",
+      "literal": false,
+      "kind": "url_path",
+      "weight": 0.9,
+      "weak": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[8]"
+    },
+    {
+      "value": "output_address_1=<btc_address>&service_fee=<percent>&delay=<int>&csrf=",
+      "literal": false,
+      "kind": "string",
+      "weight": 0.9,
+      "weak": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[9]"
+    },
+    {
+      "value": "ordernumb=<order_id>&csrf=",
+      "literal": false,
+      "kind": "string",
+      "weight": 0.9,
+      "weak": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[10]"
+    },
+    {
+      "value": "Your Coinomize Code:",
+      "literal": false,
+      "kind": "string",
+      "weight": 0.9,
+      "weak": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[11]"
+    },
+    {
+      "value": "Browser session expired - Coinomize",
+      "literal": false,
+      "kind": "string",
+      "weight": 0.7,
+      "weak": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[14]"
+    },
+    {
+      "value": "^/(start-mixing|create-order|check-order|status-order|order-expired|exist-error)$",
+      "literal": false,
+      "kind": "url_path",
+      "weight": 0.6,
+      "weak": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[12]"
+    },
+    {
+      "value": "^/captcddos",
+      "literal": false,
+      "kind": "url_path",
+      "weight": 0.6,
+      "weak": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[13]"
+    },
+    {
+      "value": "^PHPSESSID$",
+      "literal": false,
+      "kind": "cookie_name",
+      "weight": 0.1,
+      "weak": true,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[15]"
+    },
+    {
+      "value": "^__ddg(1|8|9|10)_$",
+      "literal": false,
+      "kind": "cookie_name",
+      "weight": 0.1,
+      "weak": true,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[16]"
+    },
+    {
+      "value": "^server:\\s*ddos-guard$",
+      "literal": false,
+      "kind": "header",
+      "weight": 0.1,
+      "weak": true,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[17]"
+    }
+  ],
+  "domains": [
+    {
+      "domain": "coinomize.biz",
+      "role": "canonical",
+      "clone": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "identity.domains[0]"
+    },
+    {
+      "domain": "coinomize.co",
+      "role": "alias",
+      "clone": false,
+      "tier": 0,
+      "basis": "claimed",
+      "ref": "identity.domains[1]"
+    },
+    {
+      "domain": "coinomize.is",
+      "role": "alias",
+      "clone": false,
+      "tier": 0,
+      "basis": "claimed",
+      "ref": "identity.domains[2]"
+    },
+    {
+      "domain": "coino2q64k4fg3lkjsnhjeydzwykw22a56u5nf2rdfzkjuy3jbwvypqd.onion",
+      "role": "onion",
+      "clone": false,
+      "tier": 0,
+      "basis": "claimed",
+      "ref": "identity.domains[3]"
+    },
+    {
+      "domain": "coinomize.bz",
+      "role": "suspected_clone",
+      "clone": true,
+      "tier": 0,
+      "basis": "claimed",
+      "ref": "identity.domains[4]"
+    },
+    {
+      "domain": "coinomize.cc",
+      "role": "suspected_clone",
+      "clone": true,
+      "tier": 0,
+      "basis": "claimed",
+      "ref": "identity.domains[5]"
+    },
+    {
+      "domain": "coinomize.net",
+      "role": "suspected_clone",
+      "clone": true,
+      "tier": 0,
+      "basis": "claimed",
+      "ref": "identity.domains[6]"
+    },
+    {
+      "domain": "coinomqrds5ti77r.onion",
+      "role": "suspected_clone",
+      "clone": true,
+      "tier": 0,
+      "basis": "claimed",
+      "ref": "identity.domains[7]"
+    }
+  ],
+  "where_is": [
+    {
+      "fact": "deposit_address",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "filesystem",
+      "outcome": "recovered",
+      "detail": "letter body",
+      "location": "filesystem",
+      "artifact": "letter_file",
+      "field": "<Downloads>/Coinomize.biz_Letter_<order_id>.txt",
+      "recovery": "User's Downloads folder; the file name carries the order number, the body the deposit and destination addresses, the fee percentage, the delay, the creation time and the service signature. Search unallocated space for the header line and the signing address.",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.letter_file"
+    },
+    {
+      "fact": "destination_address",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "autofill",
+      "outcome": "recovered",
+      "detail": "output_address_1 rows, including an address from a rejected submission",
+      "location": "chrome_autofill",
+      "artifact": "destination_autofill",
+      "field": "Web Data: autofill rows with name = output_address_1",
+      "recovery": "Chrome Web Data DB, autofill table, field name output_address_1 (output_address_2.. for further addresses): every address the user typed into the form, including one from a rejected submission; date_created is the submission time.",
+      "caveat": "Autofill keeps every address typed into the form, including addresses from submissions the service rejected (it refuses a destination already in an open order); confirm against the letter or the session-restore POST body.",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.destination_autofill"
+    },
+    {
+      "fact": "destination_address",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "sessions",
+      "outcome": "recovered",
+      "detail": "create-order POST body and form field state",
+      "location": "chrome_sessions",
+      "artifact": "session_restore_state",
+      "field": "Sessions/Session_<int> and Sessions/Tabs_<int> (SNSS)",
+      "recovery": "The navigation entries for the form POSTs keep their bodies as ASCII (coinocode=..&output_address_1=<btc_address>&service_fee=<percent>&delay=<int>&csrf=..&captcha=..&submit=Create+Order and ordernumb=<order_id>&csrf=..) and the form field state keeps the typed destination address in UTF-16; both the Session and the Tabs files hold them, in two generations.",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.session_restore_state"
+    },
+    {
+      "fact": "destination_address",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "filesystem",
+      "outcome": "recovered",
+      "detail": "letter body",
+      "location": "filesystem",
+      "artifact": "letter_file",
+      "field": "<Downloads>/Coinomize.biz_Letter_<order_id>.txt",
+      "recovery": "User's Downloads folder; the file name carries the order number, the body the deposit and destination addresses, the fee percentage, the delay, the creation time and the service signature. Search unallocated space for the header line and the signing address.",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.letter_file"
+    },
+    {
+      "fact": "order_id",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "downloads",
+      "outcome": "recovered",
+      "detail": "letter file name and download URL",
+      "location": "chrome_downloads",
+      "artifact": "letter_download_record",
+      "field": "History: downloads.target_path, downloads_url_chains.url (https://coinomize.biz/order/letter/download/<order_id>)",
+      "recovery": "Chrome History DB, downloads and downloads_url_chains tables: the target path and the server URL both carry the order number; start_time records the download, which follows order creation by a user action. The Download Service store (shared_proto_db) holds the same URL.",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.letter_download_record"
+    },
+    {
+      "fact": "order_id",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "autofill",
+      "outcome": "recovered",
+      "detail": "ordernumb row, if the user looked the order up",
+      "location": "chrome_autofill",
+      "artifact": "order_id_autofill",
+      "field": "Web Data: autofill row with name = ordernumb",
+      "recovery": "Chrome Web Data DB, autofill table, field name ordernumb: the order number typed into the status form; present only if the user looked the order up.",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.order_id_autofill"
+    },
+    {
+      "fact": "order_id",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "sessions",
+      "outcome": "recovered",
+      "detail": "status-lookup POST body",
+      "location": "chrome_sessions",
+      "artifact": "session_restore_state",
+      "field": "Sessions/Session_<int> and Sessions/Tabs_<int> (SNSS)",
+      "recovery": "The navigation entries for the form POSTs keep their bodies as ASCII (coinocode=..&output_address_1=<btc_address>&service_fee=<percent>&delay=<int>&csrf=..&captcha=..&submit=Create+Order and ordernumb=<order_id>&csrf=..) and the form field state keeps the typed destination address in UTF-16; both the Session and the Tabs files hold them, in two generations.",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.session_restore_state"
+    },
+    {
+      "fact": "order_id",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "filesystem",
+      "outcome": "recovered",
+      "detail": "letter file name and body",
+      "location": "filesystem",
+      "artifact": "letter_file",
+      "field": "<Downloads>/Coinomize.biz_Letter_<order_id>.txt",
+      "recovery": "User's Downloads folder; the file name carries the order number, the body the deposit and destination addresses, the fee percentage, the delay, the creation time and the service signature. Search unallocated space for the header line and the signing address.",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.letter_file"
+    },
+    {
+      "fact": "receipt",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "downloads",
+      "outcome": "recovered",
+      "detail": "download row of the letter",
+      "location": "chrome_downloads",
+      "artifact": "letter_download_record",
+      "field": "History: downloads.target_path, downloads_url_chains.url (https://coinomize.biz/order/letter/download/<order_id>)",
+      "recovery": "Chrome History DB, downloads and downloads_url_chains tables: the target path and the server URL both carry the order number; start_time records the download, which follows order creation by a user action. The Download Service store (shared_proto_db) holds the same URL.",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.letter_download_record"
+    },
+    {
+      "fact": "receipt",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "filesystem",
+      "outcome": "recovered",
+      "detail": "the letter file",
+      "location": "filesystem",
+      "artifact": "letter_file",
+      "field": "<Downloads>/Coinomize.biz_Letter_<order_id>.txt",
+      "recovery": "User's Downloads folder; the file name carries the order number, the body the deposit and destination addresses, the fee percentage, the delay, the creation time and the service signature. Search unallocated space for the header line and the signing address.",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.letter_file"
+    },
+    {
+      "fact": "fee_and_delay",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "sessions",
+      "outcome": "recovered",
+      "detail": "service_fee and delay in the create-order POST body",
+      "location": "chrome_sessions",
+      "artifact": "session_restore_state",
+      "field": "Sessions/Session_<int> and Sessions/Tabs_<int> (SNSS)",
+      "recovery": "The navigation entries for the form POSTs keep their bodies as ASCII (coinocode=..&output_address_1=<btc_address>&service_fee=<percent>&delay=<int>&csrf=..&captcha=..&submit=Create+Order and ordernumb=<order_id>&csrf=..) and the form field state keeps the typed destination address in UTF-16; both the Session and the Tabs files hold them, in two generations.",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.session_restore_state"
+    },
+    {
+      "fact": "fee_and_delay",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "filesystem",
+      "outcome": "recovered",
+      "detail": "letter body (fee percentage and delay)",
+      "location": "filesystem",
+      "artifact": "letter_file",
+      "field": "<Downloads>/Coinomize.biz_Letter_<order_id>.txt",
+      "recovery": "User's Downloads folder; the file name carries the order number, the body the deposit and destination addresses, the fee percentage, the delay, the creation time and the service signature. Search unallocated space for the header line and the signing address.",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.letter_file"
+    },
+    {
+      "fact": "order_created_time",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "history",
+      "outcome": "recovered",
+      "detail": "visit time of /create-order, one second after the server's creation time",
+      "location": "chrome_history",
+      "artifact": "page_visits",
+      "field": "History: urls.url and visits.visit_time for /start-mixing, /create-order, /order-expired, /check-order, /status-order",
+      "recovery": "Chrome History DB: the visit to /create-order is recorded one second after the creation time the server printed; the /check-order and /status-order visits date the status lookup. No URL carries an order value; the pages are at fixed paths and the state is server-side.",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.page_visits"
+    },
+    {
+      "fact": "order_created_time",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "downloads",
+      "outcome": "recovered",
+      "detail": "letter download start time (follows creation by a user action)",
+      "location": "chrome_downloads",
+      "artifact": "letter_download_record",
+      "field": "History: downloads.target_path, downloads_url_chains.url (https://coinomize.biz/order/letter/download/<order_id>)",
+      "recovery": "Chrome History DB, downloads and downloads_url_chains tables: the target path and the server URL both carry the order number; start_time records the download, which follows order creation by a user action. The Download Service store (shared_proto_db) holds the same URL.",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.letter_download_record"
+    },
+    {
+      "fact": "order_created_time",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "autofill",
+      "outcome": "recovered",
+      "detail": "date_created of the output_address_1 row (submission time)",
+      "location": "chrome_autofill",
+      "artifact": "destination_autofill",
+      "field": "Web Data: autofill rows with name = output_address_1",
+      "recovery": "Chrome Web Data DB, autofill table, field name output_address_1 (output_address_2.. for further addresses): every address the user typed into the form, including one from a rejected submission; date_created is the submission time.",
+      "caveat": "Autofill keeps every address typed into the form, including addresses from submissions the service rejected (it refuses a destination already in an open order); confirm against the letter or the session-restore POST body.",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.destination_autofill"
+    },
+    {
+      "fact": "order_created_time",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "filesystem",
+      "outcome": "recovered",
+      "detail": "'Your Order created on' in the letter body; file timestamps",
+      "location": "filesystem",
+      "artifact": "letter_file",
+      "field": "<Downloads>/Coinomize.biz_Letter_<order_id>.txt",
+      "recovery": "User's Downloads folder; the file name carries the order number, the body the deposit and destination addresses, the fee percentage, the delay, the creation time and the service signature. Search unallocated space for the header line and the signing address.",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.letter_file"
+    },
+    {
+      "fact": "client_ip",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "cookies",
+      "outcome": "metadata_only",
+      "detail": "__ddg9_ row, value encrypted",
+      "location": "chrome_cookies",
+      "artifact": "client_ip_cookie_row",
+      "field": "Network/Cookies: cookies row host_key .coinomize.biz, name __ddg9_",
+      "recovery": "Chrome Cookies DB; the value is the client's public IPv4 address, encrypted at rest with the profile's OS-bound key (decryptable with the user's Windows credentials). Creation time dates the first visit.",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.client_ip_cookie_row"
+    }
+  ],
+  "interpret": [
+    {
+      "kind": "identifier",
+      "subject": "order_number",
+      "fact": "order_id",
+      "role": "status_lookup_key",
+      "derivation": "20 lowercase hexadecimal characters assigned by the server at order creation; one sample, no decodable timestamp",
+      "scheme": "^[0-9a-f]{20}$",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "order_model.identifiers.order_number"
+    },
+    {
+      "kind": "identifier",
+      "subject": "deposit_address",
+      "fact": "deposit_address",
+      "role": "display_only",
+      "derivation": "Fresh service-controlled address per order (P2PKH in the sample), displayed on the order and status pages and printed in the letter; not used as a lookup key",
+      "scheme": "^<btc_address>$",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "order_model.identifiers.deposit_address"
+    },
+    {
+      "kind": "identifier",
+      "subject": "coinomize_code",
+      "fact": "user_identifier",
+      "role": "cross_order_user_key",
+      "derivation": "8 alphanumeric characters issued on the first order ('Your Coinomize Code' on the order page) and meant to be entered in the coinocode field of every later order so that the user never receives their own earlier coins; links a user's orders on the server",
+      "scheme": "^[A-Za-z0-9]{8}$",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "order_model.identifiers.coinomize_code"
+    },
+    {
+      "kind": "field_map",
+      "subject": "Letter of Guarantee",
+      "map": {
+        "has generated the following Bitcoin address:": "deposit_address",
+        "to the following address(es):": "destination_address",
+        "after an delay of": "fee_and_delay",
+        "Your choosen fee is": "fee_and_delay",
+        "Your Order created on": "order_created_time",
+        "Your Order Number is:": "order_id"
+      },
+      "tier": 0,
+      "basis": "observed",
+      "ref": "receipts.letter_of_guarantee.field_map"
+    },
+    {
+      "kind": "signing_identity",
+      "subject": "Letter of Guarantee",
+      "literal": "1CrywjDEzzpEMxdWzCDgtmZ3Tr57XrnANV",
+      "scheme": "bitcoin_signed_message",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "receipts.letter_of_guarantee.signature"
+    },
+    {
+      "kind": "caveat",
+      "subject": "Destination address in autofill",
+      "text": "Autofill keeps every address typed into the form, including addresses from submissions the service rejected (it refuses a destination already in an open order); confirm against the letter or the session-restore POST body.",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.destination_autofill.caveat"
+    },
+    {
+      "kind": "row_notes",
+      "subject": "deposit_txid",
+      "text": "Tier-1 fact; best_persistence is provisional until a funded order is run.",
+      "tier": 0,
+      "basis": "unknown",
+      "ref": "fact_coverage.deposit_txid.notes"
+    },
+    {
+      "kind": "row_notes",
+      "subject": "payout_txid",
+      "text": "Tier-1 fact; best_persistence is provisional until a funded order is run.",
+      "tier": 0,
+      "basis": "unknown",
+      "ref": "fact_coverage.payout_txid.notes"
+    },
+    {
+      "kind": "row_notes",
+      "subject": "amounts",
+      "text": "Tier-1 fact; the order page and letter print only the service minimum and the fixed per-address fee, which are service constants. best_persistence is provisional until a funded order is run.",
+      "tier": 0,
+      "basis": "unknown",
+      "ref": "fact_coverage.amounts.notes"
+    },
+    {
+      "kind": "row_notes",
+      "subject": "mix_mode",
+      "text": "Single mixing mode for BTC; the '100% clean coins' option is a fee-and-delay preset (5%, 900 min), not a mode. ETH and XMR are shown as coming soon.",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.mix_mode.notes"
+    },
+    {
+      "kind": "row_notes",
+      "subject": "session_id",
+      "text": "The session id reaches disk only if Chrome is killed or set to continue where it left off; with a normal exit it is network-only.",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.session_id.notes"
+    },
+    {
+      "kind": "row_notes",
+      "subject": "user_identifier",
+      "text": "Inferred: the code field is a named text field like output_address_1, which reaches autofill and session restore; not tested.",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.user_identifier.notes"
+    },
+    {
+      "kind": "row_notes",
+      "subject": "status_progression",
+      "text": "Tier-1 fact; best_persistence is provisional until a funded order is run.",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.status_progression.notes"
+    },
+    {
+      "kind": "retention_claim",
+      "subject": null,
+      "text": "We do not store any logs of your transaction, not even your IP or Bitcoin addresses. We delete all orders after 24-72 hours (Depending on choosen delay time.), but you can also delete it by yourself.",
+      "tier": 0,
+      "basis": "claimed",
+      "ref": "retention.stated_policy[0]"
+    },
+    {
+      "kind": "retention_claim",
+      "subject": null,
+      "text": "an auto-deletion occurs after 72 hours removing the records permanently",
+      "tier": 0,
+      "basis": "claimed",
+      "ref": "retention.stated_policy[1]"
+    },
+    {
+      "kind": "retention_claim",
+      "subject": null,
+      "text": "Your order is valid for 3 days and will be deleted after this time!",
+      "tier": 0,
+      "basis": "claimed",
+      "ref": "retention.stated_policy[2]"
+    },
+    {
+      "kind": "retention_claim",
+      "subject": null,
+      "text": "Your order is valid for 24 hours and will be deleted if no coins are received!",
+      "tier": 0,
+      "basis": "claimed",
+      "ref": "retention.stated_policy[3]"
+    },
+    {
+      "kind": "retention_claim",
+      "subject": null,
+      "text": "The data will be deleted after 3 days.",
+      "tier": 0,
+      "basis": "claimed",
+      "ref": "retention.stated_policy[4]"
+    }
+  ],
+  "expected_absences": [
+    {
+      "fact": "deposit_address",
+      "source": "history",
+      "outcome": "not_stored_by_design",
+      "detail": "no URL carries it",
+      "findings": [
+        {
+          "location": "chrome_history",
+          "finding": "No visited URL carries an order value (deposit address, destination address, order number, code, fee or delay); only the visit times remain",
+          "reason": "Order and status pages live at fixed paths with the state in the PHP session; the only URL with the order number is the letter download, which Chrome records as a download rather than a visit",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[4]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.deposit_address.cells.history"
+    },
+    {
+      "fact": "deposit_address",
+      "source": "downloads",
+      "outcome": "not_stored_by_design",
+      "detail": "the letter URL carries only the order number",
+      "findings": [
+        {
+          "location": "chrome_downloads",
+          "finding": "The download record carries no order value other than the order number (plus the download time)",
+          "reason": "The letter URL and file name contain the order number and nothing else",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[5]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.deposit_address.cells.downloads"
+    },
+    {
+      "fact": "deposit_address",
+      "source": "cache",
+      "outcome": "not_stored_by_design",
+      "detail": "order page, status page and letter are no-store",
+      "findings": [
+        {
+          "location": "chrome_cache",
+          "finding": "Order page, status page, order form, expiry page and letter absent; the cache holds the home page, the /exist-error page and static assets",
+          "reason": "Served with Cache-Control: no-store, no-cache, must-revalidate; the cached home page carries only the service's signing/donation address",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[3]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.deposit_address.cells.cache"
+    },
+    {
+      "fact": "deposit_address",
+      "source": "cookies",
+      "outcome": "not_stored_by_design",
+      "detail": "no cookie carries an order value",
+      "findings": [
+        {
+          "location": "chrome_cookies",
+          "finding": "No cookie carries an order value",
+          "reason": "The Set-Cookie headers in the capture carry the PHP session id, DDoS-Guard tokens and the client IP only",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[7]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.deposit_address.cells.cookies"
+    },
+    {
+      "fact": "deposit_address",
+      "source": "web_storage",
+      "outcome": "not_stored_by_design",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_local_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls; no Local Storage file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[0]"
+        },
+        {
+          "location": "chrome_session_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls; no Session Storage file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[1]"
+        },
+        {
+          "location": "chrome_indexeddb",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no IndexedDB calls; no IndexedDB file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[2]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.deposit_address.cells.web_storage"
+    },
+    {
+      "fact": "deposit_address",
+      "source": "autofill",
+      "outcome": "not_stored_by_design",
+      "detail": "displayed, never typed",
+      "findings": [
+        {
+          "location": "chrome_autofill",
+          "finding": "Deposit address absent",
+          "reason": "Displayed by the service, never typed",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[8]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.deposit_address.cells.autofill"
+    },
+    {
+      "fact": "destination_address",
+      "source": "history",
+      "outcome": "not_stored_by_design",
+      "detail": "no URL carries it",
+      "findings": [
+        {
+          "location": "chrome_history",
+          "finding": "No visited URL carries an order value (deposit address, destination address, order number, code, fee or delay); only the visit times remain",
+          "reason": "Order and status pages live at fixed paths with the state in the PHP session; the only URL with the order number is the letter download, which Chrome records as a download rather than a visit",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[4]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.destination_address.cells.history"
+    },
+    {
+      "fact": "destination_address",
+      "source": "downloads",
+      "outcome": "not_stored_by_design",
+      "detail": "the letter URL carries only the order number",
+      "findings": [
+        {
+          "location": "chrome_downloads",
+          "finding": "The download record carries no order value other than the order number (plus the download time)",
+          "reason": "The letter URL and file name contain the order number and nothing else",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[5]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.destination_address.cells.downloads"
+    },
+    {
+      "fact": "destination_address",
+      "source": "cache",
+      "outcome": "not_stored_by_design",
+      "detail": "order page, status page and letter are no-store",
+      "findings": [
+        {
+          "location": "chrome_cache",
+          "finding": "Order page, status page, order form, expiry page and letter absent; the cache holds the home page, the /exist-error page and static assets",
+          "reason": "Served with Cache-Control: no-store, no-cache, must-revalidate; the cached home page carries only the service's signing/donation address",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[3]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.destination_address.cells.cache"
+    },
+    {
+      "fact": "destination_address",
+      "source": "cookies",
+      "outcome": "not_stored_by_design",
+      "detail": "no cookie carries an order value",
+      "findings": [
+        {
+          "location": "chrome_cookies",
+          "finding": "No cookie carries an order value",
+          "reason": "The Set-Cookie headers in the capture carry the PHP session id, DDoS-Guard tokens and the client IP only",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[7]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.destination_address.cells.cookies"
+    },
+    {
+      "fact": "destination_address",
+      "source": "web_storage",
+      "outcome": "not_stored_by_design",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_local_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls; no Local Storage file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[0]"
+        },
+        {
+          "location": "chrome_session_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls; no Session Storage file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[1]"
+        },
+        {
+          "location": "chrome_indexeddb",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no IndexedDB calls; no IndexedDB file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[2]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.destination_address.cells.web_storage"
+    },
+    {
+      "fact": "order_id",
+      "source": "history",
+      "outcome": "not_stored_by_design",
+      "detail": "order and status pages are at fixed paths; the letter URL is recorded as a download, not a visit",
+      "findings": [
+        {
+          "location": "chrome_history",
+          "finding": "No visited URL carries an order value (deposit address, destination address, order number, code, fee or delay); only the visit times remain",
+          "reason": "Order and status pages live at fixed paths with the state in the PHP session; the only URL with the order number is the letter download, which Chrome records as a download rather than a visit",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[4]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.order_id.cells.history"
+    },
+    {
+      "fact": "order_id",
+      "source": "cache",
+      "outcome": "not_stored_by_design",
+      "detail": "order page, status page and letter are no-store",
+      "findings": [
+        {
+          "location": "chrome_cache",
+          "finding": "Order page, status page, order form, expiry page and letter absent; the cache holds the home page, the /exist-error page and static assets",
+          "reason": "Served with Cache-Control: no-store, no-cache, must-revalidate; the cached home page carries only the service's signing/donation address",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[3]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.order_id.cells.cache"
+    },
+    {
+      "fact": "order_id",
+      "source": "cookies",
+      "outcome": "not_stored_by_design",
+      "detail": "no cookie carries an order value",
+      "findings": [
+        {
+          "location": "chrome_cookies",
+          "finding": "No cookie carries an order value",
+          "reason": "The Set-Cookie headers in the capture carry the PHP session id, DDoS-Guard tokens and the client IP only",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[7]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.order_id.cells.cookies"
+    },
+    {
+      "fact": "order_id",
+      "source": "web_storage",
+      "outcome": "not_stored_by_design",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_local_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls; no Local Storage file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[0]"
+        },
+        {
+          "location": "chrome_session_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls; no Session Storage file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[1]"
+        },
+        {
+          "location": "chrome_indexeddb",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no IndexedDB calls; no IndexedDB file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[2]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.order_id.cells.web_storage"
+    },
+    {
+      "fact": "receipt",
+      "source": "history",
+      "outcome": "not_stored_by_design",
+      "detail": "recorded as a download, not a visit",
+      "findings": [
+        {
+          "location": "chrome_history",
+          "finding": "No visited URL carries an order value (deposit address, destination address, order number, code, fee or delay); only the visit times remain",
+          "reason": "Order and status pages live at fixed paths with the state in the PHP session; the only URL with the order number is the letter download, which Chrome records as a download rather than a visit",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[4]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.receipt.cells.history"
+    },
+    {
+      "fact": "receipt",
+      "source": "cache",
+      "outcome": "not_stored_by_design",
+      "detail": "served no-store as an attachment",
+      "findings": [
+        {
+          "location": "chrome_cache",
+          "finding": "Order page, status page, order form, expiry page and letter absent; the cache holds the home page, the /exist-error page and static assets",
+          "reason": "Served with Cache-Control: no-store, no-cache, must-revalidate; the cached home page carries only the service's signing/donation address",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[3]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.receipt.cells.cache"
+    },
+    {
+      "fact": "receipt",
+      "source": "web_storage",
+      "outcome": "not_stored_by_design",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_local_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls; no Local Storage file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[0]"
+        },
+        {
+          "location": "chrome_session_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls; no Session Storage file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[1]"
+        },
+        {
+          "location": "chrome_indexeddb",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no IndexedDB calls; no IndexedDB file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[2]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.receipt.cells.web_storage"
+    },
+    {
+      "fact": "fee_and_delay",
+      "source": "history",
+      "outcome": "not_stored_by_design",
+      "detail": "no URL carries it",
+      "findings": [
+        {
+          "location": "chrome_history",
+          "finding": "No visited URL carries an order value (deposit address, destination address, order number, code, fee or delay); only the visit times remain",
+          "reason": "Order and status pages live at fixed paths with the state in the PHP session; the only URL with the order number is the letter download, which Chrome records as a download rather than a visit",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[4]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.fee_and_delay.cells.history"
+    },
+    {
+      "fact": "fee_and_delay",
+      "source": "downloads",
+      "outcome": "not_stored_by_design",
+      "detail": "the letter URL carries only the order number",
+      "findings": [
+        {
+          "location": "chrome_downloads",
+          "finding": "The download record carries no order value other than the order number (plus the download time)",
+          "reason": "The letter URL and file name contain the order number and nothing else",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[5]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.fee_and_delay.cells.downloads"
+    },
+    {
+      "fact": "fee_and_delay",
+      "source": "cache",
+      "outcome": "not_stored_by_design",
+      "detail": "order page, status page and letter are no-store",
+      "findings": [
+        {
+          "location": "chrome_cache",
+          "finding": "Order page, status page, order form, expiry page and letter absent; the cache holds the home page, the /exist-error page and static assets",
+          "reason": "Served with Cache-Control: no-store, no-cache, must-revalidate; the cached home page carries only the service's signing/donation address",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[3]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.fee_and_delay.cells.cache"
+    },
+    {
+      "fact": "fee_and_delay",
+      "source": "cookies",
+      "outcome": "not_stored_by_design",
+      "detail": "no cookie carries an order value",
+      "findings": [
+        {
+          "location": "chrome_cookies",
+          "finding": "No cookie carries an order value",
+          "reason": "The Set-Cookie headers in the capture carry the PHP session id, DDoS-Guard tokens and the client IP only",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[7]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.fee_and_delay.cells.cookies"
+    },
+    {
+      "fact": "fee_and_delay",
+      "source": "web_storage",
+      "outcome": "not_stored_by_design",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_local_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls; no Local Storage file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[0]"
+        },
+        {
+          "location": "chrome_session_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls; no Session Storage file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[1]"
+        },
+        {
+          "location": "chrome_indexeddb",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no IndexedDB calls; no IndexedDB file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[2]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.fee_and_delay.cells.web_storage"
+    },
+    {
+      "fact": "fee_and_delay",
+      "source": "autofill",
+      "outcome": "not_stored_by_design",
+      "detail": "fee and delay are range inputs, which autofill does not save",
+      "findings": [
+        {
+          "location": "chrome_autofill",
+          "finding": "Fee and delay absent",
+          "reason": "Both are range inputs on the form; Chrome autofill saves text fields only",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[9]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.fee_and_delay.cells.autofill"
+    },
+    {
+      "fact": "order_created_time",
+      "source": "cache",
+      "outcome": "not_stored_by_design",
+      "detail": "order page, status page and letter are no-store",
+      "findings": [
+        {
+          "location": "chrome_cache",
+          "finding": "Order page, status page, order form, expiry page and letter absent; the cache holds the home page, the /exist-error page and static assets",
+          "reason": "Served with Cache-Control: no-store, no-cache, must-revalidate; the cached home page carries only the service's signing/donation address",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[3]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.order_created_time.cells.cache"
+    },
+    {
+      "fact": "order_created_time",
+      "source": "web_storage",
+      "outcome": "not_stored_by_design",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_local_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls; no Local Storage file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[0]"
+        },
+        {
+          "location": "chrome_session_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls; no Session Storage file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[1]"
+        },
+        {
+          "location": "chrome_indexeddb",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no IndexedDB calls; no IndexedDB file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[2]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.order_created_time.cells.web_storage"
+    },
+    {
+      "fact": "session_id",
+      "source": "history",
+      "outcome": "not_stored_by_design",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_history",
+          "finding": "No visited URL carries an order value (deposit address, destination address, order number, code, fee or delay); only the visit times remain",
+          "reason": "Order and status pages live at fixed paths with the state in the PHP session; the only URL with the order number is the letter download, which Chrome records as a download rather than a visit",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[4]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.session_id.cells.history"
+    },
+    {
+      "fact": "session_id",
+      "source": "downloads",
+      "outcome": "not_stored_by_design",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_downloads",
+          "finding": "The download record carries no order value other than the order number (plus the download time)",
+          "reason": "The letter URL and file name contain the order number and nothing else",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[5]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.session_id.cells.downloads"
+    },
+    {
+      "fact": "session_id",
+      "source": "cache",
+      "outcome": "not_stored_by_design",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_cache",
+          "finding": "Order page, status page, order form, expiry page and letter absent; the cache holds the home page, the /exist-error page and static assets",
+          "reason": "Served with Cache-Control: no-store, no-cache, must-revalidate; the cached home page carries only the service's signing/donation address",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[3]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.session_id.cells.cache"
+    },
+    {
+      "fact": "session_id",
+      "source": "cookies",
+      "outcome": "not_stored_by_design",
+      "detail": "PHPSESSID is a session cookie without Expires; not written to the Cookies DB on normal exit",
+      "findings": [
+        {
+          "location": "chrome_cookies",
+          "finding": "No PHPSESSID row",
+          "reason": "Session cookie without Expires or Max-Age; Chrome does not persist it on a normal exit",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[6]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.session_id.cells.cookies"
+    },
+    {
+      "fact": "session_id",
+      "source": "web_storage",
+      "outcome": "not_stored_by_design",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_local_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls; no Local Storage file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[0]"
+        },
+        {
+          "location": "chrome_session_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls; no Session Storage file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[1]"
+        },
+        {
+          "location": "chrome_indexeddb",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no IndexedDB calls; no IndexedDB file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[2]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.session_id.cells.web_storage"
+    },
+    {
+      "fact": "client_ip",
+      "source": "web_storage",
+      "outcome": "not_stored_by_design",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_local_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls; no Local Storage file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[0]"
+        },
+        {
+          "location": "chrome_session_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls; no Session Storage file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[1]"
+        },
+        {
+          "location": "chrome_indexeddb",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no IndexedDB calls; no IndexedDB file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[2]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.client_ip.cells.web_storage"
+    },
+    {
+      "fact": "user_identifier",
+      "source": "history",
+      "outcome": "not_stored_by_design",
+      "detail": "no URL carries it",
+      "findings": [
+        {
+          "location": "chrome_history",
+          "finding": "No visited URL carries an order value (deposit address, destination address, order number, code, fee or delay); only the visit times remain",
+          "reason": "Order and status pages live at fixed paths with the state in the PHP session; the only URL with the order number is the letter download, which Chrome records as a download rather than a visit",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[4]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.user_identifier.cells.history"
+    },
+    {
+      "fact": "user_identifier",
+      "source": "downloads",
+      "outcome": "not_stored_by_design",
+      "detail": "not in the letter URL",
+      "findings": [
+        {
+          "location": "chrome_downloads",
+          "finding": "The download record carries no order value other than the order number (plus the download time)",
+          "reason": "The letter URL and file name contain the order number and nothing else",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[5]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.user_identifier.cells.downloads"
+    },
+    {
+      "fact": "user_identifier",
+      "source": "cache",
+      "outcome": "not_stored_by_design",
+      "detail": "shown only on the no-store order page",
+      "findings": [
+        {
+          "location": "chrome_cache",
+          "finding": "Order page, status page, order form, expiry page and letter absent; the cache holds the home page, the /exist-error page and static assets",
+          "reason": "Served with Cache-Control: no-store, no-cache, must-revalidate; the cached home page carries only the service's signing/donation address",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[3]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.user_identifier.cells.cache"
+    },
+    {
+      "fact": "user_identifier",
+      "source": "cookies",
+      "outcome": "not_stored_by_design",
+      "detail": "no cookie carries it",
+      "findings": [
+        {
+          "location": "chrome_cookies",
+          "finding": "No cookie carries an order value",
+          "reason": "The Set-Cookie headers in the capture carry the PHP session id, DDoS-Guard tokens and the client IP only",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[7]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.user_identifier.cells.cookies"
+    },
+    {
+      "fact": "user_identifier",
+      "source": "web_storage",
+      "outcome": "not_stored_by_design",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_local_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls; no Local Storage file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[0]"
+        },
+        {
+          "location": "chrome_session_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls; no Session Storage file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[1]"
+        },
+        {
+          "location": "chrome_indexeddb",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no IndexedDB calls; no IndexedDB file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[2]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.user_identifier.cells.web_storage"
+    },
+    {
+      "fact": "status_progression",
+      "source": "cache",
+      "outcome": "not_stored_by_design",
+      "detail": "order and status pages are no-store",
+      "findings": [
+        {
+          "location": "chrome_cache",
+          "finding": "Order page, status page, order form, expiry page and letter absent; the cache holds the home page, the /exist-error page and static assets",
+          "reason": "Served with Cache-Control: no-store, no-cache, must-revalidate; the cached home page carries only the service's signing/donation address",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[3]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.status_progression.cells.cache"
+    },
+    {
+      "fact": "status_progression",
+      "source": "web_storage",
+      "outcome": "not_stored_by_design",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_local_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls; no Local Storage file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[0]"
+        },
+        {
+          "location": "chrome_session_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls; no Session Storage file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[1]"
+        },
+        {
+          "location": "chrome_indexeddb",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no IndexedDB calls; no IndexedDB file mentions the host",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[2]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.status_progression.cells.web_storage"
+    }
+  ],
+  "design_findings_without_cell": [],
+  "not_found": [
+    {
+      "fact": null,
+      "source": "sessions",
+      "outcome": "not_found",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_sessions",
+          "finding": "Deposit address, Coinomize Code and session id absent",
+          "reason": "Session restore keeps navigation entries, POST bodies and typed form state; the deposit address and the code are server-rendered page content, the session id is a cookie",
+          "implication": null,
+          "outcome": "not_found",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[10]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "negative_findings[10]"
+    }
+  ],
+  "beyond_disk": [
+    {
+      "kind": "lookup",
+      "subject": "status_lookup",
+      "method": "POST",
+      "path": "^/status-order$",
+      "lookup_key": "order_id",
+      "ownership_check": false,
+      "gate": [
+        "session",
+        "csrf"
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "endpoints.status_lookup"
+    },
+    {
+      "kind": "replay",
+      "subject": "order_expired",
+      "variant": "original",
+      "reading": "Served, but without the order number: the session no longer holds the order",
+      "outcome": "accepted",
+      "cites": [
+        {
+          "id": "cz-replay",
+          "date": "2026-10-21"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "endpoints.order_expired.replay_results[0]"
+    },
+    {
+      "kind": "replay",
+      "subject": "status_lookup",
+      "variant": "original",
+      "reading": "The stale CSRF token is refused (redirect to /wrong-token), yet the response body carries the live record three days after creation and after the 'valid until' time the service itself prints: order number, creation time, fee, delay, destination and deposit addresses and the current blockchain-fee tip",
+      "outcome": "live",
+      "cites": [
+        {
+          "id": "cz-replay",
+          "date": "2026-10-21"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "endpoints.status_lookup.replay_results[0]"
+    },
+    {
+      "kind": "replay",
+      "subject": "status_page",
+      "variant": "original",
+      "reading": "Answered with the record of the order the preceding replayed lookup had placed in the session; the delay and minimum shown are session defaults ('Instant', 0 BTC), not the order's values, and the meta refresh sends a browser back to the form",
+      "outcome": "live",
+      "cites": [
+        {
+          "id": "cz-replay",
+          "date": "2026-10-21"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "endpoints.status_page.replay_results[0]"
+    },
+    {
+      "kind": "retention_claim",
+      "subject": null,
+      "text": "We do not store any logs of your transaction, not even your IP or Bitcoin addresses. We delete all orders after 24-72 hours (Depending on choosen delay time.), but you can also delete it by yourself.",
+      "tier": 0,
+      "basis": "claimed",
+      "ref": "retention.stated_policy[0]"
+    },
+    {
+      "kind": "retention_claim",
+      "subject": null,
+      "text": "an auto-deletion occurs after 72 hours removing the records permanently",
+      "tier": 0,
+      "basis": "claimed",
+      "ref": "retention.stated_policy[1]"
+    },
+    {
+      "kind": "retention_claim",
+      "subject": null,
+      "text": "Your order is valid for 3 days and will be deleted after this time!",
+      "tier": 0,
+      "basis": "claimed",
+      "ref": "retention.stated_policy[2]"
+    },
+    {
+      "kind": "retention_claim",
+      "subject": null,
+      "text": "Your order is valid for 24 hours and will be deleted if no coins are received!",
+      "tier": 0,
+      "basis": "claimed",
+      "ref": "retention.stated_policy[3]"
+    },
+    {
+      "kind": "retention_claim",
+      "subject": null,
+      "text": "The data will be deleted after 3 days.",
+      "tier": 0,
+      "basis": "claimed",
+      "ref": "retention.stated_policy[4]"
+    },
+    {
+      "kind": "retention_observed",
+      "subject": null,
+      "text": "About 78 hours after creation, past the 'valid until' time the service prints, the lookup by order number still returned the full record of the unfunded order (number, creation time, fee, delay, destination and deposit addresses, waiting state)",
+      "cites": [
+        {
+          "id": "cz-replay",
+          "date": "2026-10-21"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "retention.observed[0]"
+    },
+    {
+      "kind": "retention_observed",
+      "subject": null,
+      "text": "The recorded PHP session no longer resolved to the order: the order page redirected to /mix-error and the letter URL to the home page",
+      "cites": [
+        {
+          "id": "cz-replay",
+          "date": "2026-10-21"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "retention.observed[1]"
+    },
+    {
+      "kind": "retention_consistency",
+      "subject": null,
+      "value": "contradicted",
+      "text": "The unfunded order was still served about 78 hours after creation, past the 24-hour (letter) and 3-day (order page) deadlines. One replay; deletion may be batched or delayed rather than absent. A later replay would settle it. The 'no logs' claim is untested.",
+      "tier": 0,
+      "basis": "inferred",
+      "ref": "retention.consistency"
+    },
+    {
+      "kind": "signature",
+      "subject": "Letter of Guarantee",
+      "scheme": "bitcoin_signed_message",
+      "scheme_notes": "Bitcoin signed-message block format; the FAQ tells users to verify it in Electrum against the signing address.",
+      "verification": null,
+      "verification_notes": "Investigator task: the signature over the message block should be verified against the signing address and the published identity.",
+      "signing_identity": "1CrywjDEzzpEMxdWzCDgtmZ3Tr57XrnANV",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "receipts.letter_of_guarantee.signature"
+    }
+  ],
+  "limits": {
+    "tiers_not_run": [
+      1
+    ],
+    "facts_not_tested": [
+      "deposit_txid",
+      "payout_txid",
+      "amounts"
+    ],
+    "columns_not_tested": [],
+    "unknown": [
+      {
+        "ref": "modes[0].limits.max",
+        "notes": "No maximum stated; the FAQ only mentions several nodes and cold wallets with different balances."
+      },
+      {
+        "ref": "receipts[0].signature.verification",
+        "notes": "Investigator task: the signature over the message block should be verified against the signing address and the published identity."
+      },
+      {
+        "ref": "fact_coverage[4].attr",
+        "notes": "tier-1 fact; no deposit was made"
+      },
+      {
+        "ref": "fact_coverage[5].attr",
+        "notes": "tier-1 fact; no payout was made"
+      },
+      {
+        "ref": "fact_coverage[6].attr",
+        "notes": "tier-1 fact; no deposit was made"
+      }
+    ],
+    "status": "reviewed",
+    "disk": [
+      {
+        "id": "cz-disk",
+        "os": "Windows 10",
+        "browser": "Chrome 155",
+        "conditions": "Chrome closed normally; VM shut down normally before acquisition",
+        "tier": 0,
+        "ref": "observations.cz-disk"
+      }
+    ]
+  }
+}

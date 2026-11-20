@@ -1,0 +1,3305 @@
+{
+  "$defs": {
+    "Access": {
+      "additionalProperties": false,
+      "properties": {
+        "account_model": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_AccountModel_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "kyc": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_bool_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "Access",
+      "type": "object"
+    },
+    "AccountModel": {
+      "enum": [
+        "account_less",
+        "optional_account",
+        "required_account"
+      ],
+      "title": "AccountModel",
+      "type": "string"
+    },
+    "Artifact": {
+      "additionalProperties": false,
+      "properties": {
+        "attr": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attr"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "carries_facts": {
+          "items": {
+            "$ref": "#/$defs/Fact"
+          },
+          "title": "Carries Facts",
+          "type": "array"
+        },
+        "case_uco_class": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Case Uco Class"
+        },
+        "caveat": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_str_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "What can mislead about this artifact."
+        },
+        "content_templates": {
+          "items": {
+            "$ref": "#/$defs/Template"
+          },
+          "title": "Content Templates",
+          "type": "array"
+        },
+        "filename_pattern": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Pattern"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "format": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Format"
+        },
+        "id": {
+          "pattern": "^[a-z0-9][a-z0-9_-]*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "location": {
+          "$ref": "#/$defs/Location"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "path_pattern": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Path Pattern"
+        },
+        "persistence_class": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_PersistenceClass_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "produced_by": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "endpoint id | receipt id | client_js | browser | user_action | service_wallet",
+          "title": "Produced By"
+        },
+        "receipt_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Receipt whose content templates parse this artifact.",
+          "title": "Receipt Ref"
+        },
+        "recovery_route": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_str_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "search_keys": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Pattern"
+              },
+              {
+                "$ref": "#/$defs/InvariantLiteral"
+              }
+            ]
+          },
+          "title": "Search Keys",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "location"
+      ],
+      "title": "Artifact",
+      "type": "object"
+    },
+    "Attr": {
+      "additionalProperties": false,
+      "description": "Provenance block carried by every fact and every record.",
+      "properties": {
+        "basis": {
+          "$ref": "#/$defs/Basis"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "sources": {
+          "description": "Observation ids (\u00a7S); required unless unknown.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "tier": {
+          "$ref": "#/$defs/Tier",
+          "description": "Lowest tier that establishes this."
+        },
+        "validity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Validity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "tier",
+        "basis"
+      ],
+      "title": "Attr",
+      "type": "object"
+    },
+    "Attribute_AccountModel_": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "$ref": "#/$defs/Basis"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "sources": {
+          "description": "Observation ids (\u00a7S); required unless unknown.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "tier": {
+          "$ref": "#/$defs/Tier",
+          "description": "Lowest tier that establishes this."
+        },
+        "validity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Validity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "value": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AccountModel"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "tier",
+        "basis"
+      ],
+      "title": "Attribute[AccountModel]",
+      "type": "object"
+    },
+    "Attribute_Any_": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "$ref": "#/$defs/Basis"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "sources": {
+          "description": "Observation ids (\u00a7S); required unless unknown.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "tier": {
+          "$ref": "#/$defs/Tier",
+          "description": "Lowest tier that establishes this."
+        },
+        "validity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Validity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "value": {
+          "default": null,
+          "title": "Value"
+        }
+      },
+      "required": [
+        "tier",
+        "basis"
+      ],
+      "title": "Attribute[Any]",
+      "type": "object"
+    },
+    "Attribute_CachePolicy_": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "$ref": "#/$defs/Basis"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "sources": {
+          "description": "Observation ids (\u00a7S); required unless unknown.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "tier": {
+          "$ref": "#/$defs/Tier",
+          "description": "Lowest tier that establishes this."
+        },
+        "validity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Validity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "value": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CachePolicy"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "tier",
+        "basis"
+      ],
+      "title": "Attribute[CachePolicy]",
+      "type": "object"
+    },
+    "Attribute_CellValue_": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "$ref": "#/$defs/Basis"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "sources": {
+          "description": "Observation ids (\u00a7S); required unless unknown.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "tier": {
+          "$ref": "#/$defs/Tier",
+          "description": "Lowest tier that establishes this."
+        },
+        "validity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Validity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "value": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CellValue"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "tier",
+        "basis"
+      ],
+      "title": "Attribute[CellValue]",
+      "type": "object"
+    },
+    "Attribute_Consistency_": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "$ref": "#/$defs/Basis"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "sources": {
+          "description": "Observation ids (\u00a7S); required unless unknown.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "tier": {
+          "$ref": "#/$defs/Tier",
+          "description": "Lowest tier that establishes this."
+        },
+        "validity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Validity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "value": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Consistency"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "tier",
+        "basis"
+      ],
+      "title": "Attribute[Consistency]",
+      "type": "object"
+    },
+    "Attribute_ContentEncoding_": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "$ref": "#/$defs/Basis"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "sources": {
+          "description": "Observation ids (\u00a7S); required unless unknown.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "tier": {
+          "$ref": "#/$defs/Tier",
+          "description": "Lowest tier that establishes this."
+        },
+        "validity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Validity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "value": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ContentEncoding"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "tier",
+        "basis"
+      ],
+      "title": "Attribute[ContentEncoding]",
+      "type": "object"
+    },
+    "Attribute_Fact_": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "$ref": "#/$defs/Basis"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "sources": {
+          "description": "Observation ids (\u00a7S); required unless unknown.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "tier": {
+          "$ref": "#/$defs/Tier",
+          "description": "Lowest tier that establishes this."
+        },
+        "validity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Validity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "value": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Fact"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "tier",
+        "basis"
+      ],
+      "title": "Attribute[Fact]",
+      "type": "object"
+    },
+    "Attribute_IdentifierRole_": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "$ref": "#/$defs/Basis"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "sources": {
+          "description": "Observation ids (\u00a7S); required unless unknown.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "tier": {
+          "$ref": "#/$defs/Tier",
+          "description": "Lowest tier that establishes this."
+        },
+        "validity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Validity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "value": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/IdentifierRole"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "tier",
+        "basis"
+      ],
+      "title": "Attribute[IdentifierRole]",
+      "type": "object"
+    },
+    "Attribute_PersistenceClass_": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "$ref": "#/$defs/Basis"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "sources": {
+          "description": "Observation ids (\u00a7S); required unless unknown.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "tier": {
+          "$ref": "#/$defs/Tier",
+          "description": "Lowest tier that establishes this."
+        },
+        "validity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Validity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "value": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PersistenceClass"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "tier",
+        "basis"
+      ],
+      "title": "Attribute[PersistenceClass]",
+      "type": "object"
+    },
+    "Attribute_ReceiptContainer_": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "$ref": "#/$defs/Basis"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "sources": {
+          "description": "Observation ids (\u00a7S); required unless unknown.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "tier": {
+          "$ref": "#/$defs/Tier",
+          "description": "Lowest tier that establishes this."
+        },
+        "validity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Validity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "value": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ReceiptContainer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "tier",
+        "basis"
+      ],
+      "title": "Attribute[ReceiptContainer]",
+      "type": "object"
+    },
+    "Attribute_ReceiptDelivery_": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "$ref": "#/$defs/Basis"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "sources": {
+          "description": "Observation ids (\u00a7S); required unless unknown.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "tier": {
+          "$ref": "#/$defs/Tier",
+          "description": "Lowest tier that establishes this."
+        },
+        "validity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Validity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "value": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ReceiptDelivery"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "tier",
+        "basis"
+      ],
+      "title": "Attribute[ReceiptDelivery]",
+      "type": "object"
+    },
+    "Attribute_ReplayOutcome_": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "$ref": "#/$defs/Basis"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "sources": {
+          "description": "Observation ids (\u00a7S); required unless unknown.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "tier": {
+          "$ref": "#/$defs/Tier",
+          "description": "Lowest tier that establishes this."
+        },
+        "validity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Validity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "value": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ReplayOutcome"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "tier",
+        "basis"
+      ],
+      "title": "Attribute[ReplayOutcome]",
+      "type": "object"
+    },
+    "Attribute_SignatureScheme_": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "$ref": "#/$defs/Basis"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "sources": {
+          "description": "Observation ids (\u00a7S); required unless unknown.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "tier": {
+          "$ref": "#/$defs/Tier",
+          "description": "Lowest tier that establishes this."
+        },
+        "validity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Validity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "value": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SignatureScheme"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "tier",
+        "basis"
+      ],
+      "title": "Attribute[SignatureScheme]",
+      "type": "object"
+    },
+    "Attribute_StatusMechanism_": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "$ref": "#/$defs/Basis"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "sources": {
+          "description": "Observation ids (\u00a7S); required unless unknown.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "tier": {
+          "$ref": "#/$defs/Tier",
+          "description": "Lowest tier that establishes this."
+        },
+        "validity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Validity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "value": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/StatusMechanism"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "tier",
+        "basis"
+      ],
+      "title": "Attribute[StatusMechanism]",
+      "type": "object"
+    },
+    "Attribute_bool_": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "$ref": "#/$defs/Basis"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "sources": {
+          "description": "Observation ids (\u00a7S); required unless unknown.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "tier": {
+          "$ref": "#/$defs/Tier",
+          "description": "Lowest tier that establishes this."
+        },
+        "validity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Validity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        }
+      },
+      "required": [
+        "tier",
+        "basis"
+      ],
+      "title": "Attribute[bool]",
+      "type": "object"
+    },
+    "Attribute_dict_str__Fact__": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "$ref": "#/$defs/Basis"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "sources": {
+          "description": "Observation ids (\u00a7S); required unless unknown.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "tier": {
+          "$ref": "#/$defs/Tier",
+          "description": "Lowest tier that establishes this."
+        },
+        "validity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Validity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "value": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "$ref": "#/$defs/Fact"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        }
+      },
+      "required": [
+        "tier",
+        "basis"
+      ],
+      "title": "Attribute[dict[str, Fact]]",
+      "type": "object"
+    },
+    "Attribute_list_GateMechanism__": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "$ref": "#/$defs/Basis"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "sources": {
+          "description": "Observation ids (\u00a7S); required unless unknown.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "tier": {
+          "$ref": "#/$defs/Tier",
+          "description": "Lowest tier that establishes this."
+        },
+        "validity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Validity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "value": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/GateMechanism"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        }
+      },
+      "required": [
+        "tier",
+        "basis"
+      ],
+      "title": "Attribute[list[GateMechanism]]",
+      "type": "object"
+    },
+    "Attribute_list_str__": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "$ref": "#/$defs/Basis"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "sources": {
+          "description": "Observation ids (\u00a7S); required unless unknown.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "tier": {
+          "$ref": "#/$defs/Tier",
+          "description": "Lowest tier that establishes this."
+        },
+        "validity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Validity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "value": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        }
+      },
+      "required": [
+        "tier",
+        "basis"
+      ],
+      "title": "Attribute[list[str]]",
+      "type": "object"
+    },
+    "Attribute_str_": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "$ref": "#/$defs/Basis"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "sources": {
+          "description": "Observation ids (\u00a7S); required unless unknown.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "tier": {
+          "$ref": "#/$defs/Tier",
+          "description": "Lowest tier that establishes this."
+        },
+        "validity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Validity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        }
+      },
+      "required": [
+        "tier",
+        "basis"
+      ],
+      "title": "Attribute[str]",
+      "type": "object"
+    },
+    "Basis": {
+      "enum": [
+        "observed",
+        "inferred",
+        "claimed",
+        "unknown"
+      ],
+      "title": "Basis",
+      "type": "string"
+    },
+    "CachePolicy": {
+      "enum": [
+        "no_store",
+        "no_cache",
+        "cacheable_heuristic",
+        "cacheable_explicit",
+        "cache_busted",
+        "unknown"
+      ],
+      "title": "CachePolicy",
+      "type": "string"
+    },
+    "Cell": {
+      "additionalProperties": false,
+      "description": "One cell of the fact-by-source matrix. In YAML a cell is written as a string:\n`recovered`, or `recovered: letter body` (value, colon, free-text detail).",
+      "properties": {
+        "detail": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Detail"
+        },
+        "value": {
+          "$ref": "#/$defs/CellValue"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "Cell",
+      "type": "object"
+    },
+    "CellValue": {
+      "description": "Table 3 vocabulary: what a source yields for a fact.",
+      "enum": [
+        "recovered",
+        "metadata_only",
+        "live_only",
+        "required_to_query",
+        "not_stored_by_design",
+        "not_found",
+        "not_tested",
+        "not_applicable"
+      ],
+      "title": "CellValue",
+      "type": "string"
+    },
+    "ClientIpLeak": {
+      "additionalProperties": false,
+      "properties": {
+        "mechanism": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_str_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "present": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_bool_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "ClientIpLeak",
+      "type": "object"
+    },
+    "Consistency": {
+      "enum": [
+        "consistent",
+        "partially_consistent",
+        "contradicted",
+        "untested"
+      ],
+      "title": "Consistency",
+      "type": "string"
+    },
+    "ContentEncoding": {
+      "enum": [
+        "gzip",
+        "br",
+        "zstd",
+        "none"
+      ],
+      "title": "ContentEncoding",
+      "type": "string"
+    },
+    "Cookie": {
+      "additionalProperties": false,
+      "properties": {
+        "attr": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attr"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "client_max_age": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_str_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "encodes_fact": {
+          "items": {
+            "$ref": "#/$defs/Fact"
+          },
+          "title": "Encodes Fact",
+          "type": "array"
+        },
+        "flags": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_list_str__"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "name": {
+          "description": "Cookie NAME only, never a value.",
+          "title": "Name",
+          "type": "string"
+        },
+        "persists_to_disk": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_bool_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "purpose": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_str_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "rotation_interval": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_str_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "server_side_validity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_str_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "set_by": {
+          "$ref": "#/$defs/CookieSetBy"
+        },
+        "value_scheme": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Pattern"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "name",
+        "set_by"
+      ],
+      "title": "Cookie",
+      "type": "object"
+    },
+    "CookieSetBy": {
+      "enum": [
+        "application",
+        "cdn",
+        "analytics"
+      ],
+      "title": "CookieSetBy",
+      "type": "string"
+    },
+    "DomainRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "attr": {
+          "$ref": "#/$defs/Attr"
+        },
+        "domain": {
+          "title": "Domain",
+          "type": "string"
+        },
+        "role": {
+          "$ref": "#/$defs/DomainRole"
+        }
+      },
+      "required": [
+        "domain",
+        "role",
+        "attr"
+      ],
+      "title": "DomainRecord",
+      "type": "object"
+    },
+    "DomainRole": {
+      "enum": [
+        "canonical",
+        "assets_api",
+        "alias",
+        "suspected_clone",
+        "onion"
+      ],
+      "title": "DomainRole",
+      "type": "string"
+    },
+    "Endpoint": {
+      "additionalProperties": false,
+      "properties": {
+        "attr": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attr"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "cache_policy": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_CachePolicy_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "content_encoding": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_ContentEncoding_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "field_facts": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Fact"
+          },
+          "description": "Request field name -> canonical fact it carries.",
+          "title": "Field Facts",
+          "type": "object"
+        },
+        "gate": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_list_GateMechanism__"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Mechanisms required; an empty list means open."
+        },
+        "id": {
+          "pattern": "^[a-z0-9][a-z0-9_-]*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "lookup_key": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_Fact_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Fact the endpoint looks an order up by."
+        },
+        "method": {
+          "title": "Method",
+          "type": "string"
+        },
+        "ownership_check": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_bool_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "path": {
+          "$ref": "#/$defs/Pattern"
+        },
+        "purpose": {
+          "title": "Purpose",
+          "type": "string"
+        },
+        "replay_results": {
+          "items": {
+            "$ref": "#/$defs/ReplayResult"
+          },
+          "title": "Replay Results",
+          "type": "array"
+        },
+        "request_fields": {
+          "description": "Body / query field NAMES only.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Request Fields",
+          "type": "array"
+        },
+        "response_templates": {
+          "items": {
+            "$ref": "#/$defs/Template"
+          },
+          "title": "Response Templates",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "method",
+        "path",
+        "purpose"
+      ],
+      "title": "Endpoint",
+      "type": "object"
+    },
+    "EntryStatus": {
+      "enum": [
+        "draft",
+        "reviewed",
+        "confirmed"
+      ],
+      "title": "EntryStatus",
+      "type": "string"
+    },
+    "Extension": {
+      "additionalProperties": false,
+      "properties": {
+        "attr": {
+          "$ref": "#/$defs/Attribute_Any_"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        }
+      },
+      "required": [
+        "description",
+        "attr"
+      ],
+      "title": "Extension",
+      "type": "object"
+    },
+    "Fact": {
+      "description": "Canonical transaction facts: the comparison axis across services.",
+      "enum": [
+        "deposit_address",
+        "destination_address",
+        "order_id",
+        "receipt",
+        "deposit_txid",
+        "payout_txid",
+        "amounts",
+        "fee_and_delay",
+        "mix_mode",
+        "order_created_time",
+        "session_id",
+        "client_ip",
+        "user_identifier",
+        "status_progression"
+      ],
+      "title": "Fact",
+      "type": "string"
+    },
+    "Framework": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_str_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "signals": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Signals",
+          "type": "array"
+        }
+      },
+      "title": "Framework",
+      "type": "object"
+    },
+    "GateMechanism": {
+      "description": "An endpoint's gate is a list of these (empty list = open).",
+      "enum": [
+        "session",
+        "csrf",
+        "captcha",
+        "cdn_challenge"
+      ],
+      "title": "GateMechanism",
+      "type": "string"
+    },
+    "Identifier": {
+      "additionalProperties": false,
+      "properties": {
+        "attr": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attr"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "derivation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_str_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "exposed_in": {
+          "items": {
+            "$ref": "#/$defs/Location"
+          },
+          "title": "Exposed In",
+          "type": "array"
+        },
+        "fact": {
+          "$ref": "#/$defs/Fact"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "role": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_IdentifierRole_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "scheme": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Pattern"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "name",
+        "fact"
+      ],
+      "title": "Identifier",
+      "type": "object"
+    },
+    "IdentifierRole": {
+      "enum": [
+        "record_key",
+        "status_lookup_key",
+        "display_only",
+        "cross_order_user_key"
+      ],
+      "title": "IdentifierRole",
+      "type": "string"
+    },
+    "Identity": {
+      "additionalProperties": false,
+      "properties": {
+        "cdn_proxy": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_str_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "client_ip_leak": {
+          "$ref": "#/$defs/ClientIpLeak"
+        },
+        "domains": {
+          "items": {
+            "$ref": "#/$defs/DomainRecord"
+          },
+          "title": "Domains",
+          "type": "array"
+        },
+        "framework": {
+          "$ref": "#/$defs/Framework"
+        }
+      },
+      "title": "Identity",
+      "type": "object"
+    },
+    "Indicator": {
+      "additionalProperties": false,
+      "properties": {
+        "attr": {
+          "$ref": "#/$defs/Attr"
+        },
+        "kind": {
+          "$ref": "#/$defs/IndicatorKind"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Pattern"
+            },
+            {
+              "$ref": "#/$defs/InvariantLiteral"
+            }
+          ],
+          "title": "Value"
+        },
+        "weight": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Weight",
+          "type": "number"
+        }
+      },
+      "required": [
+        "kind",
+        "value",
+        "weight",
+        "attr"
+      ],
+      "title": "Indicator",
+      "type": "object"
+    },
+    "IndicatorKind": {
+      "enum": [
+        "domain",
+        "url_path",
+        "filename",
+        "string",
+        "cookie_name",
+        "header"
+      ],
+      "title": "IndicatorKind",
+      "type": "string"
+    },
+    "InvariantLiteral": {
+      "additionalProperties": false,
+      "properties": {
+        "justification": {
+          "description": "Why this is service-level, not instance data.",
+          "minLength": 10,
+          "title": "Justification",
+          "type": "string"
+        },
+        "literal": {
+          "title": "Literal",
+          "type": "string"
+        }
+      },
+      "required": [
+        "literal",
+        "justification"
+      ],
+      "title": "InvariantLiteral",
+      "type": "object"
+    },
+    "Limits": {
+      "additionalProperties": false,
+      "properties": {
+        "max": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_str_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "min": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_str_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "Limits",
+      "type": "object"
+    },
+    "Location": {
+      "enum": [
+        "chrome_history",
+        "chrome_downloads",
+        "chrome_cache",
+        "chrome_cookies",
+        "chrome_local_storage",
+        "chrome_session_storage",
+        "chrome_indexeddb",
+        "chrome_autofill",
+        "chrome_sessions",
+        "filesystem",
+        "pagefile",
+        "unallocated",
+        "on_chain",
+        "network_only"
+      ],
+      "title": "Location",
+      "type": "string"
+    },
+    "MatrixRow": {
+      "additionalProperties": false,
+      "properties": {
+        "artifacts": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Artifacts",
+          "type": "array"
+        },
+        "attr": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attr"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "best_persistence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PersistenceClass"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "cells": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Cell"
+          },
+          "propertyNames": {
+            "$ref": "#/$defs/MatrixSource"
+          },
+          "title": "Cells",
+          "type": "object"
+        },
+        "fact": {
+          "$ref": "#/$defs/Fact"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        }
+      },
+      "required": [
+        "fact"
+      ],
+      "title": "MatrixRow",
+      "type": "object"
+    },
+    "MatrixSource": {
+      "description": "Columns of the fact-by-source matrix, in display order.",
+      "enum": [
+        "history",
+        "downloads",
+        "cache",
+        "cookies",
+        "web_storage",
+        "autofill",
+        "sessions",
+        "filesystem",
+        "replay",
+        "chain"
+      ],
+      "title": "MatrixSource",
+      "type": "string"
+    },
+    "Mode": {
+      "additionalProperties": false,
+      "properties": {
+        "attr": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attr"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "chain_flow": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_str_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "delay_options": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_str_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "fee_model": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_str_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "id": {
+          "pattern": "^[a-z0-9][a-z0-9_-]*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "limits": {
+          "$ref": "#/$defs/Limits"
+        },
+        "order_params": {
+          "description": "Request field names.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Order Params",
+          "type": "array"
+        },
+        "page_paths": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Page Paths",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "title": "Mode",
+      "type": "object"
+    },
+    "NegativeFinding": {
+      "additionalProperties": false,
+      "properties": {
+        "attr": {
+          "$ref": "#/$defs/Attribute_CellValue_"
+        },
+        "facts": {
+          "description": "The facts this finding explains; empty means every fact absent from the location's column.",
+          "items": {
+            "$ref": "#/$defs/Fact"
+          },
+          "title": "Facts",
+          "type": "array"
+        },
+        "finding": {
+          "title": "Finding",
+          "type": "string"
+        },
+        "implication": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_str_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "What the absence means for an examiner."
+        },
+        "location": {
+          "$ref": "#/$defs/Location"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        }
+      },
+      "required": [
+        "location",
+        "finding",
+        "attr"
+      ],
+      "title": "NegativeFinding",
+      "type": "object"
+    },
+    "Observation": {
+      "additionalProperties": false,
+      "properties": {
+        "browser_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "e.g. Chrome 150",
+          "title": "Browser Version"
+        },
+        "case_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Pointer to the case file / evidence log, never its contents.",
+          "title": "Case Ref"
+        },
+        "conditions": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Acquisition conditions of a disk image: how the browser and the machine were closed, what else the profile holds.",
+          "title": "Conditions"
+        },
+        "date": {
+          "anyOf": [
+            {
+              "pattern": "^\\d{4}-\\d{2}(?:-\\d{2})?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "YYYY-MM or YYYY-MM-DD",
+          "title": "Date"
+        },
+        "id": {
+          "pattern": "^[a-z0-9][a-z0-9._-]*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/ObservationKind"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "os": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Operating system of the subject machine, e.g. Windows 10",
+          "title": "Os"
+        },
+        "provenance_class": {
+          "$ref": "#/$defs/ProvenanceClass"
+        },
+        "tier": {
+          "$ref": "#/$defs/Tier"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "provenance_class",
+        "tier"
+      ],
+      "title": "Observation",
+      "type": "object"
+    },
+    "ObservationKind": {
+      "enum": [
+        "capture_flow",
+        "disk_image",
+        "operator_page",
+        "replay",
+        "explorer"
+      ],
+      "title": "ObservationKind",
+      "type": "string"
+    },
+    "OrderModel": {
+      "additionalProperties": false,
+      "properties": {
+        "identifiers": {
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "title": "Identifiers",
+          "type": "array"
+        }
+      },
+      "title": "OrderModel",
+      "type": "object"
+    },
+    "Pattern": {
+      "additionalProperties": false,
+      "properties": {
+        "describes": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Fact"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The fact this pattern matches, if any."
+        },
+        "regex": {
+          "description": "Regular expression; may use <placeholders> from \u00a7P.",
+          "title": "Regex",
+          "type": "string"
+        }
+      },
+      "required": [
+        "regex"
+      ],
+      "title": "Pattern",
+      "type": "object"
+    },
+    "PersistenceClass": {
+      "enum": [
+        "disk",
+        "on_chain",
+        "none_by_design"
+      ],
+      "title": "PersistenceClass",
+      "type": "string"
+    },
+    "ProvenanceClass": {
+      "enum": [
+        "subject_evidence",
+        "instrumentation",
+        "operator_claim",
+        "public_record"
+      ],
+      "title": "ProvenanceClass",
+      "type": "string"
+    },
+    "Receipt": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Artifact Refs",
+          "type": "array"
+        },
+        "attr": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attr"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "evidentiary_value": {
+          "$ref": "#/$defs/ReceiptEvidentiaryValue"
+        },
+        "field_map": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_dict_str__Fact__"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Printed label -> fact it introduces in the receipt text."
+        },
+        "file": {
+          "$ref": "#/$defs/ReceiptFile"
+        },
+        "id": {
+          "pattern": "^[a-z0-9][a-z0-9_-]*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "obtained_via": {
+          "$ref": "#/$defs/ReceiptObtainedVia"
+        },
+        "offered": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_str_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "always | optional | none"
+        },
+        "signature": {
+          "$ref": "#/$defs/ReceiptSignature"
+        },
+        "structure": {
+          "$ref": "#/$defs/ReceiptStructure"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "title": "Receipt",
+      "type": "object"
+    },
+    "ReceiptContainer": {
+      "enum": [
+        "plain_text",
+        "bitcoin_signed_message",
+        "pgp_clearsigned",
+        "pgp_detached",
+        "json",
+        "html",
+        "pdf"
+      ],
+      "title": "ReceiptContainer",
+      "type": "string"
+    },
+    "ReceiptDelivery": {
+      "enum": [
+        "server_file",
+        "client_blob",
+        "page_text",
+        "none"
+      ],
+      "title": "ReceiptDelivery",
+      "type": "string"
+    },
+    "ReceiptEvidentiaryValue": {
+      "additionalProperties": false,
+      "properties": {
+        "binds_facts": {
+          "items": {
+            "$ref": "#/$defs/Fact"
+          },
+          "title": "Binds Facts",
+          "type": "array"
+        },
+        "survives_server_purge": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_bool_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "ReceiptEvidentiaryValue",
+      "type": "object"
+    },
+    "ReceiptFile": {
+      "additionalProperties": false,
+      "properties": {
+        "encoding": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_str_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "filename_pattern": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Pattern"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "mime_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_str_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "ReceiptFile",
+      "type": "object"
+    },
+    "ReceiptObtainedVia": {
+      "additionalProperties": false,
+      "properties": {
+        "cache_policy": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_CachePolicy_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "delivery": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_ReceiptDelivery_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "endpoint_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Endpoint Ref"
+        },
+        "request_params": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Request Params",
+          "type": "array"
+        }
+      },
+      "title": "ReceiptObtainedVia",
+      "type": "object"
+    },
+    "ReceiptSignature": {
+      "additionalProperties": false,
+      "properties": {
+        "identity_published_at": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Identity Published At",
+          "type": "array"
+        },
+        "key_history": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_str_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "scheme": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_SignatureScheme_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "signed_content": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_str_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "signing_identity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/InvariantLiteral"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "verification": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_str_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "ReceiptSignature",
+      "type": "object"
+    },
+    "ReceiptStructure": {
+      "additionalProperties": false,
+      "properties": {
+        "boundary_markers": {
+          "description": "Lines that open / close a signed block.",
+          "items": {
+            "$ref": "#/$defs/Pattern"
+          },
+          "title": "Boundary Markers",
+          "type": "array"
+        },
+        "container": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_ReceiptContainer_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "container_notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Container Notes"
+        },
+        "templates": {
+          "description": "Content templates, one per variant.",
+          "items": {
+            "$ref": "#/$defs/Template"
+          },
+          "title": "Templates",
+          "type": "array"
+        }
+      },
+      "title": "ReceiptStructure",
+      "type": "object"
+    },
+    "ReplayOutcome": {
+      "enum": [
+        "live",
+        "accepted",
+        "rejected",
+        "unknown"
+      ],
+      "title": "ReplayOutcome",
+      "type": "string"
+    },
+    "ReplayResult": {
+      "additionalProperties": false,
+      "description": "One variant of the four-request replay protocol and what its reply showed.",
+      "properties": {
+        "outcome": {
+          "$ref": "#/$defs/Attribute_ReplayOutcome_"
+        },
+        "reading": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reading"
+        },
+        "reply": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Template"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "variant": {
+          "$ref": "#/$defs/ReplayVariant"
+        }
+      },
+      "required": [
+        "variant",
+        "outcome"
+      ],
+      "title": "ReplayResult",
+      "type": "object"
+    },
+    "ReplayVariant": {
+      "enum": [
+        "original",
+        "superseded_session",
+        "no_cookies",
+        "foreign_order_key"
+      ],
+      "title": "ReplayVariant",
+      "type": "string"
+    },
+    "Retention": {
+      "additionalProperties": false,
+      "properties": {
+        "consistency": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_Consistency_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "observed": {
+          "items": {
+            "$ref": "#/$defs/Attribute_str_"
+          },
+          "title": "Observed",
+          "type": "array"
+        },
+        "stated_policy": {
+          "items": {
+            "$ref": "#/$defs/Attribute_str_"
+          },
+          "title": "Stated Policy",
+          "type": "array"
+        }
+      },
+      "title": "Retention",
+      "type": "object"
+    },
+    "ServiceMeta": {
+      "additionalProperties": false,
+      "properties": {
+        "analysts": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Analysts",
+          "type": "array"
+        },
+        "display_name": {
+          "title": "Display Name",
+          "type": "string"
+        },
+        "entry_status": {
+          "$ref": "#/$defs/EntryStatus",
+          "default": "draft"
+        },
+        "first_analyzed": {
+          "anyOf": [
+            {
+              "pattern": "^\\d{4}-\\d{2}(?:-\\d{2})?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "First Analyzed"
+        },
+        "id": {
+          "pattern": "^[a-z0-9][a-z0-9_-]*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "tiers_completed": {
+          "items": {
+            "$ref": "#/$defs/Tier"
+          },
+          "title": "Tiers Completed",
+          "type": "array"
+        },
+        "validity_default": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Validity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Applies to every attribute without its own validity."
+        }
+      },
+      "required": [
+        "id",
+        "display_name"
+      ],
+      "title": "ServiceMeta",
+      "type": "object"
+    },
+    "SignatureScheme": {
+      "enum": [
+        "bitcoin_signed_message",
+        "pgp",
+        "rsa",
+        "none",
+        "unknown"
+      ],
+      "title": "SignatureScheme",
+      "type": "string"
+    },
+    "Status": {
+      "additionalProperties": false,
+      "properties": {
+        "endpoint_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Endpoint Ref"
+        },
+        "interval": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_str_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "mechanism": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_StatusMechanism_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "replay_behavior": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attribute_str_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "states": {
+          "items": {
+            "$ref": "#/$defs/StatusState"
+          },
+          "title": "States",
+          "type": "array"
+        }
+      },
+      "title": "Status",
+      "type": "object"
+    },
+    "StatusMechanism": {
+      "enum": [
+        "polling",
+        "websocket",
+        "server_rendered_refresh",
+        "none"
+      ],
+      "title": "StatusMechanism",
+      "type": "string"
+    },
+    "StatusState": {
+      "additionalProperties": false,
+      "properties": {
+        "attr": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attr"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "order": {
+          "title": "Order",
+          "type": "integer"
+        },
+        "template": {
+          "$ref": "#/$defs/Template"
+        }
+      },
+      "required": [
+        "order",
+        "label",
+        "template"
+      ],
+      "title": "StatusState",
+      "type": "object"
+    },
+    "Template": {
+      "additionalProperties": false,
+      "properties": {
+        "literals": {
+          "description": "Service-level literals that occur verbatim in the text (e.g. a signing address).",
+          "items": {
+            "$ref": "#/$defs/InvariantLiteral"
+          },
+          "title": "Literals",
+          "type": "array"
+        },
+        "text": {
+          "description": "Literal response / document text with <placeholders> for instance values.",
+          "title": "Text",
+          "type": "string"
+        },
+        "yields": {
+          "description": "Facts carried by the fact-bearing placeholders, in order.",
+          "items": {
+            "$ref": "#/$defs/Fact"
+          },
+          "title": "Yields",
+          "type": "array"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "title": "Template",
+      "type": "object"
+    },
+    "Tier": {
+      "description": "Stage of the transaction at which a fact can first be established. The observation\nkind (capture, disk image, operator page, replay, explorer) records HOW it was seen.",
+      "enum": [
+        0,
+        1
+      ],
+      "title": "Tier",
+      "type": "integer"
+    },
+    "Validity": {
+      "additionalProperties": false,
+      "description": "When a value was true. Front ends change: a superseded record is kept and dated.",
+      "properties": {
+        "first_seen": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "YYYY-MM or YYYY-MM-DD",
+          "title": "First Seen"
+        },
+        "last_seen": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "YYYY-MM or YYYY-MM-DD",
+          "title": "Last Seen"
+        },
+        "status": {
+          "$ref": "#/$defs/ValidityStatus",
+          "default": "current"
+        },
+        "superseded_by": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Path of the record that replaces this one.",
+          "title": "Superseded By"
+        }
+      },
+      "title": "Validity",
+      "type": "object"
+    },
+    "ValidityStatus": {
+      "enum": [
+        "current",
+        "superseded",
+        "withdrawn"
+      ],
+      "title": "ValidityStatus",
+      "type": "string"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "One mixer service's invariant record (codes defined in knowledge_base/definitions.yaml). Every fact is an Attribute (value, tier 0 = no funds / 1 = funded, confidence observed|inferred|claimed|unknown, sources = observation ids). Instance data (specific addresses, TXIDs, order IDs, cookie values, amounts, timestamps) is rejected by the Python validators and belongs in a per-case findings file, never the KB.",
+  "properties": {
+    "access": {
+      "$ref": "#/$defs/Access"
+    },
+    "artifacts": {
+      "items": {
+        "$ref": "#/$defs/Artifact"
+      },
+      "title": "Artifacts",
+      "type": "array"
+    },
+    "cookies": {
+      "items": {
+        "$ref": "#/$defs/Cookie"
+      },
+      "title": "Cookies",
+      "type": "array"
+    },
+    "endpoints": {
+      "items": {
+        "$ref": "#/$defs/Endpoint"
+      },
+      "title": "Endpoints",
+      "type": "array"
+    },
+    "extensions": {
+      "additionalProperties": {
+        "$ref": "#/$defs/Extension"
+      },
+      "title": "Extensions",
+      "type": "object"
+    },
+    "fact_coverage": {
+      "items": {
+        "$ref": "#/$defs/MatrixRow"
+      },
+      "title": "Fact Coverage",
+      "type": "array"
+    },
+    "identity": {
+      "$ref": "#/$defs/Identity"
+    },
+    "indicators": {
+      "items": {
+        "$ref": "#/$defs/Indicator"
+      },
+      "title": "Indicators",
+      "type": "array"
+    },
+    "modes": {
+      "items": {
+        "$ref": "#/$defs/Mode"
+      },
+      "title": "Modes",
+      "type": "array"
+    },
+    "negative_findings": {
+      "items": {
+        "$ref": "#/$defs/NegativeFinding"
+      },
+      "title": "Negative Findings",
+      "type": "array"
+    },
+    "observations": {
+      "items": {
+        "$ref": "#/$defs/Observation"
+      },
+      "title": "Observations",
+      "type": "array"
+    },
+    "order_model": {
+      "$ref": "#/$defs/OrderModel"
+    },
+    "receipts": {
+      "items": {
+        "$ref": "#/$defs/Receipt"
+      },
+      "title": "Receipts",
+      "type": "array"
+    },
+    "retention": {
+      "$ref": "#/$defs/Retention"
+    },
+    "schema_version": {
+      "default": "0.4",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "service": {
+      "$ref": "#/$defs/ServiceMeta"
+    },
+    "status": {
+      "$ref": "#/$defs/Status"
+    }
+  },
+  "required": [
+    "service"
+  ],
+  "title": "mixerscope ServiceEntry v0.4",
+  "type": "object"
+}

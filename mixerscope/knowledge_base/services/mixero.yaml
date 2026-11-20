@@ -1,0 +1,1558 @@
+# =============================================================================
+# MixerScope KB entry: Mixero                                   schema_version 0.4
+# =============================================================================
+# INVARIANTS ONLY. No value from any order appears here; order-specific values are
+# placeholders (<btc_address>, <order_id>, <txid_hex64>, ...). Service-level literals
+# (signing key, onion) are InvariantLiterals with a justification.
+# =============================================================================
+schema_version: "0.4"
+
+service:
+  id: mixero
+  display_name: Mixero
+  entry_status: reviewed
+  tiers_completed: [0, 1]
+  analysts: [analyst]
+  first_analyzed: "2026-07"
+  validity_default:
+    { first_seen: "2026-07", last_seen: "2026-10", status: current }
+
+observations:
+  - id: mx-flow
+    kind: capture_flow
+    provenance_class: instrumentation
+    tier: 1
+    date: "2026-07-22"
+    os: Windows 10
+    browser_version: Chrome 150
+    case_ref: "proxy capture of the tier-1 order"
+    notes: "Proxy capture of one order from page loads through order creation, invoice, letter download, status polling and completion (460 exchanges); also the source of the page scripts and page text."
+  - id: mx-policy
+    kind: operator_page
+    provenance_class: operator_claim
+    tier: 0
+    date: "2026-07-22"
+    case_ref: "mixero.io order form, FAQ, terms and footer text as served during the capture; the operator statements printed in the Letter of Guarantee"
+  - id: mx-disk
+    kind: disk_image
+    provenance_class: subject_evidence
+    tier: 1
+    date: "2026-07-22"
+    os: Windows 10
+    browser_version: Chrome 150
+    case_ref: "disk image of the capture VM acquired after the tier-1 run (Chrome profile, Downloads)"
+    conditions: "Chrome closed normally; VM shut down normally before acquisition. Acquired after the tier-1 run; covers the tier-0 artifacts as well"
+    notes: "Examined in Autopsy (read-only), including its web-cache view, which located the cached letter.php response. The memory dump taken in the experiment is deliberately out of scope: a post-incident investigator has the disk, not live memory."
+  - id: mx-replay
+    kind: replay
+    provenance_class: instrumentation
+    tier: 1
+    date: "2026-08"
+    case_ref: "replay of the captured status request about two weeks after completion, four variants (paper Section 3.1)"
+  - id: mx-chain
+    kind: explorer
+    provenance_class: public_record
+    tier: 1
+    date: "2026-07"
+    case_ref: "mempool.space lookups of the examiner-owned deposit and destination addresses"
+
+# --- 1. Identity -------------------------------------------------------------------------
+identity:
+  domains:
+    - domain: mixero.io
+      role: canonical
+      attr: { tier: 0, basis: observed, sources: [mx-policy, mx-flow] }
+    - domain: mixero.co
+      role: assets_api
+      attr:
+        {
+          tier: 0,
+          basis: observed,
+          sources: [mx-flow],
+          notes: "All captured traffic, assets and API calls went to this host.",
+        }
+    - domain: mixero.org
+      role: alias
+      attr: { tier: 0, basis: observed, sources: [mx-policy] }
+    - domain: mixero.website
+      role: alias
+      attr: { tier: 0, basis: observed, sources: [mx-policy] }
+    - domain: mixeruni.com
+      role: alias
+      attr:
+        {
+          tier: 0,
+          basis: observed,
+          sources: [mx-policy],
+          notes: "Numbered mixero33-style variants also seen; treat unlisted lookalikes as suspected clones.",
+        }
+    - domain: mixeroyubx5g5yxaucsxcd767vn2lnujuuz2dh53quwabukhrok2ekid.onion
+      role: onion
+      attr: { tier: 0, basis: observed, sources: [mx-policy] }
+  cdn_proxy:
+    {
+      value: ddos-guard,
+      tier: 0,
+      basis: observed,
+      sources: [mx-flow, mx-disk],
+      notes: "server: ddos-guard header; __ddg* cookies set on the service host",
+    }
+  framework:
+    name:
+      {
+        value: CodeIgniter (PHP),
+        tier: 0,
+        basis: inferred,
+        sources: [mx-flow],
+        notes: "Inferred from the signals below; not confirmed by the operator",
+      }
+    signals:
+      [
+        "ci_session cookie name",
+        "/Home/<method> controller routing",
+        ".php endpoints under /scripts/",
+      ]
+  client_ip_leak:
+    present:
+      { value: true, tier: 0, basis: observed, sources: [mx-flow, mx-disk] }
+    mechanism:
+      {
+        value: "__ddg9_ persistent DDoS-Guard cookie whose value is the client's public IPv4 address; the row lands in the Chrome Cookies DB with the value encrypted at rest",
+        tier: 0,
+        basis: observed,
+        sources: [mx-flow, mx-disk],
+      }
+
+# --- 2. Access and modes -----------------------------------------------------------------
+access:
+  account_model:
+    {
+      value: account_less,
+      tier: 0,
+      basis: observed,
+      sources: [mx-flow],
+      notes: "No registration or login endpoint; the session cookie is the only client identity.",
+    }
+  kyc: { value: false, tier: 0, basis: observed, sources: [mx-flow] }
+
+modes:
+  - id: coinjoin
+    page_paths: ["/mix_coinjoin", "/invoice_coinjoin"]
+    chain_flow:
+      {
+        value: "BTC -> pooled service wallet -> BTC",
+        tier: 1,
+        basis: observed,
+        sources: [mx-chain],
+      }
+    limits:
+      min: { value: "0.002 BTC", tier: 0, basis: claimed, sources: [mx-policy] }
+      max: { value: "250 BTC", tier: 0, basis: claimed, sources: [mx-policy] }
+    fee_model:
+      {
+        value: "service fee 0.7% floor, range about 0.7-4.7% (2.1% minimum with Random Input); fixed network fee 0.0003 BTC; payout consistent with it on-chain",
+        tier: 1,
+        basis: observed,
+        sources: [mx-policy, mx-chain],
+      }
+    delay_options:
+      {
+        value: "0-168 h, user selectable, including no delay",
+        tier: 0,
+        basis: claimed,
+        sources: [mx-policy],
+      }
+    order_params: [service_fee, delay, "receiver[]", "receiver_percent[]"]
+    attr:
+      {
+        tier: 0,
+        basis: observed,
+        sources: [mx-flow],
+        notes: "Up to 5 destinations, each at least 5%. The only mode taken through both tiers.",
+      }
+  - id: xmr_bridge
+    page_paths: ["/mix_advanced"]
+    chain_flow:
+      {
+        value: "BTC -> XMR -> BTC",
+        tier: 0,
+        basis: claimed,
+        sources: [mx-policy],
+      }
+    attr:
+      {
+        tier: 0,
+        basis: claimed,
+        sources: [mx-policy],
+        notes: "Marketed as Advanced; not exercised.",
+      }
+  - id: ricochet
+    page_paths: ["/ricochet"]
+    chain_flow:
+      {
+        value: "BTC hops with inter-hop confirmations",
+        tier: 0,
+        basis: claimed,
+        sources: [mx-policy],
+      }
+    attr:
+      {
+        tier: 0,
+        basis: claimed,
+        sources: [mx-policy],
+        notes: "Separate tool page; not exercised.",
+      }
+
+# --- 3. Order model ----------------------------------------------------------------------
+order_model:
+  identifiers:
+    - name: uniqid_order_id
+      fact: order_id
+      scheme: { regex: '^[0-9a-f]{14}\.\d+$', describes: order_id }
+      derivation:
+        {
+          value: "PHP uniqid(prefix, true) with the literal prefix 'session' internally (session<13 hex><digit>.<8 digits>); the UI strips the prefix. The first 8 hex characters are the unix seconds of order creation, the next 5 the microseconds, then a decimal entropy suffix (one digit, a point, eight digits). The letter.php cache key carries 'session' + the full ID, so the creation time can be read from the cache key alone (its first 13 hex digits); the full ID is also in the cached letter body.",
+          tier: 0,
+          basis: inferred,
+          sources: [mx-flow, mx-disk],
+        }
+      role: { value: record_key, tier: 0, basis: observed, sources: [mx-flow] }
+      exposed_in:
+        [
+          chrome_downloads,
+          filesystem,
+          chrome_cache,
+          chrome_autofill,
+          chrome_sessions,
+        ]
+      attr: { tier: 0, basis: observed, sources: [mx-flow] }
+    - name: deposit_address
+      fact: deposit_address
+      scheme: { regex: "^<btc_address>$", describes: deposit_address }
+      derivation:
+        {
+          value: "Fresh service-controlled address per order; the operational lookup key for status (POST check_transaction keyed by bitcoin_address).",
+          tier: 0,
+          basis: observed,
+          sources: [mx-flow],
+        }
+      role:
+        {
+          value: status_lookup_key,
+          tier: 0,
+          basis: observed,
+          sources: [mx-flow, mx-replay],
+        }
+      exposed_in: [chrome_cache, filesystem, chrome_sessions, on_chain]
+      attr: { tier: 0, basis: observed, sources: [mx-flow] }
+
+# --- 4. Session --------------------------------------------------------------------------
+cookies:
+  - name: ci_session
+    set_by: application
+    purpose:
+      {
+        value: "CodeIgniter server-side session; the gate for the status endpoint",
+        tier: 0,
+        basis: observed,
+        sources: [mx-flow],
+      }
+    flags:
+      {
+        value: [HttpOnly, "Max-Age=86400"],
+        tier: 0,
+        basis: observed,
+        sources: [mx-flow],
+      }
+    client_max_age:
+      {
+        value: "86400 s, rolling (re-issued on every rotation)",
+        tier: 0,
+        basis: observed,
+        sources: [mx-flow],
+      }
+    rotation_interval:
+      {
+        value: "about 20 min during use (sess_time_to_update); 9 distinct values over the capture",
+        tier: 0,
+        basis: observed,
+        sources: [mx-flow],
+      }
+    server_side_validity:
+      {
+        value: "superseded identifiers still accepted about two weeks later (regenerate_destroy=false, weak or no GC)",
+        tier: 1,
+        basis: observed,
+        sources: [mx-replay],
+      }
+    persists_to_disk:
+      {
+        value: true,
+        tier: 0,
+        basis: observed,
+        sources: [mx-disk],
+        notes: "Name and metadata in plaintext, latest value only, value encrypted.",
+      }
+    encodes_fact: [session_id]
+    attr: { tier: 0, basis: observed, sources: [mx-flow] }
+  - name: __ddg9_
+    set_by: cdn
+    purpose:
+      {
+        value: "DDoS-Guard; value carries the client's public IPv4 address",
+        tier: 0,
+        basis: observed,
+        sources: [mx-flow],
+      }
+    value_scheme: { regex: "^<ipv4>$", describes: client_ip }
+    flags:
+      { value: ["Max-Age=86400"], tier: 0, basis: observed, sources: [mx-flow] }
+    persists_to_disk:
+      {
+        value: true,
+        tier: 0,
+        basis: observed,
+        sources: [mx-disk],
+        notes: "Value encrypted; content known from the proxy capture only.",
+      }
+    encodes_fact: [client_ip]
+    attr: { tier: 0, basis: observed, sources: [mx-flow] }
+  - name: __ddg10_
+    set_by: cdn
+    purpose:
+      {
+        value: "DDoS-Guard; value carries a unix timestamp",
+        tier: 0,
+        basis: observed,
+        sources: [mx-flow],
+      }
+    value_scheme: { regex: "^<unix_ts>$" }
+    persists_to_disk:
+      { value: true, tier: 0, basis: observed, sources: [mx-disk] }
+    attr: { tier: 0, basis: observed, sources: [mx-flow] }
+  - name: __ddg8_
+    set_by: cdn
+    purpose:
+      {
+        value: "DDoS-Guard session / challenge token",
+        tier: 0,
+        basis: inferred,
+        sources: [mx-flow],
+      }
+    persists_to_disk:
+      { value: true, tier: 0, basis: observed, sources: [mx-disk] }
+    attr: { tier: 0, basis: observed, sources: [mx-flow] }
+  - name: __ddg1_
+    set_by: cdn
+    purpose:
+      {
+        value: "DDoS-Guard session / challenge token",
+        tier: 0,
+        basis: inferred,
+        sources: [mx-flow],
+      }
+    persists_to_disk:
+      { value: true, tier: 0, basis: observed, sources: [mx-disk] }
+    attr: { tier: 0, basis: observed, sources: [mx-flow] }
+
+# --- 5. Endpoints ------------------------------------------------------------------------
+endpoints:
+  - id: landing
+    method: GET
+    path: { regex: "^/$" }
+    purpose: Landing page
+    gate: { value: [], tier: 0, basis: observed, sources: [mx-flow] }
+    cache_policy:
+      {
+        value: no_store,
+        tier: 0,
+        basis: observed,
+        sources: [mx-flow],
+        notes: "All dynamic pages carry Cache-Control: no-store, no-cache, must-revalidate.",
+      }
+    attr: { tier: 0, basis: observed, sources: [mx-flow] }
+  - id: mix_coinjoin
+    method: GET
+    path: { regex: "^/mix_coinjoin$", describes: mix_mode }
+    purpose: CoinJoin order form
+    gate: { value: [], tier: 0, basis: observed, sources: [mx-flow] }
+    cache_policy:
+      { value: no_store, tier: 0, basis: observed, sources: [mx-flow] }
+    attr: { tier: 0, basis: observed, sources: [mx-flow] }
+  - id: set_transaction_coinjoin
+    method: POST
+    path: { regex: "^/Home/set_transaction_coinjoin$" }
+    purpose: "Creates the order; carries destination address(es), percentages, fee and delay in the body"
+    request_fields:
+      [
+        service_fee,
+        delay,
+        captcha_answer,
+        captcha_token,
+        "receiver[]",
+        "receiver_percent[]",
+        csrf_token,
+      ]
+    field_facts:
+      { "receiver[]": destination_address, service_fee: fee_and_delay }
+    gate:
+      {
+        value: [session, csrf, captcha],
+        tier: 0,
+        basis: observed,
+        sources: [mx-flow],
+      }
+    cache_policy:
+      { value: no_store, tier: 0, basis: observed, sources: [mx-flow] }
+    attr: { tier: 0, basis: observed, sources: [mx-flow] }
+  - id: csrf_token
+    method: GET
+    path: { regex: "^/Home/csrf_token$" }
+    purpose: Fetch a CSRF token (JSON)
+    request_fields: ["_"]
+    gate: { value: [session], tier: 0, basis: inferred, sources: [mx-flow] }
+    cache_policy:
+      {
+        value: cache_busted,
+        tier: 0,
+        basis: observed,
+        sources: [mx-flow],
+        notes: "jQuery cache:false appends _=<unix_ts_ms>; the response is additionally no-store.",
+      }
+    attr: { tier: 0, basis: observed, sources: [mx-flow] }
+  - id: captcha
+    method: GET
+    path: { regex: "^/Home/captcha$" }
+    purpose: Captcha image and token (JSON)
+    request_fields: ["_"]
+    gate: { value: [session], tier: 0, basis: inferred, sources: [mx-flow] }
+    cache_policy:
+      {
+        value: cache_busted,
+        tier: 0,
+        basis: observed,
+        sources: [mx-flow],
+        notes: "Cache-busted client-side and no-store server-side.",
+      }
+    attr: { tier: 0, basis: observed, sources: [mx-flow] }
+  - id: invoice_coinjoin
+    method: GET
+    path: { regex: "^/invoice_coinjoin$", describes: mix_mode }
+    purpose: "Invoice: deposit address, QR code, order ID, letter download, status display"
+    gate: { value: [session], tier: 0, basis: observed, sources: [mx-flow] }
+    cache_policy:
+      { value: no_store, tier: 0, basis: observed, sources: [mx-flow, mx-disk] }
+    attr: { tier: 0, basis: observed, sources: [mx-flow] }
+  - id: check_transaction
+    method: POST
+    path: { regex: "^/Home/check_transaction$", describes: status_progression }
+    purpose: Status lookup keyed on the deposit address (polled about every 30 s)
+    request_fields: [bitcoin_address, mode]
+    field_facts: { bitcoin_address: deposit_address, mode: mix_mode }
+    lookup_key: { value: deposit_address, tier: 0, basis: observed, sources: [mx-flow, mx-replay] }
+    gate:
+      {
+        value: [session, csrf],
+        tier: 0,
+        basis: observed,
+        sources: [mx-flow, mx-replay],
+      }
+    ownership_check:
+      {
+        value: false,
+        tier: 1,
+        basis: observed,
+        sources: [mx-replay],
+        notes: "Any valid session can query any deposit address (open oracle).",
+      }
+    cache_policy:
+      { value: no_store, tier: 0, basis: observed, sources: [mx-flow, mx-disk] }
+    response_templates:
+      - { text: "Awaiting an incoming transaction...", yields: [] }
+      - {
+          text: "We have detected a transaction. Waiting for 1 confirmation... <br> Incoming amount: <amount_btc> BTC | HASH: <txid_hex64>",
+          yields: [amounts, deposit_txid],
+        }
+      - {
+          text: "We have received your transaction, we just started mixing your funds! You can leave the page if you wish.",
+          yields: [],
+        }
+      - {
+          text: "Transaction has been completed with TXID: <txid_hex64>",
+          yields: [payout_txid],
+        }
+      - { text: "No address provided", yields: [] }
+    replay_results:
+      - variant: original
+        reply:
+          {
+            text: "Transaction has been completed with TXID: <txid_hex64>",
+            yields: [payout_txid],
+          }
+        reading: "Completion record served while the order's session is live"
+        outcome: { value: live, tier: 1, basis: observed, sources: [mx-flow] }
+      - variant: superseded_session
+        reply:
+          {
+            text: "We have received your transaction, we just started mixing your funds! You can leave the page if you wish.",
+            yields: [],
+          }
+        reading: "Superseded session still accepted; the completion record is no longer served (purged), the order is reported as mixing"
+        outcome:
+          { value: accepted, tier: 1, basis: observed, sources: [mx-replay] }
+      - variant: no_cookies
+        reply: { text: "No address provided", yields: [] }
+        reading: "Rejected before the request body is read"
+        outcome:
+          { value: rejected, tier: 1, basis: observed, sources: [mx-replay] }
+      - variant: foreign_order_key
+        reply: { text: "Awaiting an incoming transaction...", yields: [] }
+        reading: "Key taken from the body; no ownership check"
+        outcome:
+          { value: accepted, tier: 1, basis: observed, sources: [mx-replay] }
+    attr:
+      {
+        tier: 0,
+        basis: observed,
+        sources: [mx-flow],
+        notes: "Responses are labelled text/html but are plain pipe-delimited text.",
+      }
+  - id: letter
+    method: GET
+    path: { regex: '^/scripts/letter\.php$' }
+    purpose: "Returns the Letter of Guarantee text; page script turns it into a download (query parameters address, session, mode)"
+    request_fields: [address, session, mode]
+    field_facts: { address: deposit_address, session: order_id, mode: mix_mode }
+    gate:
+      {
+        tier: 0,
+        basis: unknown,
+        notes: "Access model not tested without a session.",
+      }
+    cache_policy:
+      {
+        value: cacheable_heuristic,
+        tier: 0,
+        basis: observed,
+        sources: [mx-flow, mx-disk],
+        notes: "No Cache-Control header, unlike the no-store invoice and status responses; Chrome stored the URL and the gzip body (see artifact letter_cache_entry).",
+      }
+    attr:
+      {
+        tier: 0,
+        basis: observed,
+        sources: [mx-flow, mx-disk],
+        notes: "session= carries the literal prefix 'session' followed by the full order ID (session<13 hex><digit>.<8 digits>); its first 13 hex digits date the order creation to the microsecond. The page script requests the letter by XMLHttpRequest; the URL was found in the HTTP cache and not in History.",
+      }
+  - id: switch_lang
+    method: GET
+    path: { regex: "^/Home/switch_lang/[a-z]{2}$" }
+    purpose: Language switch
+    attr: { tier: 0, basis: observed, sources: [mx-flow] }
+  - id: status_page
+    method: GET
+    path: { regex: "^/status$" }
+    purpose: Status lookup page (order ID + captcha form)
+    cache_policy:
+      { value: no_store, tier: 0, basis: observed, sources: [mx-flow] }
+    attr: { tier: 0, basis: observed, sources: [mx-flow] }
+  - id: fetch_order
+    method: POST
+    path: { regex: "^/Home/fetch_order$" }
+    purpose: Order lookup by order ID, submitted from the status page
+    request_fields: [mode, order_id, csrf_token, captcha_answer, captcha_token]
+    field_facts: { order_id: order_id, mode: mix_mode }
+    lookup_key: { value: order_id, tier: 0, basis: observed, sources: [mx-flow] }
+    gate:
+      {
+        value: [session, csrf, captcha],
+        tier: 0,
+        basis: observed,
+        sources: [mx-flow],
+      }
+    cache_policy:
+      { value: no_store, tier: 0, basis: observed, sources: [mx-flow] }
+    attr:
+      {
+        tier: 0,
+        basis: observed,
+        sources: [mx-flow],
+        notes: "The order ID travels in the POST body, so no URL carries it.",
+      }
+  - id: ricochet
+    method: GET
+    path: { regex: "^/ricochet$" }
+    purpose: Ricochet tool page
+    cache_policy:
+      { value: no_store, tier: 0, basis: observed, sources: [mx-flow] }
+    attr: { tier: 0, basis: observed, sources: [mx-flow] }
+  - id: mix_advanced
+    method: GET
+    path: { regex: "^/mix_advanced$", describes: mix_mode }
+    purpose: Advanced (BTC-XMR-BTC) order form
+    cache_policy:
+      { value: no_store, tier: 0, basis: observed, sources: [mx-flow] }
+    attr: { tier: 0, basis: observed, sources: [mx-flow] }
+  - id: static_pages
+    method: GET
+    path: { regex: "^/(about|faqs|terms)$" }
+    purpose: Static pages
+    cache_policy:
+      { value: no_store, tier: 0, basis: observed, sources: [mx-flow] }
+    attr: { tier: 0, basis: observed, sources: [mx-flow] }
+
+# --- 6. Status ---------------------------------------------------------------------------
+status:
+  mechanism:
+    {
+      value: polling,
+      tier: 0,
+      basis: observed,
+      sources: [mx-flow],
+      notes: "Not a websocket; page JS rewrites the status element.",
+    }
+  endpoint_ref: check_transaction
+  interval:
+    {
+      value: "30 s (median over 152 polls)",
+      tier: 0,
+      basis: observed,
+      sources: [mx-flow],
+    }
+  states:
+    - order: 0
+      label: awaiting
+      template: { text: "Awaiting an incoming transaction...", yields: [] }
+      attr: { tier: 0, basis: observed, sources: [mx-flow] }
+    - order: 1
+      label: detected
+      template:
+        {
+          text: "We have detected a transaction. Waiting for 1 confirmation... <br> Incoming amount: <amount_btc> BTC | HASH: <txid_hex64>",
+          yields: [amounts, deposit_txid],
+        }
+      attr: { tier: 1, basis: observed, sources: [mx-flow] }
+    - order: 2
+      label: mixing
+      template:
+        {
+          text: "We have received your transaction, we just started mixing your funds! You can leave the page if you wish.",
+          yields: [],
+        }
+      attr: { tier: 1, basis: observed, sources: [mx-flow] }
+    - order: 3
+      label: completed
+      template:
+        {
+          text: "Transaction has been completed with TXID: <txid_hex64>",
+          yields: [payout_txid],
+        }
+      attr:
+        {
+          tier: 1,
+          basis: observed,
+          sources: [mx-flow],
+          notes: "The only place the payout TXID appears.",
+        }
+  replay_behavior:
+    {
+      value: "After the completion record is purged (about two weeks), the order is reported as mixing; superseded sessions and deposit-address resolution still work.",
+      tier: 1,
+      basis: observed,
+      sources: [mx-replay],
+    }
+
+# --- 7. Receipts -------------------------------------------------------------------------
+receipts:
+  - id: letter_of_guarantee
+    name: Letter of Guarantee
+    offered: { value: optional, tier: 0, basis: observed, sources: [mx-flow] }
+    obtained_via:
+      endpoint_ref: letter
+      request_params: [address, session, mode]
+      delivery:
+        {
+          value: client_blob,
+          tier: 0,
+          basis: observed,
+          sources: [mx-flow, mx-disk],
+          notes: "Page script (FileSaver.js + LetterOfGuarantee.js) saves the text via a blob URL.",
+        }
+      cache_policy:
+        {
+          value: cacheable_heuristic,
+          tier: 0,
+          basis: observed,
+          sources: [mx-flow],
+        }
+    file:
+      filename_pattern:
+        { regex: '^Letter_<order_id>\.txt$', describes: order_id }
+      mime_type:
+        { value: text/plain, tier: 0, basis: observed, sources: [mx-disk] }
+    structure:
+      container:
+        { value: plain_text, tier: 0, basis: observed, sources: [mx-disk] }
+      container_notes: "A date block, a letter block, a base64 signature block, the deposit address block and the destination address block, each delimited by -----START X----- / -----END X----- markers"
+      templates:
+        - text: |-
+            This message has been signed with our signature 1HsM2JbyKnqwcYvEm1kLMNwJtqb6uxSczd
+
+            -----START DATE-----
+            <datetime>
+            -----END DATE-----
+
+            -----START LETTER OF GUARANTEE-----
+            Here is your letter of guarantee. Keep it carefully as it represents the unique proof of your transaction. Mixero confirms that the following address <btc_address> has been generated in order to receive your funds to the following destination address: <btc_address>. The fees for this transaction are <percent>%. Your Order ID is <order_id>
+            -----END LETTER OF GUARANTEE-----
+
+            -----START SIGNATURE-----
+            <signature>
+            -----END SIGNATURE-----
+
+            -----START ADDRESS FOR SENDING FUNDS-----
+            <btc_address>
+            -----END ADDRESS FOR SENDING FUNDS-----
+
+            -----START DESTINATION ADDRESSES-----
+            <btc_address>
+            -----END DESTINATION ADDRESSES-----
+
+            The letter of guarantee must be submitted within 48 hours of payment if problems arise. Failure to comply will invalidate the letter per our Data Confidentiality policy. If a delay is set, the letter expires 48 hours after this delay.
+          yields:
+            [
+              order_created_time,
+              deposit_address,
+              destination_address,
+              fee_and_delay,
+              order_id,
+              deposit_address,
+              destination_address,
+            ]
+          literals:
+            - {
+                literal: 1HsM2JbyKnqwcYvEm1kLMNwJtqb6uxSczd,
+                justification: "Fixed service signing key printed in every letter; service-level, not per transaction.",
+              }
+    signature:
+      scheme:
+        {
+          value: bitcoin_signed_message,
+          tier: 0,
+          basis: inferred,
+          sources: [mx-disk],
+          notes: "A base64 signature over the letter block, attributed to a Bitcoin address; verification of the exact message bytes not yet performed.",
+        }
+      signing_identity:
+        {
+          literal: 1HsM2JbyKnqwcYvEm1kLMNwJtqb6uxSczd,
+          justification: "The service's fixed signing address, printed in the letter header.",
+        }
+      verification:
+        {
+          tier: 0,
+          basis: unknown,
+          notes: "Investigator task: the signature should be verified against the signing address and the published identity.",
+        }
+    evidentiary_value:
+      binds_facts:
+        [
+          order_id,
+          deposit_address,
+          destination_address,
+          fee_and_delay,
+          order_created_time,
+        ]
+      survives_server_purge:
+        {
+          value: true,
+          tier: 1,
+          basis: inferred,
+          sources: [mx-replay, mx-disk],
+          notes: "User-side copy; the server purges the completion record after about two weeks.",
+        }
+    field_map:
+      value:
+        "Mixero confirms that the following address": deposit_address
+        "in order to receive your funds to the following destination address:": destination_address
+        "The fees for this transaction are": fee_and_delay
+        "Your Order ID is": order_id
+        "-----START DATE-----": order_created_time
+        "-----START ADDRESS FOR SENDING FUNDS-----": deposit_address
+        "-----START DESTINATION ADDRESSES-----": destination_address
+      tier: 0
+      basis: observed
+      sources: [mx-flow, mx-disk]
+    artifact_refs: [letter_file, letter_download_record, letter_cache_entry]
+    attr:
+      {
+        tier: 0,
+        basis: observed,
+        sources: [mx-flow, mx-disk],
+        notes: "Content template derived from the letter downloaded in the experiment, instance values replaced by placeholders. The date line is the server's local time (+0300). With several destinations the destination block repeats one address per line; the template captures the first. English wording only. The downloaded file is the letter.php response with its <br> line breaks replaced by newlines (page script); the cached body and the file both end with the 48-hour validity paragraph, now part of the template (see retention).",
+      }
+
+# --- 8. Artifacts ------------------------------------------------------------------------
+artifacts:
+  - id: letter_file
+    name: Letter of Guarantee (downloaded file)
+    location: filesystem
+    path_pattern: "<Downloads>/Letter_<order_id>.txt"
+    filename_pattern: { regex: '^Letter_<order_id>\.txt$', describes: order_id }
+    produced_by: letter_of_guarantee
+    receipt_ref: letter_of_guarantee
+    format: text/plain
+    carries_facts: [deposit_address, destination_address, order_id, fee_and_delay, order_created_time, receipt]
+    persistence_class:
+      { value: disk, tier: 0, basis: observed, sources: [mx-disk] }
+    recovery_route:
+      {
+        value: "User's Downloads folder; the file name carries the order ID, the body the deposit and destination addresses, the fee percentage, the creation date and the service signature. Also search unallocated space for the body template.",
+        tier: 0,
+        basis: observed,
+        sources: [mx-disk],
+      }
+    search_keys:
+      - {
+          literal: 1HsM2JbyKnqwcYvEm1kLMNwJtqb6uxSczd,
+          justification: "Fixed service key that signs every Letter of Guarantee; service-level, not per transaction.",
+        }
+      - { regex: "-----START LETTER OF GUARANTEE-----" }
+    case_uco_class: uco-observable:File
+    attr: { tier: 0, basis: observed, sources: [mx-disk] }
+  - id: letter_download_record
+    name: Download record of the Letter of Guarantee
+    location: chrome_downloads
+    path_pattern: "History: downloads.target_path, downloads_url_chains.url (blob: URL)"
+    produced_by: letter_of_guarantee
+    format: sqlite row
+    carries_facts: [order_id, order_created_time, receipt]
+    persistence_class:
+      { value: disk, tier: 0, basis: observed, sources: [mx-disk] }
+    recovery_route:
+      {
+        value: "Chrome History DB, downloads table; target_path basename matches the file name pattern; start_time gives the download time; the URL chain is a blob: URL and the referrer is the invoice tab",
+        tier: 0,
+        basis: observed,
+        sources: [mx-disk],
+      }
+    search_keys:
+      - { regex: 'Letter_<order_id>\.txt', describes: order_id }
+    attr: { tier: 0, basis: observed, sources: [mx-disk] }
+  - id: letter_cache_entry
+    name: Cached letter.php response
+    location: chrome_cache
+    path_pattern: "Cache/Cache_Data/data_* (block-file cache); key '1/0/_dk_https://mixero.co https://mixero.co https://mixero.co/scripts/letter.php?address=<btc_address>&session=session<order_id>&mode=<mix_mode>'"
+    produced_by: letter
+    receipt_ref: letter_of_guarantee
+    format: cache entry; gzip, text/html body with <br> line breaks
+    carries_facts: [deposit_address, order_id, destination_address, fee_and_delay, order_created_time, mix_mode, receipt]
+    persistence_class:
+      { value: disk, tier: 0, basis: observed, sources: [mx-disk] }
+    recovery_route:
+      {
+        value: "Chrome HTTP cache, block-file format. The key, which has a partitioned-cache prefix, carries the deposit address, 'session' + the full order ID (whose first 13 hex digits are the creation time) and the mode; the gzip body is the letter text with the full order ID, the deposit and destination addresses, the fee percentage, the server-local date block and the 48-hour validity paragraph. Match the letter.php URL as a substring of the key.",
+        tier: 0,
+        basis: observed,
+        sources: [mx-disk],
+      }
+    search_keys:
+      - {
+          regex: 'scripts/letter\.php\?address=<btc_address>&session=session<order_id>&mode=<mix_mode>',
+        }
+    caveat:
+      {
+        value: "The key is longer than the 160-byte key field of one 256-byte block, so the entry spans two blocks; a viewer that shows one block cuts the key after the 13-hex creation-time prefix, before the rest of the ID and the mode parameter.",
+        tier: 0,
+        basis: observed,
+        sources: [mx-disk],
+      }
+    attr:
+      {
+        tier: 0,
+        basis: observed,
+        sources: [mx-disk],
+        notes: "Found by manual examination in Autopsy (web-cache view), which displays the first 160 bytes of the key; the full key was read from the entry's two blocks in data_1. The entry's creation time is about two seconds before the server date header of the response. The session= value is the full order ID with the 'session' prefix; the date block is server local time (+0300).",
+      }
+  - id: page_visits
+    name: Visits to order, invoice and tool pages
+    location: chrome_history
+    path_pattern: "History: urls / visits"
+    produced_by: browser
+    format: sqlite rows
+    carries_facts: [mix_mode, order_created_time]
+    persistence_class:
+      { value: disk, tier: 0, basis: observed, sources: [mx-disk] }
+    recovery_route:
+      {
+        value: "Query urls/visits for the service host; the mode from the URL path (/mix_coinjoin, /invoice_coinjoin, /mix_advanced), the session time from visit_time; no order ID in any page URL",
+        tier: 0,
+        basis: observed,
+        sources: [mx-disk],
+      }
+    search_keys:
+      - { regex: "/(mix|invoice)_coinjoin", describes: mix_mode }
+      - { regex: 'mixero\.(io|co)/' }
+    attr: { tier: 0, basis: observed, sources: [mx-disk] }
+  - id: session_cookie_row
+    name: ci_session cookie row
+    location: chrome_cookies
+    path_pattern: "Network/Cookies: cookies.name = ci_session"
+    produced_by: browser
+    format: sqlite row (value encrypted by Chrome)
+    carries_facts: [session_id, order_created_time]
+    persistence_class:
+      { value: disk, tier: 0, basis: observed, sources: [mx-disk] }
+    recovery_route:
+      {
+        value: "Chrome Cookies DB; name, host and times in plaintext, latest value only and encrypted; creation and last-access times frame the session",
+        tier: 0,
+        basis: observed,
+        sources: [mx-disk],
+      }
+    search_keys:
+      - { regex: "^ci_session$" }
+    attr: { tier: 0, basis: observed, sources: [mx-disk] }
+  - id: client_ip_cookie_row
+    name: __ddg9_ cookie row (client IP)
+    location: chrome_cookies
+    path_pattern: "Network/Cookies: cookies.name = __ddg9_"
+    produced_by: browser
+    format: sqlite row (value encrypted by Chrome)
+    carries_facts: [client_ip]
+    persistence_class:
+      { value: disk, tier: 0, basis: observed, sources: [mx-disk] }
+    recovery_route:
+      {
+        value: "Chrome Cookies DB row; the value is the public IPv4 address the subject used, but Chrome stores cookie values encrypted at rest (DPAPI / OS key ring), so decryption with the profile's key is needed to read it",
+        tier: 0,
+        basis: observed,
+        sources: [mx-disk],
+      }
+    search_keys:
+      - { regex: "^__ddg9_$" }
+    caveat:
+      {
+        value: "The row (name, host, times) was found with an encrypted value and no plaintext; the IP itself was not read from disk.",
+        tier: 0,
+        basis: observed,
+        sources: [mx-disk],
+      }
+    attr:
+      {
+        tier: 0,
+        basis: observed,
+        sources: [mx-disk],
+      }
+  - id: destination_autofill
+    name: Destination address in autofill
+    location: chrome_autofill
+    path_pattern: "Web Data: autofill.name = destination_address-<int>"
+    produced_by: browser
+    format: sqlite row
+    carries_facts: [destination_address]
+    persistence_class:
+      { value: disk, tier: 0, basis: observed, sources: [mx-disk] }
+    recovery_route:
+      {
+        value: "Chrome Web Data autofill table, rows whose name matches destination_address-<int>",
+        tier: 0,
+        basis: observed,
+        sources: [mx-disk],
+      }
+    search_keys:
+      - { regex: '^destination_address-\d+$' }
+    caveat:
+      {
+        value: "Which form (CoinJoin or Advanced) produced the entry is not pinned down.",
+        tier: 0,
+        basis: observed,
+        sources: [mx-disk],
+      }
+    attr:
+      {
+        tier: 0,
+        basis: observed,
+        sources: [mx-disk],
+        notes: "Contradicts the earlier belief, inferred from the form markup, that autofill captures nothing.",
+      }
+  - id: order_id_autofill
+    name: Order ID in autofill
+    location: chrome_autofill
+    path_pattern: "Web Data: autofill.name = orderId"
+    produced_by: browser
+    format: sqlite row
+    carries_facts: [order_id]
+    persistence_class:
+      { value: disk, tier: 0, basis: observed, sources: [mx-disk] }
+    recovery_route:
+      {
+        value: "Chrome Web Data autofill table, name = orderId (typed into the status lookup form)",
+        tier: 0,
+        basis: observed,
+        sources: [mx-disk],
+      }
+    search_keys:
+      - { regex: "^orderId$" }
+    attr: { tier: 0, basis: observed, sources: [mx-disk] }
+  - id: session_restore_state
+    name: Session-restore page state
+    location: chrome_sessions
+    path_pattern: "Sessions/Session_<int>, Sessions/Tabs_<int> (SNSS)"
+    produced_by: browser
+    format: SNSS (carved strings)
+    carries_facts: [destination_address, order_id, deposit_address, deposit_txid, mix_mode]
+    persistence_class: {value: disk, tier: 0, basis: observed, sources: [mx-disk]}
+    recovery_route: {value: "String carve of the SNSS files; form state and navigation entries (page URLs, the explorer URL) survive there", tier: 0, basis: observed, sources: [mx-disk]}
+    search_keys:
+      - {regex: 'mixero\.co'}
+    attr: {tier: 0, basis: observed, sources: [mx-disk]}
+  - id: explorer_visit
+    name: Block-explorer visit for the deposit transaction
+    location: chrome_history
+    path_pattern: "History: urls.url = https://mempool.space/tx/<txid_hex64>"
+    produced_by: user_action
+    format: sqlite row
+    carries_facts: [deposit_txid]
+    persistence_class:
+      {
+        value: disk,
+        tier: 1,
+        basis: observed,
+        sources: [mx-disk],
+        notes: "Created by a user click, not by the service itself.",
+      }
+    recovery_route:
+      {
+        value: "Chrome History; explorer URLs containing a 64-hex TXID; user-behaviour dependent",
+        tier: 1,
+        basis: observed,
+        sources: [mx-disk],
+      }
+    search_keys:
+      - { regex: 'mempool\.space/tx/<txid_hex64>', describes: deposit_txid }
+    attr: { tier: 1, basis: observed, sources: [mx-disk] }
+  - id: chain_deposit_payout
+    name: Deposit and payout transactions on-chain
+    location: on_chain
+    path_pattern: "Bitcoin blockchain"
+    produced_by: service_wallet
+    format: blockchain transactions
+    carries_facts: [deposit_txid, payout_txid, amounts, fee_and_delay, deposit_address]
+    persistence_class:
+      {
+        value: on_chain,
+        tier: 1,
+        basis: observed,
+        sources: [mx-chain],
+        notes: "Payout funded from a pooled address; no on-chain link to the deposit.",
+      }
+    recovery_route:
+      {
+        value: "The deposit from the deposit address; the payout only from a known destination address, after the derived order-creation time. The completion response that carried the payout TXID is no-store and leaves no disk trace.",
+        tier: 1,
+        basis: observed,
+        sources: [mx-chain],
+      }
+    attr: { tier: 1, basis: observed, sources: [mx-chain] }
+
+# --- 9. Fact coverage: the stored fact-by-source matrix (Table 3 vocabulary) --------------
+# Columns: history, downloads, cache, cookies, web_storage, autofill, sessions, filesystem,
+# replay, chain. A cell is `<value>` or `<value>: <detail>`.
+fact_coverage:
+  - fact: deposit_address
+    best_persistence: disk
+    artifacts: [letter_file, letter_cache_entry, session_restore_state]
+    cells:
+      {
+        history: not_found,
+        downloads: not_found,
+        cache: "recovered: letter.php cache entry (address= in the key; letter body)",
+        cookies: not_found,
+        web_storage: not_stored_by_design,
+        autofill: "not_stored_by_design: displayed, never typed",
+        sessions: "recovered: page state",
+        filesystem: "recovered: letter body",
+        replay: required_to_query,
+        chain: "recovered: deposit output",
+      }
+    attr: { tier: 0, basis: observed, sources: [mx-disk, mx-chain] }
+  - fact: destination_address
+    best_persistence: disk
+    artifacts:
+      [
+        letter_file,
+        letter_cache_entry,
+        destination_autofill,
+        session_restore_state,
+      ]
+    cells:
+      {
+        history: not_found,
+        downloads: not_found,
+        cache: "recovered: letter body in the letter.php cache entry",
+        cookies: not_found,
+        web_storage: not_stored_by_design,
+        autofill: "recovered: destination_address-<int>",
+        sessions: "recovered: form state",
+        filesystem: "recovered: letter body",
+        replay: not_found,
+        chain: "required_to_query: payout found only from a known destination",
+      }
+    attr: { tier: 0, basis: observed, sources: [mx-disk, mx-chain] }
+  - fact: order_id
+    best_persistence: disk
+    artifacts:
+      [
+        letter_file,
+        letter_download_record,
+        letter_cache_entry,
+        order_id_autofill,
+        session_restore_state,
+      ]
+    cells:
+      {
+        history: "not_stored_by_design: no page URL carries the order ID",
+        downloads: "recovered: file name",
+        cache: "recovered: letter.php cache entry (full ID in the key's session= value and in the body)",
+        cookies: not_found,
+        web_storage: not_stored_by_design,
+        autofill: "recovered: orderId",
+        sessions: "recovered: page state",
+        filesystem: "recovered: file name and body",
+        replay: "required_to_query: fetch_order needs it",
+        chain: not_applicable,
+      }
+    attr: { tier: 0, basis: observed, sources: [mx-disk] }
+  - fact: receipt
+    best_persistence: disk
+    artifacts: [letter_file, letter_download_record, letter_cache_entry]
+    cells:
+      {
+        history: "not_found: no letter.php URL in History; the letter's only History-database trace is its download row (downloads column)",
+        downloads: "recovered: download record with file name and target path",
+        cache: "recovered: letter body in the letter.php cache entry",
+        cookies: not_applicable,
+        web_storage: not_stored_by_design,
+        autofill: not_applicable,
+        sessions: not_found,
+        filesystem: "recovered: the letter file in Downloads",
+        replay: "not_tested: letter endpoint not replayed",
+        chain: not_applicable,
+      }
+    attr: { tier: 0, basis: observed, sources: [mx-disk] }
+  - fact: deposit_txid
+    best_persistence: disk
+    artifacts: [explorer_visit, session_restore_state, chain_deposit_payout]
+    cells:
+      {
+        history: "recovered: explorer visit (user click)",
+        downloads: not_found,
+        cache: "not_stored_by_design: no-store status response",
+        cookies: not_found,
+        web_storage: not_stored_by_design,
+        autofill: not_found,
+        sessions: "recovered: explorer URL in navigation entries",
+        filesystem: not_found,
+        replay: "live_only: detected reply while the record is held",
+        chain: recovered,
+      }
+    attr: { tier: 1, basis: observed, sources: [mx-disk, mx-chain] }
+  - fact: payout_txid
+    best_persistence: on_chain
+    artifacts: [chain_deposit_payout]
+    cells:
+      {
+        history: "not_stored_by_design: no page URL carries it; the completion response that shows it is no-store",
+        downloads: not_found,
+        cache: "not_stored_by_design: no-store",
+        cookies: not_found,
+        web_storage: not_stored_by_design,
+        autofill: not_found,
+        sessions: not_found,
+        filesystem: not_found,
+        replay: "live_only: purged about two weeks after completion",
+        chain: "recovered: from a known destination address (recovered on disk from the letter, autofill or session restore)",
+      }
+    attr: { tier: 1, basis: observed, sources: [mx-disk, mx-replay, mx-chain] }
+  - fact: amounts
+    best_persistence: on_chain
+    artifacts: [chain_deposit_payout]
+    cells:
+      {
+        history: not_found,
+        downloads: not_found,
+        cache: not_stored_by_design,
+        cookies: not_found,
+        web_storage: not_stored_by_design,
+        autofill: not_found,
+        sessions: not_found,
+        filesystem: "not_found: the letter states no amounts",
+        replay: "live_only: deposit amount in the detected reply; the payout amount is never returned",
+        chain: "recovered: deposit output; the payout amount only from a known destination address",
+      }
+    attr: { tier: 1, basis: observed, sources: [mx-disk, mx-chain] }
+  - fact: fee_and_delay
+    best_persistence: disk
+    artifacts: [letter_file, letter_cache_entry, chain_deposit_payout]
+    cells:
+      {
+        history: not_found,
+        downloads: not_found,
+        cache: "recovered: fee percentage in the cached letter body; the delay is not stated",
+        cookies: not_found,
+        web_storage: not_stored_by_design,
+        autofill: not_found,
+        sessions: not_found,
+        filesystem: "recovered: fee percentage in the letter; the delay is not stated",
+        replay: not_found,
+        chain: "recovered: fee derivable as deposit minus payout",
+      }
+    attr: { tier: 0, basis: observed, sources: [mx-disk, mx-chain] }
+  - fact: order_created_time
+    best_persistence: disk
+    artifacts:
+      [
+        letter_file,
+        letter_cache_entry,
+        letter_download_record,
+        page_visits,
+        session_cookie_row,
+      ]
+    cells:
+      {
+        history: "recovered: visit times",
+        downloads: "recovered: download start time",
+        cache: "recovered: date block of the cached letter body (server time, +0300); creation time to the microsecond from the 13-hex prefix of the key's session= value",
+        cookies: "metadata_only: cookie creation times",
+        web_storage: not_stored_by_design,
+        autofill: not_found,
+        sessions: not_found,
+        filesystem: "recovered: letter date block; also derivable from the order ID (uniqid unix seconds)",
+        replay: not_found,
+        chain: "not_applicable: the deposit's block time only bounds the creation time from above",
+      }
+    attr: { tier: 0, basis: observed, sources: [mx-disk, mx-chain] }
+  - fact: client_ip
+    best_persistence: disk
+    artifacts: [client_ip_cookie_row]
+    cells:
+      {
+        history: not_found,
+        downloads: not_found,
+        cache: not_found,
+        cookies: "metadata_only: __ddg9_ row, value encrypted",
+        web_storage: not_stored_by_design,
+        autofill: not_found,
+        sessions: not_found,
+        filesystem: not_found,
+        replay: not_found,
+        chain: not_applicable,
+      }
+    attr: { tier: 0, basis: observed, sources: [mx-disk] }
+  - fact: session_id
+    best_persistence: disk
+    artifacts: [session_cookie_row]
+    cells:
+      {
+        history: not_found,
+        downloads: not_found,
+        cache: not_found,
+        cookies: "metadata_only: ci_session row, value encrypted",
+        web_storage: not_stored_by_design,
+        autofill: not_found,
+        sessions: not_found,
+        filesystem: not_found,
+        replay: "required_to_query: the decrypted cookie value is needed",
+        chain: not_applicable,
+      }
+    attr: { tier: 0, basis: observed, sources: [mx-disk, mx-replay] }
+  - fact: user_identifier
+    best_persistence: none_by_design
+    artifacts: []
+    cells:
+      {
+        history: not_applicable,
+        downloads: not_applicable,
+        cache: not_applicable,
+        cookies: not_applicable,
+        web_storage: not_applicable,
+        autofill: not_applicable,
+        sessions: not_applicable,
+        filesystem: not_applicable,
+        replay: not_applicable,
+        chain: not_applicable,
+      }
+    notes: "Account-less service: no cross-order user identifier exists."
+    attr: { tier: 0, basis: observed, sources: [mx-flow] }
+  - fact: mix_mode
+    best_persistence: disk
+    artifacts: [page_visits, letter_cache_entry, session_restore_state]
+    cells:
+      {
+        history: "recovered: URL path (/mix_coinjoin, /invoice_coinjoin, /mix_advanced)",
+        downloads: not_found,
+        cache: "recovered: mode= parameter in the letter.php cache key",
+        cookies: not_found,
+        web_storage: not_stored_by_design,
+        autofill: not_found,
+        sessions: "recovered: page URLs",
+        filesystem: not_found,
+        replay: not_found,
+        chain: not_found,
+      }
+    attr: { tier: 0, basis: observed, sources: [mx-disk] }
+  - fact: status_progression
+    best_persistence: none_by_design
+    artifacts: []
+    cells:
+      {
+        history: not_found,
+        downloads: not_found,
+        cache: "not_stored_by_design: no-store",
+        cookies: not_found,
+        web_storage: not_stored_by_design,
+        autofill: not_applicable,
+        sessions: not_found,
+        filesystem: not_found,
+        replay: "live_only: current state",
+        chain: not_applicable,
+      }
+    attr: { tier: 1, basis: observed, sources: [mx-disk, mx-replay] }
+
+# --- 10. Retention -----------------------------------------------------------------------
+retention:
+  stated_policy:
+    - {
+        value: "Transaction details are kept only until the mix completes and is confirmed",
+        tier: 0,
+        basis: claimed,
+        sources: [mx-policy],
+      }
+    - {
+        value: "No trace remains after the 24-hour session",
+        tier: 0,
+        basis: claimed,
+        sources: [mx-policy],
+      }
+    - {
+        value: "The letter of guarantee must be submitted within 48 hours of payment if problems arise. Failure to comply will invalidate the letter per our Data Confidentiality policy. If a delay is set, the letter expires 48 hours after this delay.",
+        tier: 0,
+        basis: claimed,
+        sources: [mx-policy],
+        notes: "Printed in the Letter of Guarantee (cached body and downloaded file).",
+      }
+  observed:
+    - {
+        value: "Completion record (payout TXID) no longer served about two weeks after completion",
+        tier: 1,
+        basis: observed,
+        sources: [mx-replay],
+      }
+    - {
+        value: "Superseded session identifiers still accepted about two weeks later; deposit-address resolution still works",
+        tier: 1,
+        basis: observed,
+        sources: [mx-replay],
+      }
+  consistency:
+    {
+      value: partially_consistent,
+      tier: 1,
+      basis: inferred,
+      sources: [mx-policy, mx-replay],
+      notes: "First claim consistent with the purge; second contradicted by the validity of old sessions.",
+    }
+
+# --- 11. Negative findings ---------------------------------------------------------------
+negative_findings:
+  - location: chrome_local_storage
+    finding: "Not written for the service origin"
+    reason: "Page scripts make no Web Storage calls"
+    attr:
+      {
+        value: not_stored_by_design,
+        tier: 0,
+        basis: observed,
+        sources: [mx-flow, mx-disk],
+      }
+  - location: chrome_session_storage
+    finding: "Not written for the service origin"
+    reason: "Page scripts make no Web Storage calls"
+    attr:
+      {
+        value: not_stored_by_design,
+        tier: 0,
+        basis: observed,
+        sources: [mx-flow, mx-disk],
+      }
+  - location: chrome_indexeddb
+    finding: "Not written for the service origin"
+    reason: "Page scripts make no IndexedDB calls"
+    attr:
+      {
+        value: not_stored_by_design,
+        tier: 0,
+        basis: observed,
+        sources: [mx-flow, mx-disk],
+      }
+  - location: chrome_cache
+    finding: "Invoice page and status responses absent"
+    reason: "Served with Cache-Control: no-store"
+    attr:
+      {
+        value: not_stored_by_design,
+        tier: 0,
+        basis: observed,
+        sources: [mx-flow, mx-disk],
+      }
+  - location: chrome_history
+    finding: "No page URL carries the order ID"
+    reason: "The order ID travels only in POST bodies and in the script-fetched letter.php resource URL"
+    facts: [order_id]
+    attr:
+      {
+        value: not_stored_by_design,
+        tier: 0,
+        basis: observed,
+        sources: [mx-flow],
+      }
+  - location: chrome_history
+    finding: "No letter.php URL in History"
+    reason: "The receipt is not in History; the only History-database trace of the letter is the download row written when the user downloads it (downloads column, letter_download_record)"
+    facts: [receipt]
+    attr: { value: not_found, tier: 0, basis: observed, sources: [mx-disk] }
+  - location: chrome_autofill
+    finding: "The deposit address is absent from autofill"
+    reason: "Displayed by the service, never typed by the user"
+    attr:
+      {
+        value: not_stored_by_design,
+        tier: 0,
+        basis: observed,
+        sources: [mx-disk],
+      }
+  - location: network_only
+    finding: "Request bodies (deposit and destination in POSTs) are not persisted by the browser"
+    reason: "Chrome stores no request bodies"
+    implication: { value: "Form field state reaches disk through session restore and autofill instead", tier: 0, basis: observed, sources: [mx-disk] }
+    attr:
+      {
+        value: not_stored_by_design,
+        tier: 0,
+        basis: observed,
+        sources: [mx-disk],
+      }
+
+# --- 12. Indicators (weights are analyst-assigned specificity) ----------------------------
+indicators:
+  - kind: domain
+    value:
+      { literal: mixero.io, justification: "The service's canonical domain." }
+    weight: 1.0
+    attr: { tier: 0, basis: observed, sources: [mx-policy, mx-flow] }
+  - kind: domain
+    value:
+      { literal: mixero.co, justification: "The service's assets / API host." }
+    weight: 1.0
+    attr: { tier: 0, basis: observed, sources: [mx-flow] }
+  - kind: string
+    value:
+      {
+        literal: 1HsM2JbyKnqwcYvEm1kLMNwJtqb6uxSczd,
+        justification: "Fixed Letter-of-Guarantee signing key shared by every letter the service issues.",
+      }
+    weight: 1.0
+    attr: { tier: 0, basis: observed, sources: [mx-disk] }
+  - kind: string
+    value:
+      {
+        literal: mixeroyubx5g5yxaucsxcd767vn2lnujuuz2dh53quwabukhrok2ekid.onion,
+        justification: "The service's published onion address.",
+      }
+    weight: 1.0
+    attr: { tier: 0, basis: observed, sources: [mx-policy] }
+  - kind: url_path
+    value: { regex: "^/Home/check_transaction$" }
+    weight: 0.9
+    attr: { tier: 0, basis: observed, sources: [mx-flow] }
+  - kind: url_path
+    value: { regex: "^/Home/set_transaction_coinjoin$" }
+    weight: 0.9
+    attr: { tier: 0, basis: observed, sources: [mx-flow] }
+  - kind: url_path
+    value: { regex: '^/scripts/letter\.php' }
+    weight: 0.8
+    attr: { tier: 0, basis: observed, sources: [mx-flow] }
+  - kind: url_path
+    value: { regex: "^/(mix|invoice)_coinjoin$", describes: mix_mode }
+    weight: 0.8
+    attr: { tier: 0, basis: observed, sources: [mx-flow, mx-disk] }
+  - kind: string
+    value: { regex: "Mixero confirms that the following address" }
+    weight: 0.9
+    attr:
+      {
+        tier: 0,
+        basis: observed,
+        sources: [mx-disk],
+        notes: "Letter of Guarantee wording.",
+      }
+  - kind: string
+    value: { regex: "-----START ADDRESS FOR SENDING FUNDS-----" }
+    weight: 0.8
+    attr:
+      {
+        tier: 0,
+        basis: observed,
+        sources: [mx-disk],
+        notes: "Letter of Guarantee section marker.",
+      }
+  - kind: string
+    value: { regex: "Transaction has been completed with TXID:" }
+    weight: 0.8
+    attr: { tier: 1, basis: observed, sources: [mx-flow] }
+  - kind: string
+    value:
+      { regex: 'We have detected a transaction\. Waiting for 1 confirmation' }
+    weight: 0.8
+    attr: { tier: 1, basis: observed, sources: [mx-flow] }
+  - kind: string
+    value: { regex: "we just started mixing your funds" }
+    weight: 0.6
+    attr: { tier: 1, basis: observed, sources: [mx-flow] }
+  - kind: string
+    value: { regex: "Awaiting an incoming transaction" }
+    weight: 0.5
+    attr: { tier: 0, basis: observed, sources: [mx-flow] }
+  - kind: filename
+    value: { regex: '^Letter_<order_id>\.txt$', describes: order_id }
+    weight: 0.7
+    attr: { tier: 0, basis: observed, sources: [mx-disk] }
+  - kind: cookie_name
+    value: { regex: "^ci_session$" }
+    weight: 0.1
+    attr:
+      {
+        tier: 0,
+        basis: observed,
+        sources: [mx-flow],
+        notes: "Framework default name, shared by many sites.",
+      }
+  - kind: cookie_name
+    value: { regex: "^__ddg(1|8|9|10)_$" }
+    weight: 0.1
+    attr:
+      {
+        tier: 0,
+        basis: observed,
+        sources: [mx-flow],
+        notes: "CDN cookies, shared by all DDoS-Guard customers.",
+      }
+  - kind: header
+    value: { regex: '^server:\s*ddos-guard$' }
+    weight: 0.1
+    attr: { tier: 0, basis: observed, sources: [mx-flow] }
+
+# --- 13. Extensions ----------------------------------------------------------------------
+extensions: {}

@@ -1,0 +1,1778 @@
+{
+  "service": "mixero",
+  "display_name": "Mixero",
+  "scope": {
+    "status": "reviewed",
+    "tiers": [
+      0,
+      1
+    ],
+    "valid": {
+      "first_seen": "2026-07",
+      "last_seen": "2026-10"
+    },
+    "disk": [
+      {
+        "id": "mx-disk",
+        "os": "Windows 10",
+        "browser": "Chrome 150",
+        "conditions": "Chrome closed normally; VM shut down normally before acquisition. Acquired after the tier-1 run; covers the tier-0 artifacts as well",
+        "tier": 1,
+        "ref": "observations.mx-disk"
+      }
+    ]
+  },
+  "recognise": [
+    {
+      "value": "mixero.io",
+      "literal": true,
+      "kind": "domain",
+      "weight": 1.0,
+      "weak": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[0]"
+    },
+    {
+      "value": "mixero.co",
+      "literal": true,
+      "kind": "domain",
+      "weight": 1.0,
+      "weak": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[1]"
+    },
+    {
+      "value": "1HsM2JbyKnqwcYvEm1kLMNwJtqb6uxSczd",
+      "literal": true,
+      "kind": "string",
+      "weight": 1.0,
+      "weak": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[2]"
+    },
+    {
+      "value": "mixeroyubx5g5yxaucsxcd767vn2lnujuuz2dh53quwabukhrok2ekid.onion",
+      "literal": true,
+      "kind": "string",
+      "weight": 1.0,
+      "weak": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[3]"
+    },
+    {
+      "value": "^/Home/check_transaction$",
+      "literal": false,
+      "kind": "url_path",
+      "weight": 0.9,
+      "weak": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[4]"
+    },
+    {
+      "value": "^/Home/set_transaction_coinjoin$",
+      "literal": false,
+      "kind": "url_path",
+      "weight": 0.9,
+      "weak": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[5]"
+    },
+    {
+      "value": "Mixero confirms that the following address",
+      "literal": false,
+      "kind": "string",
+      "weight": 0.9,
+      "weak": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[8]"
+    },
+    {
+      "value": "^/scripts/letter\\.php",
+      "literal": false,
+      "kind": "url_path",
+      "weight": 0.8,
+      "weak": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[6]"
+    },
+    {
+      "value": "^/(mix|invoice)_coinjoin$",
+      "literal": false,
+      "kind": "url_path",
+      "weight": 0.8,
+      "weak": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[7]"
+    },
+    {
+      "value": "-----START ADDRESS FOR SENDING FUNDS-----",
+      "literal": false,
+      "kind": "string",
+      "weight": 0.8,
+      "weak": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[9]"
+    },
+    {
+      "value": "Transaction has been completed with TXID:",
+      "literal": false,
+      "kind": "string",
+      "weight": 0.8,
+      "weak": false,
+      "tier": 1,
+      "basis": "observed",
+      "ref": "indicators[10]"
+    },
+    {
+      "value": "We have detected a transaction\\. Waiting for 1 confirmation",
+      "literal": false,
+      "kind": "string",
+      "weight": 0.8,
+      "weak": false,
+      "tier": 1,
+      "basis": "observed",
+      "ref": "indicators[11]"
+    },
+    {
+      "value": "^Letter_<order_id>\\.txt$",
+      "literal": false,
+      "kind": "filename",
+      "weight": 0.7,
+      "weak": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[14]"
+    },
+    {
+      "value": "we just started mixing your funds",
+      "literal": false,
+      "kind": "string",
+      "weight": 0.6,
+      "weak": false,
+      "tier": 1,
+      "basis": "observed",
+      "ref": "indicators[12]"
+    },
+    {
+      "value": "Awaiting an incoming transaction",
+      "literal": false,
+      "kind": "string",
+      "weight": 0.5,
+      "weak": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[13]"
+    },
+    {
+      "value": "^ci_session$",
+      "literal": false,
+      "kind": "cookie_name",
+      "weight": 0.1,
+      "weak": true,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[15]"
+    },
+    {
+      "value": "^__ddg(1|8|9|10)_$",
+      "literal": false,
+      "kind": "cookie_name",
+      "weight": 0.1,
+      "weak": true,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[16]"
+    },
+    {
+      "value": "^server:\\s*ddos-guard$",
+      "literal": false,
+      "kind": "header",
+      "weight": 0.1,
+      "weak": true,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "indicators[17]"
+    }
+  ],
+  "domains": [
+    {
+      "domain": "mixero.io",
+      "role": "canonical",
+      "clone": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "identity.domains[0]"
+    },
+    {
+      "domain": "mixero.co",
+      "role": "assets_api",
+      "clone": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "identity.domains[1]"
+    },
+    {
+      "domain": "mixero.org",
+      "role": "alias",
+      "clone": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "identity.domains[2]"
+    },
+    {
+      "domain": "mixero.website",
+      "role": "alias",
+      "clone": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "identity.domains[3]"
+    },
+    {
+      "domain": "mixeruni.com",
+      "role": "alias",
+      "clone": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "identity.domains[4]"
+    },
+    {
+      "domain": "mixeroyubx5g5yxaucsxcd767vn2lnujuuz2dh53quwabukhrok2ekid.onion",
+      "role": "onion",
+      "clone": false,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "identity.domains[5]"
+    }
+  ],
+  "where_is": [
+    {
+      "fact": "deposit_address",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "cache",
+      "outcome": "recovered",
+      "detail": "letter.php cache entry (address= in the key; letter body)",
+      "location": "chrome_cache",
+      "artifact": "letter_cache_entry",
+      "field": "Cache/Cache_Data/data_* (block-file cache); key '1/0/_dk_https://mixero.co https://mixero.co https://mixero.co/scripts/letter.php?address=<btc_address>&session=session<order_id>&mode=<mix_mode>'",
+      "recovery": "Chrome HTTP cache, block-file format. The key, which has a partitioned-cache prefix, carries the deposit address, 'session' + the full order ID (whose first 13 hex digits are the creation time) and the mode; the gzip body is the letter text with the full order ID, the deposit and destination addresses, the fee percentage, the server-local date block and the 48-hour validity paragraph. Match the letter.php URL as a substring of the key.",
+      "caveat": "The key is longer than the 160-byte key field of one 256-byte block, so the entry spans two blocks; a viewer that shows one block cuts the key after the 13-hex creation-time prefix, before the rest of the ID and the mode parameter.",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.letter_cache_entry"
+    },
+    {
+      "fact": "deposit_address",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "sessions",
+      "outcome": "recovered",
+      "detail": "page state",
+      "location": "chrome_sessions",
+      "artifact": "session_restore_state",
+      "field": "Sessions/Session_<int>, Sessions/Tabs_<int> (SNSS)",
+      "recovery": "String carve of the SNSS files; form state and navigation entries (page URLs, the explorer URL) survive there",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.session_restore_state"
+    },
+    {
+      "fact": "deposit_address",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "filesystem",
+      "outcome": "recovered",
+      "detail": "letter body",
+      "location": "filesystem",
+      "artifact": "letter_file",
+      "field": "<Downloads>/Letter_<order_id>.txt",
+      "recovery": "User's Downloads folder; the file name carries the order ID, the body the deposit and destination addresses, the fee percentage, the creation date and the service signature. Also search unallocated space for the body template.",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.letter_file"
+    },
+    {
+      "fact": "destination_address",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "cache",
+      "outcome": "recovered",
+      "detail": "letter body in the letter.php cache entry",
+      "location": "chrome_cache",
+      "artifact": "letter_cache_entry",
+      "field": "Cache/Cache_Data/data_* (block-file cache); key '1/0/_dk_https://mixero.co https://mixero.co https://mixero.co/scripts/letter.php?address=<btc_address>&session=session<order_id>&mode=<mix_mode>'",
+      "recovery": "Chrome HTTP cache, block-file format. The key, which has a partitioned-cache prefix, carries the deposit address, 'session' + the full order ID (whose first 13 hex digits are the creation time) and the mode; the gzip body is the letter text with the full order ID, the deposit and destination addresses, the fee percentage, the server-local date block and the 48-hour validity paragraph. Match the letter.php URL as a substring of the key.",
+      "caveat": "The key is longer than the 160-byte key field of one 256-byte block, so the entry spans two blocks; a viewer that shows one block cuts the key after the 13-hex creation-time prefix, before the rest of the ID and the mode parameter.",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.letter_cache_entry"
+    },
+    {
+      "fact": "destination_address",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "autofill",
+      "outcome": "recovered",
+      "detail": "destination_address-<int>",
+      "location": "chrome_autofill",
+      "artifact": "destination_autofill",
+      "field": "Web Data: autofill.name = destination_address-<int>",
+      "recovery": "Chrome Web Data autofill table, rows whose name matches destination_address-<int>",
+      "caveat": "Which form (CoinJoin or Advanced) produced the entry is not pinned down.",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.destination_autofill"
+    },
+    {
+      "fact": "destination_address",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "sessions",
+      "outcome": "recovered",
+      "detail": "form state",
+      "location": "chrome_sessions",
+      "artifact": "session_restore_state",
+      "field": "Sessions/Session_<int>, Sessions/Tabs_<int> (SNSS)",
+      "recovery": "String carve of the SNSS files; form state and navigation entries (page URLs, the explorer URL) survive there",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.session_restore_state"
+    },
+    {
+      "fact": "destination_address",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "filesystem",
+      "outcome": "recovered",
+      "detail": "letter body",
+      "location": "filesystem",
+      "artifact": "letter_file",
+      "field": "<Downloads>/Letter_<order_id>.txt",
+      "recovery": "User's Downloads folder; the file name carries the order ID, the body the deposit and destination addresses, the fee percentage, the creation date and the service signature. Also search unallocated space for the body template.",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.letter_file"
+    },
+    {
+      "fact": "order_id",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "downloads",
+      "outcome": "recovered",
+      "detail": "file name",
+      "location": "chrome_downloads",
+      "artifact": "letter_download_record",
+      "field": "History: downloads.target_path, downloads_url_chains.url (blob: URL)",
+      "recovery": "Chrome History DB, downloads table; target_path basename matches the file name pattern; start_time gives the download time; the URL chain is a blob: URL and the referrer is the invoice tab",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.letter_download_record"
+    },
+    {
+      "fact": "order_id",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "cache",
+      "outcome": "recovered",
+      "detail": "letter.php cache entry (full ID in the key's session= value and in the body)",
+      "location": "chrome_cache",
+      "artifact": "letter_cache_entry",
+      "field": "Cache/Cache_Data/data_* (block-file cache); key '1/0/_dk_https://mixero.co https://mixero.co https://mixero.co/scripts/letter.php?address=<btc_address>&session=session<order_id>&mode=<mix_mode>'",
+      "recovery": "Chrome HTTP cache, block-file format. The key, which has a partitioned-cache prefix, carries the deposit address, 'session' + the full order ID (whose first 13 hex digits are the creation time) and the mode; the gzip body is the letter text with the full order ID, the deposit and destination addresses, the fee percentage, the server-local date block and the 48-hour validity paragraph. Match the letter.php URL as a substring of the key.",
+      "caveat": "The key is longer than the 160-byte key field of one 256-byte block, so the entry spans two blocks; a viewer that shows one block cuts the key after the 13-hex creation-time prefix, before the rest of the ID and the mode parameter.",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.letter_cache_entry"
+    },
+    {
+      "fact": "order_id",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "autofill",
+      "outcome": "recovered",
+      "detail": "orderId",
+      "location": "chrome_autofill",
+      "artifact": "order_id_autofill",
+      "field": "Web Data: autofill.name = orderId",
+      "recovery": "Chrome Web Data autofill table, name = orderId (typed into the status lookup form)",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.order_id_autofill"
+    },
+    {
+      "fact": "order_id",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "sessions",
+      "outcome": "recovered",
+      "detail": "page state",
+      "location": "chrome_sessions",
+      "artifact": "session_restore_state",
+      "field": "Sessions/Session_<int>, Sessions/Tabs_<int> (SNSS)",
+      "recovery": "String carve of the SNSS files; form state and navigation entries (page URLs, the explorer URL) survive there",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.session_restore_state"
+    },
+    {
+      "fact": "order_id",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "filesystem",
+      "outcome": "recovered",
+      "detail": "file name and body",
+      "location": "filesystem",
+      "artifact": "letter_file",
+      "field": "<Downloads>/Letter_<order_id>.txt",
+      "recovery": "User's Downloads folder; the file name carries the order ID, the body the deposit and destination addresses, the fee percentage, the creation date and the service signature. Also search unallocated space for the body template.",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.letter_file"
+    },
+    {
+      "fact": "receipt",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "downloads",
+      "outcome": "recovered",
+      "detail": "download record with file name and target path",
+      "location": "chrome_downloads",
+      "artifact": "letter_download_record",
+      "field": "History: downloads.target_path, downloads_url_chains.url (blob: URL)",
+      "recovery": "Chrome History DB, downloads table; target_path basename matches the file name pattern; start_time gives the download time; the URL chain is a blob: URL and the referrer is the invoice tab",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.letter_download_record"
+    },
+    {
+      "fact": "receipt",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "cache",
+      "outcome": "recovered",
+      "detail": "letter body in the letter.php cache entry",
+      "location": "chrome_cache",
+      "artifact": "letter_cache_entry",
+      "field": "Cache/Cache_Data/data_* (block-file cache); key '1/0/_dk_https://mixero.co https://mixero.co https://mixero.co/scripts/letter.php?address=<btc_address>&session=session<order_id>&mode=<mix_mode>'",
+      "recovery": "Chrome HTTP cache, block-file format. The key, which has a partitioned-cache prefix, carries the deposit address, 'session' + the full order ID (whose first 13 hex digits are the creation time) and the mode; the gzip body is the letter text with the full order ID, the deposit and destination addresses, the fee percentage, the server-local date block and the 48-hour validity paragraph. Match the letter.php URL as a substring of the key.",
+      "caveat": "The key is longer than the 160-byte key field of one 256-byte block, so the entry spans two blocks; a viewer that shows one block cuts the key after the 13-hex creation-time prefix, before the rest of the ID and the mode parameter.",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.letter_cache_entry"
+    },
+    {
+      "fact": "receipt",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "filesystem",
+      "outcome": "recovered",
+      "detail": "the letter file in Downloads",
+      "location": "filesystem",
+      "artifact": "letter_file",
+      "field": "<Downloads>/Letter_<order_id>.txt",
+      "recovery": "User's Downloads folder; the file name carries the order ID, the body the deposit and destination addresses, the fee percentage, the creation date and the service signature. Also search unallocated space for the body template.",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.letter_file"
+    },
+    {
+      "fact": "deposit_txid",
+      "fact_tier": 1,
+      "fact_basis": "observed",
+      "source": "history",
+      "outcome": "recovered",
+      "detail": "explorer visit (user click)",
+      "location": "chrome_history",
+      "artifact": "explorer_visit",
+      "field": "History: urls.url = https://mempool.space/tx/<txid_hex64>",
+      "recovery": "Chrome History; explorer URLs containing a 64-hex TXID; user-behaviour dependent",
+      "caveat": null,
+      "tier": 1,
+      "basis": "observed",
+      "ref": "artifacts.explorer_visit"
+    },
+    {
+      "fact": "deposit_txid",
+      "fact_tier": 1,
+      "fact_basis": "observed",
+      "source": "sessions",
+      "outcome": "recovered",
+      "detail": "explorer URL in navigation entries",
+      "location": "chrome_sessions",
+      "artifact": "session_restore_state",
+      "field": "Sessions/Session_<int>, Sessions/Tabs_<int> (SNSS)",
+      "recovery": "String carve of the SNSS files; form state and navigation entries (page URLs, the explorer URL) survive there",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.session_restore_state"
+    },
+    {
+      "fact": "fee_and_delay",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "cache",
+      "outcome": "recovered",
+      "detail": "fee percentage in the cached letter body; the delay is not stated",
+      "location": "chrome_cache",
+      "artifact": "letter_cache_entry",
+      "field": "Cache/Cache_Data/data_* (block-file cache); key '1/0/_dk_https://mixero.co https://mixero.co https://mixero.co/scripts/letter.php?address=<btc_address>&session=session<order_id>&mode=<mix_mode>'",
+      "recovery": "Chrome HTTP cache, block-file format. The key, which has a partitioned-cache prefix, carries the deposit address, 'session' + the full order ID (whose first 13 hex digits are the creation time) and the mode; the gzip body is the letter text with the full order ID, the deposit and destination addresses, the fee percentage, the server-local date block and the 48-hour validity paragraph. Match the letter.php URL as a substring of the key.",
+      "caveat": "The key is longer than the 160-byte key field of one 256-byte block, so the entry spans two blocks; a viewer that shows one block cuts the key after the 13-hex creation-time prefix, before the rest of the ID and the mode parameter.",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.letter_cache_entry"
+    },
+    {
+      "fact": "fee_and_delay",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "filesystem",
+      "outcome": "recovered",
+      "detail": "fee percentage in the letter; the delay is not stated",
+      "location": "filesystem",
+      "artifact": "letter_file",
+      "field": "<Downloads>/Letter_<order_id>.txt",
+      "recovery": "User's Downloads folder; the file name carries the order ID, the body the deposit and destination addresses, the fee percentage, the creation date and the service signature. Also search unallocated space for the body template.",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.letter_file"
+    },
+    {
+      "fact": "mix_mode",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "history",
+      "outcome": "recovered",
+      "detail": "URL path (/mix_coinjoin, /invoice_coinjoin, /mix_advanced)",
+      "location": "chrome_history",
+      "artifact": "page_visits",
+      "field": "History: urls / visits",
+      "recovery": "Query urls/visits for the service host; the mode from the URL path (/mix_coinjoin, /invoice_coinjoin, /mix_advanced), the session time from visit_time; no order ID in any page URL",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.page_visits"
+    },
+    {
+      "fact": "mix_mode",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "cache",
+      "outcome": "recovered",
+      "detail": "mode= parameter in the letter.php cache key",
+      "location": "chrome_cache",
+      "artifact": "letter_cache_entry",
+      "field": "Cache/Cache_Data/data_* (block-file cache); key '1/0/_dk_https://mixero.co https://mixero.co https://mixero.co/scripts/letter.php?address=<btc_address>&session=session<order_id>&mode=<mix_mode>'",
+      "recovery": "Chrome HTTP cache, block-file format. The key, which has a partitioned-cache prefix, carries the deposit address, 'session' + the full order ID (whose first 13 hex digits are the creation time) and the mode; the gzip body is the letter text with the full order ID, the deposit and destination addresses, the fee percentage, the server-local date block and the 48-hour validity paragraph. Match the letter.php URL as a substring of the key.",
+      "caveat": "The key is longer than the 160-byte key field of one 256-byte block, so the entry spans two blocks; a viewer that shows one block cuts the key after the 13-hex creation-time prefix, before the rest of the ID and the mode parameter.",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.letter_cache_entry"
+    },
+    {
+      "fact": "mix_mode",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "sessions",
+      "outcome": "recovered",
+      "detail": "page URLs",
+      "location": "chrome_sessions",
+      "artifact": "session_restore_state",
+      "field": "Sessions/Session_<int>, Sessions/Tabs_<int> (SNSS)",
+      "recovery": "String carve of the SNSS files; form state and navigation entries (page URLs, the explorer URL) survive there",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.session_restore_state"
+    },
+    {
+      "fact": "order_created_time",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "history",
+      "outcome": "recovered",
+      "detail": "visit times",
+      "location": "chrome_history",
+      "artifact": "page_visits",
+      "field": "History: urls / visits",
+      "recovery": "Query urls/visits for the service host; the mode from the URL path (/mix_coinjoin, /invoice_coinjoin, /mix_advanced), the session time from visit_time; no order ID in any page URL",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.page_visits"
+    },
+    {
+      "fact": "order_created_time",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "downloads",
+      "outcome": "recovered",
+      "detail": "download start time",
+      "location": "chrome_downloads",
+      "artifact": "letter_download_record",
+      "field": "History: downloads.target_path, downloads_url_chains.url (blob: URL)",
+      "recovery": "Chrome History DB, downloads table; target_path basename matches the file name pattern; start_time gives the download time; the URL chain is a blob: URL and the referrer is the invoice tab",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.letter_download_record"
+    },
+    {
+      "fact": "order_created_time",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "cache",
+      "outcome": "recovered",
+      "detail": "date block of the cached letter body (server time, +0300); creation time to the microsecond from the 13-hex prefix of the key's session= value",
+      "location": "chrome_cache",
+      "artifact": "letter_cache_entry",
+      "field": "Cache/Cache_Data/data_* (block-file cache); key '1/0/_dk_https://mixero.co https://mixero.co https://mixero.co/scripts/letter.php?address=<btc_address>&session=session<order_id>&mode=<mix_mode>'",
+      "recovery": "Chrome HTTP cache, block-file format. The key, which has a partitioned-cache prefix, carries the deposit address, 'session' + the full order ID (whose first 13 hex digits are the creation time) and the mode; the gzip body is the letter text with the full order ID, the deposit and destination addresses, the fee percentage, the server-local date block and the 48-hour validity paragraph. Match the letter.php URL as a substring of the key.",
+      "caveat": "The key is longer than the 160-byte key field of one 256-byte block, so the entry spans two blocks; a viewer that shows one block cuts the key after the 13-hex creation-time prefix, before the rest of the ID and the mode parameter.",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.letter_cache_entry"
+    },
+    {
+      "fact": "order_created_time",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "cookies",
+      "outcome": "metadata_only",
+      "detail": "cookie creation times",
+      "location": "chrome_cookies",
+      "artifact": "session_cookie_row",
+      "field": "Network/Cookies: cookies.name = ci_session",
+      "recovery": "Chrome Cookies DB; name, host and times in plaintext, latest value only and encrypted; creation and last-access times frame the session",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.session_cookie_row"
+    },
+    {
+      "fact": "order_created_time",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "filesystem",
+      "outcome": "recovered",
+      "detail": "letter date block; also derivable from the order ID (uniqid unix seconds)",
+      "location": "filesystem",
+      "artifact": "letter_file",
+      "field": "<Downloads>/Letter_<order_id>.txt",
+      "recovery": "User's Downloads folder; the file name carries the order ID, the body the deposit and destination addresses, the fee percentage, the creation date and the service signature. Also search unallocated space for the body template.",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.letter_file"
+    },
+    {
+      "fact": "session_id",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "cookies",
+      "outcome": "metadata_only",
+      "detail": "ci_session row, value encrypted",
+      "location": "chrome_cookies",
+      "artifact": "session_cookie_row",
+      "field": "Network/Cookies: cookies.name = ci_session",
+      "recovery": "Chrome Cookies DB; name, host and times in plaintext, latest value only and encrypted; creation and last-access times frame the session",
+      "caveat": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.session_cookie_row"
+    },
+    {
+      "fact": "client_ip",
+      "fact_tier": 0,
+      "fact_basis": "observed",
+      "source": "cookies",
+      "outcome": "metadata_only",
+      "detail": "__ddg9_ row, value encrypted",
+      "location": "chrome_cookies",
+      "artifact": "client_ip_cookie_row",
+      "field": "Network/Cookies: cookies.name = __ddg9_",
+      "recovery": "Chrome Cookies DB row; the value is the public IPv4 address the subject used, but Chrome stores cookie values encrypted at rest (DPAPI / OS key ring), so decryption with the profile's key is needed to read it",
+      "caveat": "The row (name, host, times) was found with an encrypted value and no plaintext; the IP itself was not read from disk.",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.client_ip_cookie_row"
+    }
+  ],
+  "interpret": [
+    {
+      "kind": "identifier",
+      "subject": "uniqid_order_id",
+      "fact": "order_id",
+      "role": "record_key",
+      "derivation": "PHP uniqid(prefix, true) with the literal prefix 'session' internally (session<13 hex><digit>.<8 digits>); the UI strips the prefix. The first 8 hex characters are the unix seconds of order creation, the next 5 the microseconds, then a decimal entropy suffix (one digit, a point, eight digits). The letter.php cache key carries 'session' + the full ID, so the creation time can be read from the cache key alone (its first 13 hex digits); the full ID is also in the cached letter body.",
+      "scheme": "^[0-9a-f]{14}\\.\\d+$",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "order_model.identifiers.uniqid_order_id"
+    },
+    {
+      "kind": "identifier",
+      "subject": "deposit_address",
+      "fact": "deposit_address",
+      "role": "status_lookup_key",
+      "derivation": "Fresh service-controlled address per order; the operational lookup key for status (POST check_transaction keyed by bitcoin_address).",
+      "scheme": "^<btc_address>$",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "order_model.identifiers.deposit_address"
+    },
+    {
+      "kind": "field_map",
+      "subject": "Letter of Guarantee",
+      "map": {
+        "Mixero confirms that the following address": "deposit_address",
+        "in order to receive your funds to the following destination address:": "destination_address",
+        "The fees for this transaction are": "fee_and_delay",
+        "Your Order ID is": "order_id",
+        "-----START DATE-----": "order_created_time",
+        "-----START ADDRESS FOR SENDING FUNDS-----": "deposit_address",
+        "-----START DESTINATION ADDRESSES-----": "destination_address"
+      },
+      "tier": 0,
+      "basis": "observed",
+      "ref": "receipts.letter_of_guarantee.field_map"
+    },
+    {
+      "kind": "signing_identity",
+      "subject": "Letter of Guarantee",
+      "literal": "1HsM2JbyKnqwcYvEm1kLMNwJtqb6uxSczd",
+      "scheme": "bitcoin_signed_message",
+      "tier": 0,
+      "basis": "inferred",
+      "ref": "receipts.letter_of_guarantee.signature"
+    },
+    {
+      "kind": "caveat",
+      "subject": "Cached letter.php response",
+      "text": "The key is longer than the 160-byte key field of one 256-byte block, so the entry spans two blocks; a viewer that shows one block cuts the key after the 13-hex creation-time prefix, before the rest of the ID and the mode parameter.",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.letter_cache_entry.caveat"
+    },
+    {
+      "kind": "caveat",
+      "subject": "__ddg9_ cookie row (client IP)",
+      "text": "The row (name, host, times) was found with an encrypted value and no plaintext; the IP itself was not read from disk.",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.client_ip_cookie_row.caveat"
+    },
+    {
+      "kind": "caveat",
+      "subject": "Destination address in autofill",
+      "text": "Which form (CoinJoin or Advanced) produced the entry is not pinned down.",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "artifacts.destination_autofill.caveat"
+    },
+    {
+      "kind": "row_notes",
+      "subject": "user_identifier",
+      "text": "Account-less service: no cross-order user identifier exists.",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.user_identifier.notes"
+    },
+    {
+      "kind": "retention_claim",
+      "subject": null,
+      "text": "Transaction details are kept only until the mix completes and is confirmed",
+      "tier": 0,
+      "basis": "claimed",
+      "ref": "retention.stated_policy[0]"
+    },
+    {
+      "kind": "retention_claim",
+      "subject": null,
+      "text": "No trace remains after the 24-hour session",
+      "tier": 0,
+      "basis": "claimed",
+      "ref": "retention.stated_policy[1]"
+    },
+    {
+      "kind": "retention_claim",
+      "subject": null,
+      "text": "The letter of guarantee must be submitted within 48 hours of payment if problems arise. Failure to comply will invalidate the letter per our Data Confidentiality policy. If a delay is set, the letter expires 48 hours after this delay.",
+      "tier": 0,
+      "basis": "claimed",
+      "ref": "retention.stated_policy[2]"
+    }
+  ],
+  "expected_absences": [
+    {
+      "fact": "deposit_address",
+      "source": "web_storage",
+      "outcome": "not_stored_by_design",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_local_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[0]"
+        },
+        {
+          "location": "chrome_session_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[1]"
+        },
+        {
+          "location": "chrome_indexeddb",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no IndexedDB calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[2]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.deposit_address.cells.web_storage"
+    },
+    {
+      "fact": "deposit_address",
+      "source": "autofill",
+      "outcome": "not_stored_by_design",
+      "detail": "displayed, never typed",
+      "findings": [
+        {
+          "location": "chrome_autofill",
+          "finding": "The deposit address is absent from autofill",
+          "reason": "Displayed by the service, never typed by the user",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[6]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.deposit_address.cells.autofill"
+    },
+    {
+      "fact": "destination_address",
+      "source": "web_storage",
+      "outcome": "not_stored_by_design",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_local_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[0]"
+        },
+        {
+          "location": "chrome_session_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[1]"
+        },
+        {
+          "location": "chrome_indexeddb",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no IndexedDB calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[2]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.destination_address.cells.web_storage"
+    },
+    {
+      "fact": "order_id",
+      "source": "history",
+      "outcome": "not_stored_by_design",
+      "detail": "no page URL carries the order ID",
+      "findings": [
+        {
+          "location": "chrome_history",
+          "finding": "No page URL carries the order ID",
+          "reason": "The order ID travels only in POST bodies and in the script-fetched letter.php resource URL",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[4]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.order_id.cells.history"
+    },
+    {
+      "fact": "order_id",
+      "source": "web_storage",
+      "outcome": "not_stored_by_design",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_local_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[0]"
+        },
+        {
+          "location": "chrome_session_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[1]"
+        },
+        {
+          "location": "chrome_indexeddb",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no IndexedDB calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[2]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.order_id.cells.web_storage"
+    },
+    {
+      "fact": "receipt",
+      "source": "web_storage",
+      "outcome": "not_stored_by_design",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_local_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[0]"
+        },
+        {
+          "location": "chrome_session_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[1]"
+        },
+        {
+          "location": "chrome_indexeddb",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no IndexedDB calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[2]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.receipt.cells.web_storage"
+    },
+    {
+      "fact": "deposit_txid",
+      "source": "cache",
+      "outcome": "not_stored_by_design",
+      "detail": "no-store status response",
+      "findings": [
+        {
+          "location": "chrome_cache",
+          "finding": "Invoice page and status responses absent",
+          "reason": "Served with Cache-Control: no-store",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[3]"
+        }
+      ],
+      "tier": 1,
+      "basis": "observed",
+      "ref": "fact_coverage.deposit_txid.cells.cache"
+    },
+    {
+      "fact": "deposit_txid",
+      "source": "web_storage",
+      "outcome": "not_stored_by_design",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_local_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[0]"
+        },
+        {
+          "location": "chrome_session_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[1]"
+        },
+        {
+          "location": "chrome_indexeddb",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no IndexedDB calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[2]"
+        }
+      ],
+      "tier": 1,
+      "basis": "observed",
+      "ref": "fact_coverage.deposit_txid.cells.web_storage"
+    },
+    {
+      "fact": "payout_txid",
+      "source": "history",
+      "outcome": "not_stored_by_design",
+      "detail": "no page URL carries it; the completion response that shows it is no-store",
+      "findings": [],
+      "tier": 1,
+      "basis": "observed",
+      "ref": "fact_coverage.payout_txid.cells.history"
+    },
+    {
+      "fact": "payout_txid",
+      "source": "cache",
+      "outcome": "not_stored_by_design",
+      "detail": "no-store",
+      "findings": [
+        {
+          "location": "chrome_cache",
+          "finding": "Invoice page and status responses absent",
+          "reason": "Served with Cache-Control: no-store",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[3]"
+        }
+      ],
+      "tier": 1,
+      "basis": "observed",
+      "ref": "fact_coverage.payout_txid.cells.cache"
+    },
+    {
+      "fact": "payout_txid",
+      "source": "web_storage",
+      "outcome": "not_stored_by_design",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_local_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[0]"
+        },
+        {
+          "location": "chrome_session_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[1]"
+        },
+        {
+          "location": "chrome_indexeddb",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no IndexedDB calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[2]"
+        }
+      ],
+      "tier": 1,
+      "basis": "observed",
+      "ref": "fact_coverage.payout_txid.cells.web_storage"
+    },
+    {
+      "fact": "amounts",
+      "source": "cache",
+      "outcome": "not_stored_by_design",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_cache",
+          "finding": "Invoice page and status responses absent",
+          "reason": "Served with Cache-Control: no-store",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[3]"
+        }
+      ],
+      "tier": 1,
+      "basis": "observed",
+      "ref": "fact_coverage.amounts.cells.cache"
+    },
+    {
+      "fact": "amounts",
+      "source": "web_storage",
+      "outcome": "not_stored_by_design",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_local_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[0]"
+        },
+        {
+          "location": "chrome_session_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[1]"
+        },
+        {
+          "location": "chrome_indexeddb",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no IndexedDB calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[2]"
+        }
+      ],
+      "tier": 1,
+      "basis": "observed",
+      "ref": "fact_coverage.amounts.cells.web_storage"
+    },
+    {
+      "fact": "fee_and_delay",
+      "source": "web_storage",
+      "outcome": "not_stored_by_design",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_local_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[0]"
+        },
+        {
+          "location": "chrome_session_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[1]"
+        },
+        {
+          "location": "chrome_indexeddb",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no IndexedDB calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[2]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.fee_and_delay.cells.web_storage"
+    },
+    {
+      "fact": "mix_mode",
+      "source": "web_storage",
+      "outcome": "not_stored_by_design",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_local_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[0]"
+        },
+        {
+          "location": "chrome_session_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[1]"
+        },
+        {
+          "location": "chrome_indexeddb",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no IndexedDB calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[2]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.mix_mode.cells.web_storage"
+    },
+    {
+      "fact": "order_created_time",
+      "source": "web_storage",
+      "outcome": "not_stored_by_design",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_local_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[0]"
+        },
+        {
+          "location": "chrome_session_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[1]"
+        },
+        {
+          "location": "chrome_indexeddb",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no IndexedDB calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[2]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.order_created_time.cells.web_storage"
+    },
+    {
+      "fact": "session_id",
+      "source": "web_storage",
+      "outcome": "not_stored_by_design",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_local_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[0]"
+        },
+        {
+          "location": "chrome_session_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[1]"
+        },
+        {
+          "location": "chrome_indexeddb",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no IndexedDB calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[2]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.session_id.cells.web_storage"
+    },
+    {
+      "fact": "client_ip",
+      "source": "web_storage",
+      "outcome": "not_stored_by_design",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_local_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[0]"
+        },
+        {
+          "location": "chrome_session_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[1]"
+        },
+        {
+          "location": "chrome_indexeddb",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no IndexedDB calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[2]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.client_ip.cells.web_storage"
+    },
+    {
+      "fact": "status_progression",
+      "source": "cache",
+      "outcome": "not_stored_by_design",
+      "detail": "no-store",
+      "findings": [
+        {
+          "location": "chrome_cache",
+          "finding": "Invoice page and status responses absent",
+          "reason": "Served with Cache-Control: no-store",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[3]"
+        }
+      ],
+      "tier": 1,
+      "basis": "observed",
+      "ref": "fact_coverage.status_progression.cells.cache"
+    },
+    {
+      "fact": "status_progression",
+      "source": "web_storage",
+      "outcome": "not_stored_by_design",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_local_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[0]"
+        },
+        {
+          "location": "chrome_session_storage",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no Web Storage calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[1]"
+        },
+        {
+          "location": "chrome_indexeddb",
+          "finding": "Not written for the service origin",
+          "reason": "Page scripts make no IndexedDB calls",
+          "implication": null,
+          "outcome": "not_stored_by_design",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[2]"
+        }
+      ],
+      "tier": 1,
+      "basis": "observed",
+      "ref": "fact_coverage.status_progression.cells.web_storage"
+    }
+  ],
+  "design_findings_without_cell": [
+    {
+      "location": "network_only",
+      "source": null,
+      "finding": "Request bodies (deposit and destination in POSTs) are not persisted by the browser",
+      "reason": "Chrome stores no request bodies",
+      "implication": "Form field state reaches disk through session restore and autofill instead",
+      "outcome": "not_stored_by_design",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "negative_findings[7]"
+    }
+  ],
+  "not_found": [
+    {
+      "fact": null,
+      "source": "history",
+      "outcome": "not_found",
+      "detail": null,
+      "findings": [
+        {
+          "location": "chrome_history",
+          "finding": "No letter.php URL in History",
+          "reason": "The receipt is not in History; the only History-database trace of the letter is the download row written when the user downloads it (downloads column, letter_download_record)",
+          "implication": null,
+          "outcome": "not_found",
+          "tier": 0,
+          "basis": "observed",
+          "ref": "negative_findings[5]"
+        }
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "negative_findings[5]"
+    }
+  ],
+  "beyond_disk": [
+    {
+      "kind": "lookup",
+      "subject": "check_transaction",
+      "method": "POST",
+      "path": "^/Home/check_transaction$",
+      "lookup_key": "deposit_address",
+      "ownership_check": false,
+      "gate": [
+        "session",
+        "csrf"
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "endpoints.check_transaction"
+    },
+    {
+      "kind": "lookup",
+      "subject": "fetch_order",
+      "method": "POST",
+      "path": "^/Home/fetch_order$",
+      "lookup_key": "order_id",
+      "ownership_check": null,
+      "gate": [
+        "session",
+        "csrf",
+        "captcha"
+      ],
+      "tier": 0,
+      "basis": "observed",
+      "ref": "endpoints.fetch_order"
+    },
+    {
+      "kind": "replay",
+      "subject": "check_transaction",
+      "variant": "original",
+      "reading": "Completion record served while the order's session is live",
+      "outcome": "live",
+      "cites": [
+        {
+          "id": "mx-flow",
+          "date": "2026-07-22"
+        }
+      ],
+      "tier": 1,
+      "basis": "observed",
+      "ref": "endpoints.check_transaction.replay_results[0]"
+    },
+    {
+      "kind": "replay",
+      "subject": "check_transaction",
+      "variant": "superseded_session",
+      "reading": "Superseded session still accepted; the completion record is no longer served (purged), the order is reported as mixing",
+      "outcome": "accepted",
+      "cites": [
+        {
+          "id": "mx-replay",
+          "date": "2026-08"
+        }
+      ],
+      "tier": 1,
+      "basis": "observed",
+      "ref": "endpoints.check_transaction.replay_results[1]"
+    },
+    {
+      "kind": "replay",
+      "subject": "check_transaction",
+      "variant": "foreign_order_key",
+      "reading": "Key taken from the body; no ownership check",
+      "outcome": "accepted",
+      "cites": [
+        {
+          "id": "mx-replay",
+          "date": "2026-08"
+        }
+      ],
+      "tier": 1,
+      "basis": "observed",
+      "ref": "endpoints.check_transaction.replay_results[3]"
+    },
+    {
+      "kind": "retention_claim",
+      "subject": null,
+      "text": "Transaction details are kept only until the mix completes and is confirmed",
+      "tier": 0,
+      "basis": "claimed",
+      "ref": "retention.stated_policy[0]"
+    },
+    {
+      "kind": "retention_claim",
+      "subject": null,
+      "text": "No trace remains after the 24-hour session",
+      "tier": 0,
+      "basis": "claimed",
+      "ref": "retention.stated_policy[1]"
+    },
+    {
+      "kind": "retention_claim",
+      "subject": null,
+      "text": "The letter of guarantee must be submitted within 48 hours of payment if problems arise. Failure to comply will invalidate the letter per our Data Confidentiality policy. If a delay is set, the letter expires 48 hours after this delay.",
+      "tier": 0,
+      "basis": "claimed",
+      "ref": "retention.stated_policy[2]"
+    },
+    {
+      "kind": "retention_observed",
+      "subject": null,
+      "text": "Completion record (payout TXID) no longer served about two weeks after completion",
+      "cites": [
+        {
+          "id": "mx-replay",
+          "date": "2026-08"
+        }
+      ],
+      "tier": 1,
+      "basis": "observed",
+      "ref": "retention.observed[0]"
+    },
+    {
+      "kind": "retention_observed",
+      "subject": null,
+      "text": "Superseded session identifiers still accepted about two weeks later; deposit-address resolution still works",
+      "cites": [
+        {
+          "id": "mx-replay",
+          "date": "2026-08"
+        }
+      ],
+      "tier": 1,
+      "basis": "observed",
+      "ref": "retention.observed[1]"
+    },
+    {
+      "kind": "retention_consistency",
+      "subject": null,
+      "value": "partially_consistent",
+      "text": "First claim consistent with the purge; second contradicted by the validity of old sessions.",
+      "tier": 1,
+      "basis": "inferred",
+      "ref": "retention.consistency"
+    },
+    {
+      "kind": "signature",
+      "subject": "Letter of Guarantee",
+      "scheme": "bitcoin_signed_message",
+      "scheme_notes": "A base64 signature over the letter block, attributed to a Bitcoin address; verification of the exact message bytes not yet performed.",
+      "verification": null,
+      "verification_notes": "Investigator task: the signature should be verified against the signing address and the published identity.",
+      "signing_identity": "1HsM2JbyKnqwcYvEm1kLMNwJtqb6uxSczd",
+      "tier": 0,
+      "basis": "inferred",
+      "ref": "receipts.letter_of_guarantee.signature"
+    },
+    {
+      "kind": "chain",
+      "subject": "deposit_address",
+      "outcome": "recovered",
+      "detail": "deposit output",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.deposit_address.cells.chain"
+    },
+    {
+      "kind": "chain",
+      "subject": "destination_address",
+      "outcome": "required_to_query",
+      "detail": "payout found only from a known destination",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.destination_address.cells.chain"
+    },
+    {
+      "kind": "chain",
+      "subject": "deposit_txid",
+      "outcome": "recovered",
+      "detail": null,
+      "tier": 1,
+      "basis": "observed",
+      "ref": "fact_coverage.deposit_txid.cells.chain"
+    },
+    {
+      "kind": "chain",
+      "subject": "payout_txid",
+      "outcome": "recovered",
+      "detail": "from a known destination address (recovered on disk from the letter, autofill or session restore)",
+      "tier": 1,
+      "basis": "observed",
+      "ref": "fact_coverage.payout_txid.cells.chain"
+    },
+    {
+      "kind": "chain",
+      "subject": "amounts",
+      "outcome": "recovered",
+      "detail": "deposit output; the payout amount only from a known destination address",
+      "tier": 1,
+      "basis": "observed",
+      "ref": "fact_coverage.amounts.cells.chain"
+    },
+    {
+      "kind": "chain",
+      "subject": "fee_and_delay",
+      "outcome": "recovered",
+      "detail": "fee derivable as deposit minus payout",
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.fee_and_delay.cells.chain"
+    },
+    {
+      "kind": "chain",
+      "subject": "mix_mode",
+      "outcome": "not_found",
+      "detail": null,
+      "tier": 0,
+      "basis": "observed",
+      "ref": "fact_coverage.mix_mode.cells.chain"
+    }
+  ],
+  "limits": {
+    "tiers_not_run": [],
+    "facts_not_tested": [],
+    "columns_not_tested": [],
+    "unknown": [
+      {
+        "ref": "endpoints[7].gate",
+        "notes": "Access model not tested without a session."
+      },
+      {
+        "ref": "receipts[0].signature.verification",
+        "notes": "Investigator task: the signature should be verified against the signing address and the published identity."
+      }
+    ],
+    "status": "reviewed",
+    "disk": [
+      {
+        "id": "mx-disk",
+        "os": "Windows 10",
+        "browser": "Chrome 150",
+        "conditions": "Chrome closed normally; VM shut down normally before acquisition. Acquired after the tier-1 run; covers the tier-0 artifacts as well",
+        "tier": 1,
+        "ref": "observations.mx-disk"
+      }
+    ]
+  }
+}

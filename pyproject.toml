@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mixerscope"
+version = "0.1.0"
+description = "Read-only forensic interpretation layer for cryptocurrency-mixer artifacts: hand-curated invariant knowledge base, disk evidence matching, MCP server."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+    "pydantic>=2.12",
+    "pyyaml>=6.0",
+    "mcp>=2.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+mixerscope-build-kb = "mixerscope.knowledge_base.build:main"
+mixerscope-export-schema = "mixerscope.schema.jsonschema:main"
+mixerscope-scan = "mixerscope.evidence.cli:main"
+mixerscope-mcp = "mixerscope.mcp_server.server:main"
+
+[tool.setuptools.packages.find]
+include = ["mixerscope*"]
+
+[tool.setuptools.package-data]
+"mixerscope.knowledge_base" = ["services/*.yaml", "tiers.yaml", "definitions.yaml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

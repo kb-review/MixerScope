@@ -1,0 +1,301 @@
+# =============================================================================
+# MixerScope shared definitions                                   version 0.4
+# Written once, used by every service entry. A service file refers to these
+# terms by their code (e.g. required_to_query); the build and the renderers look
+# up the label and meaning here. A code that is not defined here is a build
+# error, and the Python enums in mixerscope.schema.vocab must match this file
+# exactly (the test suite checks both directions).
+# Nothing in this file is about a particular mixer or about the paper.
+# =============================================================================
+version: "0.4"
+
+# --- Vocabularies --------------------------------------------------------------
+
+tiers:
+  0: { label: "0", meaning: "Everything without funds: public pages, operator statements, and creating an order up to its deposit address and receipt" }
+  1: { label: "1", meaning: "A funded transaction between examiner-owned wallets, through to the payout" }
+
+basis:
+  observed: { label: O, meaning: "Seen in a registered observation" }
+  inferred: { label: I, meaning: "Reasoned from observations; the reasoning is written in the entry" }
+  claimed:  { label: C, meaning: "Stated by the operator; never merged with an observation" }
+  unknown:  { label: U, meaning: "Not yet established" }
+
+provenance:
+  subject_evidence: { label: subject evidence, meaning: "Would exist on a seized device (disk image)" }
+  instrumentation:  { label: instrumentation,  meaning: "Lab-only: proxy capture, packet capture, replay" }
+  operator_claim:   { label: operator claim,   meaning: "The service's own statements" }
+  public_record:    { label: public record,    meaning: "Blockchain or block explorer" }
+
+observation_kinds:
+  capture_flow:  { label: proxy capture }
+  disk_image:    { label: disk image }
+  operator_page: { label: operator page }
+  replay:        { label: replay }
+  explorer:      { label: block explorer }
+
+outcomes:                         # fact-by-source matrix cells (paper Table 3)
+  recovered:
+    label: Recovered
+    meaning: "The fact was extracted from this source on the subject image, without instrumentation"
+  metadata_only:
+    label: Metadata only
+    meaning: "The source records that the item exists, with its name or time, but the value is encrypted or unreadable"
+  live_only:
+    label: Live only
+    meaning: "The fact passes through this source only while the session is active"
+  required_to_query:
+    label: Required to query
+    meaning: "The source does not yield the fact; the examiner must already hold it, recovered from another source, to query this one"
+  not_stored_by_design:
+    label: Not stored by design
+    meaning: "The service never writes the fact to this source, as confirmed from its client code or response headers"
+  not_found:
+    label: Not found
+    meaning: "The source was examined and the fact was absent, without a confirmed design reason"
+  not_tested:
+    label: Not tested
+    meaning: "The source was not examined for this service"
+  not_applicable:
+    label: Not applicable
+    meaning: "The fact cannot be present in this source, or the service does not have the fact"
+
+matrix_sources:                   # matrix columns, in this order
+  history:     { label: History,                  disk: true }
+  downloads:   { label: Downloads,                disk: true }
+  cache:       { label: HTTP cache,               disk: true }
+  cookies:     { label: Cookies,                  disk: true }
+  web_storage: { label: Web Storage / IndexedDB,  disk: true }
+  autofill:    { label: Autofill,                 disk: true }
+  sessions:    { label: Session restore,          disk: true }
+  filesystem:  { label: File system,              disk: true }
+  replay:      { label: Server replay,            disk: false }
+  chain:       { label: Blockchain,               disk: false }
+
+facts:
+  deposit_address:     { label: Deposit address,        meaning: "Address the user pays into" }
+  destination_address: { label: Destination address,    meaning: "Address the user is paid out to" }
+  order_id:            { label: Order ID,               meaning: "Identifier the service assigns to the order" }
+  receipt:             { label: Letter of Guarantee,    meaning: "Operator-issued receipt for the order" }
+  deposit_txid:        { label: Deposit TXID,           meaning: "Transaction paying the deposit address" }
+  payout_txid:         { label: Payout TXID,            meaning: "Transaction paying the destination address" }
+  amounts:             { label: Amounts,                meaning: "Deposit and payout amounts" }
+  fee_and_delay:       { label: Fee and delay settings, meaning: "Settings chosen at order creation" }
+  mix_mode:            { label: Mixing mode,            meaning: "Mode chosen, where the service offers several" }
+  order_created_time:  { label: Order time,             meaning: "When the order was created" }
+  session_id:          { label: Session ID,             meaning: "Server-side session identifier" }
+  client_ip:           { label: Client IP address,      meaning: "Public IP address of the user" }
+  user_identifier:     { label: User identifier,        meaning: "Identifier the service reuses across a user's orders" }
+  status_progression:  { label: Status progression,     meaning: "Sequence of status messages for the order" }
+
+locations:
+  chrome_history:         { label: History,         source: history }
+  chrome_downloads:       { label: Downloads,       source: downloads }
+  chrome_cache:           { label: HTTP cache,      source: cache }
+  chrome_cookies:         { label: Cookies,         source: cookies }
+  chrome_local_storage:   { label: Local Storage,   source: web_storage }
+  chrome_session_storage: { label: Session Storage, source: web_storage }
+  chrome_indexeddb:       { label: IndexedDB,       source: web_storage }
+  chrome_autofill:        { label: Autofill,        source: autofill }
+  chrome_sessions:        { label: Session restore, source: sessions }
+  filesystem:             { label: File system,     source: filesystem }
+  pagefile:               { label: Pagefile,        source: filesystem }
+  unallocated:            { label: Unallocated space, source: filesystem }
+  on_chain:               { label: Blockchain,      source: chain }
+  network_only:           { label: Network only }
+
+persistence:
+  disk:           { label: disk }
+  on_chain:       { label: on-chain }
+  none_by_design: { label: none by design }
+
+cache_policies:
+  no_store:            { label: no-store,                meaning: "Response forbidden from the browser cache" }
+  no_cache:            { label: no-cache,                meaning: "Stored but revalidated before reuse" }
+  cacheable_heuristic: { label: cacheable (no directive), meaning: "No cache directive; the browser may store it" }
+  cacheable_explicit:  { label: cacheable,               meaning: "Explicitly cacheable" }
+  cache_busted:        { label: cache-busted,            meaning: "Client appends a unique query parameter so the response is never reused" }
+  unknown:             { label: unknown }
+
+gate_mechanisms:                  # an endpoint's gate is a list of these
+  session: { label: session,  meaning: "A valid session cookie is required" }
+  csrf:    { label: CSRF,     meaning: "A CSRF token obtained in the session is required" }
+  captcha: { label: captcha,  meaning: "A solved captcha is required" }
+  cdn_challenge: { label: CDN challenge, meaning: "Requests may be intercepted by the CDN's bot challenge; not a service gate" }
+
+roles:
+  record_key:           { label: record key,           meaning: "Primary key of the order on the server" }
+  status_lookup_key:    { label: status lookup key,    meaning: "Value the status endpoint is queried with" }
+  display_only:         { label: display only }
+  cross_order_user_key: { label: cross-order user key, meaning: "Reused across a user's orders" }
+
+set_by:
+  application: { label: application }
+  cdn:         { label: CDN }
+  analytics:   { label: analytics }
+
+replay_variants:                  # Section 3.1 replay protocol
+  original:           { label: "Original request, live session" }
+  superseded_session: { label: "Superseded session, own order key" }
+  no_cookies:         { label: "No cookies, own order key" }
+  foreign_order_key:  { label: "Valid session, another order's key" }
+
+replay_outcomes:
+  live:     { label: live,     meaning: "Answered with the live order state" }
+  accepted: { label: accepted, meaning: "Accepted, but without the record being asked for" }
+  rejected: { label: rejected }
+  unknown:  { label: unknown }
+
+indicator_kinds:
+  domain:      { label: domain }
+  url_path:    { label: URL path }
+  filename:    { label: file name }
+  string:      { label: text string }
+  cookie_name: { label: cookie name }
+  header:      { label: response header }
+
+consistency:
+  consistent:           { label: consistent }
+  partially_consistent: { label: partially consistent }
+  contradicted:         { label: contradicted }
+  untested:             { label: untested }
+
+delivery:
+  server_file: { label: server file }
+  client_blob: { label: assembled in the browser (blob download) }
+  page_text:   { label: page text }
+  none:        { label: none }
+
+receipt_containers:
+  plain_text:             { label: plain text }
+  bitcoin_signed_message: { label: Bitcoin signed message block }
+  pgp_clearsigned:        { label: PGP clear-signed block }
+  pgp_detached:           { label: PGP detached signature }
+  json:                   { label: JSON }
+  html:                   { label: HTML }
+  pdf:                    { label: PDF }
+
+signature_schemes:
+  bitcoin_signed_message: { label: Bitcoin signed message }
+  pgp:             { label: PGP }
+  rsa:             { label: RSA }
+  none:            { label: none }
+  unknown:         { label: unknown }
+
+status_mechanisms:
+  polling:                 { label: polling }
+  websocket:               { label: websocket }
+  server_rendered_refresh: { label: server-rendered refresh }
+  none:                    { label: none }
+
+account_models:
+  account_less:     { label: account-less }
+  optional_account: { label: optional account }
+  required_account: { label: required account }
+
+domain_roles:
+  canonical:       { label: canonical }
+  assets_api:      { label: assets / API }
+  alias:           { label: alias }
+  suspected_clone: { label: suspected clone }
+  onion:           { label: onion }
+
+entry_status:
+  draft:     { label: draft }
+  reviewed:  { label: reviewed }
+  confirmed: { label: confirmed }
+
+validity_status:
+  current:    { label: current }
+  superseded: { label: superseded }
+  withdrawn:  { label: withdrawn }
+
+content_encodings:
+  gzip: { label: gzip }
+  br:   { label: brotli }
+  zstd: { label: zstd }
+  none: { label: none }
+
+booleans:
+  "true":  { label: "yes" }
+  "false": { label: "no" }
+
+# --- Placeholders (§P) ---------------------------------------------------------
+# Used inside Patterns and Templates as <code>. `regex` is the class of values the
+# placeholder stands for; `fact_bearing: false` marks placeholders that never carry
+# a canonical fact (a template's `yields` pair with the remaining ones, in order).
+placeholders:
+  btc_address: { label: Bitcoin address, regex: "(?:(?:bc1|tb1)[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{25,87}|[13][a-km-zA-HJ-NP-Z1-9]{25,34})" }
+  xmr_address: { label: Monero address,  regex: "[48][0-9AB][1-9A-HJ-NP-Za-km-z]{93}" }
+  eth_address: { label: EVM address,     regex: "0x[0-9a-fA-F]{40}" }
+  txid_hex64:  { label: transaction ID,  regex: "[0-9a-fA-F]{64}" }
+  order_id:    { label: order ID,        regex: "[A-Za-z0-9._\\-]{6,64}", meaning: "Expanded from the service's own order-ID scheme when one is defined" }
+  amount_btc:  { label: amount,          regex: "\\d+(?:\\.\\d+)?" }
+  unix_ts:     { label: unix time (s),   regex: "\\d{10}" }
+  unix_ts_ms:  { label: unix time (ms),  regex: "\\d{13}" }
+  datetime:    { label: date and time,   regex: "[A-Za-z0-9,:+\\- /]{8,40}" }
+  percent:     { label: percentage,      regex: "\\d+(?:\\.\\d+)?" }
+  ipv4:        { label: IPv4 address,    regex: "(?:\\d{1,3}\\.){3}\\d{1,3}" }
+  mix_mode:    { label: mixing mode,     regex: "[A-Za-z0-9_\\-]{1,32}" }
+  hex:         { label: hex string,      regex: "[0-9a-fA-F]+",        fact_bearing: false }
+  int:         { label: integer,         regex: "\\d+",                fact_bearing: false }
+  text:        { label: free text,       regex: ".+?",                 fact_bearing: false }
+  signature:   { label: signature blob,  regex: "[A-Za-z0-9+/=\\s]{20,}", fact_bearing: false }
+
+# --- Building blocks (paper Table 4a) -----------------------------------------
+# The forms every value in an entry is written in. Their codes come from the vocabularies
+# above; their shape is listed here so that this file is the complete written form of the
+# schema's building blocks. The models in mixerscope.schema must carry exactly these fields
+# (the test suite checks it). Sections of an entry (Table 4b) are documented in
+# docs/service-entry.schema.json and in the README.
+building_blocks:
+  attribute:
+    meaning: "Wraps every value in an entry and records how it is known and when it was true"
+    fields:
+      value:    "The value itself (absent when basis is unknown)"
+      tier:     "Collection tier at which the value was first established (tiers)"
+      basis:    "Evidence basis: observed, inferred, claimed or unknown (basis)"
+      sources:  "Ids of the observations the value is drawn from; required unless basis is unknown"
+      validity: "When the value was true (a validity record); the entry's validity_default applies when absent"
+      notes:    "Reasoning for an inferred value, caveats, or what an unknown still needs"
+  validity:
+    meaning: "The window in which a value was true; a value that stops being true is superseded, not overwritten"
+    fields:
+      first_seen:    "YYYY-MM or YYYY-MM-DD"
+      last_seen:     "YYYY-MM or YYYY-MM-DD"
+      status:        "current, superseded or withdrawn (validity_status)"
+      superseded_by: "Free-text pointer to the record that replaced this one"
+  observation:
+    meaning: "A registered source that values point to; one registry per entry, nothing from a case inside it"
+    fields:
+      id:               "Short identifier cited by attributes' sources"
+      kind:             "How the service was seen (observation_kinds)"
+      provenance_class: "Whether a subject device would hold it (provenance)"
+      tier:             "Tier at which the observation was collected (tiers)"
+      date:             "YYYY-MM or YYYY-MM-DD"
+      os:               "Operating system of the subject machine, when applicable"
+      browser_version:  "Browser and version, when applicable"
+      case_ref:         "Pointer to the evidence log or capture, never its contents"
+      notes:            "What the observation covers"
+      conditions:       "Acquisition conditions of a disk image: how the browser and the machine were closed, what else the profile holds"
+  pattern:
+    meaning: "A regular expression that matches identifiers, paths or file names without naming any value; may use <placeholders>"
+    fields:
+      regex:     "The expression; placeholders expand to the classes defined under placeholders"
+      describes: "The fact the matched value carries, if any (facts)"
+  template:
+    meaning: "Literal response or document text with <placeholders> in place of order-specific values"
+    fields:
+      text:     "The text; whitespace runs match loosely"
+      yields:   "Facts carried by the fact-bearing placeholders, in order of appearance (facts)"
+      literals: "Service-level constants inside the text that would otherwise look like case data (invariant_literal records)"
+  invariant_literal:
+    meaning: "A service-level constant that looks like instance data (a signing address, an onion name) and is admitted only with a reason"
+    fields:
+      literal:       "The constant"
+      justification: "Why it is a property of the service and not of one order"
+  cell:
+    meaning: "One cell of the fact-by-source matrix"
+    fields:
+      value:  "One of the outcomes"
+      detail: "Where in the source the fact sits, or why it is absent (optional; written after a colon)"

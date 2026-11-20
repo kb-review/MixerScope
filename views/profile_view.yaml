@@ -1,0 +1,65 @@
+# Layout of the investigator profile (Markdown rendering of build/profiles/<id>.json).
+# Every string the renderer prints that is not a value from the entry or a label from
+# definitions.yaml comes from this file; the renderer refuses anything else.
+title: "Investigator profile"
+intro:
+  scope: "Scope of this profile"
+  tiers: "tiers"
+  status: "entry status"
+  valid: "valid"
+  env: "environment"
+  conditions: "acquisition conditions"
+  legend: "Tier/Basis: the number is the collection tier, the letter the evidence basis (O observed, I inferred, C claimed, U unknown). Every row names the entry field it comes from."
+sections:
+  recognise:
+    title: "1. Was this service used? (search terms, strongest first)"
+    columns: ["Search for", "Kind", "Tier/Basis", "From"]
+    domains_columns: ["Domain", "Role", "Tier/Basis", "From"]
+    weak: "weak: shared with unrelated sites"
+    clone: "a clone, not this service"
+  where_is:
+    title: "2. Where each fact is on the disk"
+    columns: ["Facts (where in the record)", "Location", "Field", "Recovery", "Caveat", "Tier/Basis", "From"]
+  interpret:
+    title: "3. How to read what you find"
+    identifier: "Identifier"
+    field_map: "Receipt labels"
+    signing_identity: "Signing identity"
+    caveat: "Caveat"
+    row_notes: "Fact row notes"
+    retention_claims: "Operator statements on retention (compare)"
+    columns: ["Kind", "Subject", "Statement", "Tier/Basis", "From"]
+  expected_absences:
+    title: "4. Absences that are expected (do not read them as deletion)"
+    columns: ["Source", "Finding (why absent)", "Facts affected (cell detail)", "Implication", "Tier/Basis", "From"]
+    no_design_reason: "absent, no design reason"
+  beyond_disk:
+    title: "5. Beyond the disk"
+    lookup: "Lookup endpoint"
+    replay: "Replay result"
+    retention_claim: "Retention claim"
+    retention_observed: "Retention observed"
+    retention_consistency: "Consistency"
+    signature: "Receipt signature"
+    chain: "Blockchain"
+    columns: ["Kind", "Subject", "Statement", "Tier/Basis", "From"]
+  limits:
+    title: "6. What this profile does not cover"
+    tiers_not_run: "Tiers not run"
+    facts_not_tested: "Facts not tested in any source"
+    columns_not_tested: "Sources not tested for any fact"
+    unknown: "Values not yet established"
+    status: "Entry status"
+    conditions: "Disk evidence conditions"
+    columns: ["Limit", "Detail", "From"]
+labels:
+  none: "none"
+  empty: "None recorded in the entry."
+  "yes": "yes"
+  "no": "no"
+  ownership_check: "ownership check"
+  cites: "cites"
+  gate: "gate"
+  lookup_key: "looked up by"
+  verification: "verification"
+  scheme: "scheme"

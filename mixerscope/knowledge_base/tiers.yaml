@@ -1,0 +1,71 @@
+# =============================================================================
+# MixerScope — data-collection tiers (schema v0.4, §V.tier; one-line meanings in definitions.yaml)
+# =============================================================================
+# A tier is the stage of the transaction at which a fact can FIRST be established. It says
+# nothing about how the fact was seen: that is the observation's kind (capture_flow,
+# disk_image, operator_page, replay, explorer) and provenance class.
+#
+# Every attribute carries `tier`: the lowest tier that establishes it. Every observation
+# carries the tier at which it was collected. Validation rejects an attribute whose tier is
+# higher than the highest tier of the observations it cites. A disk image acquired after a
+# funded transaction is a Tier-1 observation, yet the cookies, the letter download and the
+# autofill rows it contains are Tier-0 facts, because they already existed once the order
+# was created.
+#
+# Whether a funded transaction adds disk artifacts is itself a per-service finding. For
+# Mixero it added almost nothing on disk; another service might redirect to a new page once
+# the deposit arrives and create new History entries. Keeping the tiers separate is what
+# lets the entry record "funding added nothing on disk" as a fact.
+
+tiers:
+  - number: 0
+    id: no_funds
+    name: No funds
+    requires: >-
+      Everything up to and including creating an order, with nothing funded: reading the
+      public pages, FAQ and terms; creating an order behind a capturing proxy; reaching the
+      invoice page; downloading the letter of guarantee. The deposit address shown is never
+      paid. Costs only time.
+    establishes:
+      - canonical, assets/API, alias and onion domains; CDN / proxy; framework signals
+      - "operator statements (confidence: claimed): limits, fees, delays, retention policy"
+      - "every endpoint touched: method, path pattern, request field names, gate, cache policy, response type"
+      - "cookies: name, flags, client max-age, rotation interval, what the value encodes"
+      - the order-ID scheme, the deposit address as lookup key, the account model
+      - the status mechanism, its endpoint and interval, and the first ("awaiting") template
+      - the letter of guarantee as a document template, its filename pattern and signing key
+      - "disk artifacts that exist once the order is created: cookie rows, the letter file and its download record, autofill rows, session-restore state, cache entries, page visits"
+      - identification indicators and their weights
+    observation_kinds: [operator_page, capture_flow, disk_image]
+    typical_provenance: [operator_claim, instrumentation, subject_evidence]
+    cost: time only
+    notes: >-
+      The analyst writes the network side of a Tier-0 entry from the capture and the disk
+      side from the profile copy (mixerscope-scan against known ground truth shows where
+      facts land). The deposit address and any typed destination are instance data and
+      never enter the entry.
+
+  - number: 1
+    id: funded
+    name: Funded transaction
+    requires: >-
+      A real deposit is sent to the order's deposit address with examiner-owned funds on both
+      sides (ground truth for deposit and destination), the mix completes, the host is
+      acquired afterwards, and the captured requests are optionally replayed days or weeks
+      later.
+    establishes:
+      - "the status templates after awaiting: detected (with the deposit TXID and amount), mixing, completed (with the payout TXID)"
+      - "which post-payment facts reach disk at all; for Mixero none did: the payout TXID lives only in a no-store response and is reconstructed on-chain"
+      - the deposit TXID in browsing history when the subject checks the deposit on an explorer
+      - the payout structure on-chain and the fee arithmetic (deposit minus payout)
+      - server-side session validity and what the service still answers after completion (replay behaviour)
+      - observed retention versus the stated policy, e.g. deletion of the completion record
+      - whether funding adds any disk artifacts for this service (a per-service finding either way)
+    observation_kinds: [capture_flow, disk_image, replay, explorer]
+    typical_provenance: [instrumentation, subject_evidence, public_record]
+    cost: real funds (minimum order plus fees), one representative transaction per service
+    notes: >-
+      Only templates that demonstrably carry a TXID, or states observed after funds moved, are
+      tagged Tier 1. Tier 1 matters for the fact-coverage matrix even when it
+      adds nothing on disk, because it is the only way to learn which transaction facts never
+      reach the host.

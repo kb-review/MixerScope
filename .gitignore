@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.venv/
+
+# Build products (rebuilt from YAML; YAML is the source of truth)
+build/
+*.sqlite
+*.sqlite3
+*.db
+
+# Evidence and capture files must never be committed.
+# The KB holds invariants only; instance data lives in per-case findings outside this repo.
+*.E0*
+*.E1*
+*.E2*
+*.mem
+*.raw
+*.vmdk
+*.vdi
+*.mitm
+*.har
+*.dmp
+*.img
+*.dd
+case_findings/
+scan_out/
+ground_truth*.json
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Case folders: evidence and working files for one service (instance data); never committed.
+cases/
+
